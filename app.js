@@ -2018,11 +2018,10 @@ function renderDayContent(){
 
   dayContent.innerHTML = `${todayRemindHTML()}
     <div class="day-card-head nw-dayhead">
-      <div class="day-eyebrow"><span>DAY ${pad}</span><span>・</span><span>${d.date}（${d.weekday}）${v.twTime?'・台灣時間':''}</span></div>
+      <div class="day-eyebrow"><span class="de-day">DAY ${pad}</span><i aria-hidden="true"></i><span>${d.date}（${d.weekday}）</span>${v.twTime?'<em>台灣時間</em>':''}</div>
       <div class="region">${escHtml(v.title)}</div>
       <h2>${escHtml(v.dayDesc)}</h2>
-      <div class="nw-day-art"><img src="${escAttr(v.img)}" alt="D${d.dayNum} ${escAttr(v.title)}" loading="lazy"><span class="nw-day-tag">${escHtml(v.region)}</span></div>
-      <div class="nw-day-route"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span>${escHtml(v.enRegion).split(' → ').join('<i>→</i>')}</span></div>
+      <div class="nw-route-card"><img class="nrc-img" src="${escAttr(v.img)}" alt="D${d.dayNum} ${escAttr(v.title)}" width="96" height="96" loading="lazy" decoding="async"><div class="nrc-copy"><strong>${escHtml(v.region).split(' → ').join(' <i>→</i> ')}</strong>${v.enRegion&&v.enRegion.replace(/\s/g,'')!==String(v.region||'').replace(/\s/g,'')?`<small class="nrc-en">${escHtml(v.enRegion)}</small>`:''}${v.wear?`<small class="nrc-wear">${escHtml(v.wear)}</small>`:''}</div></div>
       ${stripFactsHTML(v)}
       ${dayChoiceHTML(v)}
       ${swapNote}
@@ -2872,7 +2871,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=71').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=72').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3374,7 +3373,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw10-2026-10-10';
+const APP_VERSION='nw11-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();

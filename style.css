@@ -2942,3 +2942,30 @@ html body .rv-moods .rv-mood b{font-family:var(--title)!important;font-weight:va
 html body .rv-moods .rv-mood small{font-size:11px;font-weight:700;opacity:.8;}
 body.large-text .mood-opt .mood-title{font-size:23px!important;}
 html body .day-review h3{font-size:21px!important;color:var(--midnight)!important;}
+
+/* nw11：每日標頭改成北海道版排法（日期列、手寫標題、路線小卡、住宿卡） */
+html body .nw-dayhead .day-eyebrow{display:flex!important;align-items:center;gap:10px!important;font-family:var(--title)!important;font-weight:var(--title-weight)!important;font-size:19px!important;letter-spacing:.06em!important;color:var(--periwinkle)!important;margin:0!important;}
+html body .nw-dayhead .day-eyebrow i{display:block;flex:none;width:44px;height:3px;border-radius:3px;background:var(--peach)!important;}
+html body .nw-dayhead .day-eyebrow em{font-style:normal;font-family:var(--hand);font-size:11.5px;letter-spacing:.08em;color:#fff;background:var(--cerulean);border-radius:999px;padding:1px 8px;}
+html body .nw-dayhead .region{margin:4px 0 0!important;}
+html body .nw-dayhead h2{margin:2px 0 0!important;}
+.nw-route-card{display:flex;align-items:center;gap:12px;margin:14px 0 0;padding:12px 16px 12px 10px;border-radius:24px;background:linear-gradient(120deg,#E8F0FB 0,#EEEBF8 55%,#F6ECEF 100%);}
+.nw-route-card .nrc-img{flex:none;width:92px;height:92px;object-fit:contain;filter:drop-shadow(0 3px 6px rgba(32,40,72,.18));}
+.nrc-copy{min-width:0;display:flex;flex-direction:column;gap:2px;}
+.nrc-copy strong{font-size:19px;font-weight:600;line-height:1.4;color:var(--midnight);letter-spacing:.03em;}
+.nrc-copy strong i{font-style:normal;color:var(--copper);margin:0 6px;}
+.nrc-copy small{font-size:13px;line-height:1.5;color:var(--ink-soft);}
+.nrc-copy .nrc-en{font-family:var(--script);font-style:var(--en-style);color:var(--periwinkle);font-size:14px;}
+html body .nw-dayhead .nrc-copy .nw-strip-facts{margin:0!important;font-size:13px!important;letter-spacing:.02em!important;}
+html body .nw-dayhead .stay-quick-card{margin-top:12px!important;border-radius:24px!important;}
+body.large-text .nrc-copy strong{font-size:20px;}
+body.large-text .nrc-copy small{font-size:15px;}
+/* nw11：標頭標題縮小、留在左側，不碰到呆維 */
+html body .nw-hero .header-title{right:14px!important;}
+html body .nw-hero .nw-hero-sub{white-space:nowrap;font-size:min(3.9vw,15px)!important;letter-spacing:.1em!important;}
+html body .nw-hero h1{font-size:min(12.4vw,54px)!important;white-space:nowrap;letter-spacing:.02em!important;}
+html body.large-text .nw-hero h1{font-size:min(12.4vw,54px)!important;}
+html body .nw-dayhead>.nw-strip-facts{margin:10px 4px 0!important;font-size:13px!important;letter-spacing:.04em!important;}
+.nrc-copy strong{font-size:18px;}
+.nrc-copy strong{word-break:keep-all;overflow-wrap:break-word;}
+.nrc-copy strong i{margin:0 1px;}
