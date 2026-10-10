@@ -3752,17 +3752,18 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
 
 /* ---------- 字體（每支手機各自選，存在這台裝置） ---------- */
 const FONT_OPTIONS=[
-  {k:'a',name:'霞鶩文楷',en:'Caveat',desc:'手寫楷書，和北海道版同一套'},
+  {k:'a',name:'仙人掌明體＋芫荽',en:'Cormorant',desc:'預設：古典明體標題，內文細手寫'},
+  {k:'g',name:'霞鶩文楷',en:'Caveat',desc:'手寫楷書，和北海道版同一套'},
   {k:'b',name:'思源宋體＋思源黑體',en:'Cormorant',desc:'粗宋體標題，內文清楚好讀'},
   {k:'c',name:'粉圓',en:'Caveat',desc:'圓圓的標題，內文用黑體'},
   {k:'d',name:'芫荽',en:'Cormorant',desc:'細細的手寫字，整站同一套'},
   {k:'e',name:'仙人掌明體＋文楷',en:'Cormorant',desc:'古典明體標題，內文文楷'},
   {k:'f',name:'昭源黑體',en:'Cormorant',desc:'俐落的現代黑體'}
 ];
-function currentFont(){const v=document.documentElement.getAttribute('data-font');return /^[a-f]$/.test(v||'')?v:'a';}
+function currentFont(){const v=document.documentElement.getAttribute('data-font');return /^[a-g]$/.test(v||'')?v:'a';}
 function setFont(k){if(k==='a')document.documentElement.removeAttribute('data-font');else document.documentElement.setAttribute('data-font',k);try{localStorage.setItem('norway_font_v1',k);}catch(e){}document.querySelectorAll('.font-opt').forEach(b=>b.classList.toggle('on',b.dataset.font===k));}
-function fontOptionsHTML(){const cur=currentFont();return `<div class="font-opts">${FONT_OPTIONS.map(o=>`<button type="button" class="font-opt${o.k===cur?' on':''}" data-font="${o.k}" onclick="setFont('${o.k}')" style="${fontPreviewStyle(o.k)}"><span><b>${String.fromCharCode(64+'abcdef'.indexOf(o.k)+1)}　狐光漫遊</b><small>${o.name}・${o.desc}</small></span></button>`).join('')}</div>`;}
-function fontPreviewStyle(k){const t={a:"'LXGW WenKai TC'",b:"'Noto Serif TC'",c:"'Huninn'",d:"'Iansui'",e:"'Cactus Classical Serif'",f:"'Chiron Hei HK'"}[k];return `font-family:${t},serif`;}
+function fontOptionsHTML(){const cur=currentFont();return `<div class="font-opts">${FONT_OPTIONS.map(o=>`<button type="button" class="font-opt${o.k===cur?' on':''}" data-font="${o.k}" onclick="setFont('${o.k}')"><span><b style="${fontPreviewStyle(o.k)}">狐光漫遊</b><small>${o.name}・${o.desc}</small></span></button>`).join('')}</div>`;}
+function fontPreviewStyle(k){const t={a:"'Cactus Classical Serif'",g:"'LXGW WenKai TC'",b:"'Noto Serif TC'",c:"'Huninn'",d:"'Iansui'",e:"'Cactus Classical Serif'",f:"'Chiron Hei HK'"}[k];return `font-family:${t},serif!important`;}
 /* ---------- 工具面板（備份、版本、安裝成 App） ---------- */
 let deferredInstall=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;});

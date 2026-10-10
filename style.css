@@ -2613,13 +2613,14 @@ details.todo-section[open]>summary.todo-sum{margin-bottom:8px;}
   --ink:#202848; --ink-soft:#5E6386; --line:#DEDCEB; --card:#FFFFFF; --cream-card:#FFFFFF; --cream:#FCFAF7;
   --mustard:#C16F25; --mustard-deep:#A35A1A; --mustard-soft:#FDEBD5; --gold-pale:#FDEBD5; --gold:#C16F25; --yellow:#C16F25; --orange:#C16F25; --pale:#FDEBD5; --sand:#FBF1E4; --coral:#C16F25;
   --shadow:0 10px 24px -16px rgba(32,40,72,.28); --shadow-sm:0 3px 10px -7px rgba(32,40,72,.22);
-  /* 字體（預設 A：霞鶩文楷；⚙️ 可切換） */
-  --title:'LXGW WenKai TC','Noto Serif TC',serif;
-  --serif:'LXGW WenKai TC','Noto Serif TC',serif;
-  --hand:'LXGW WenKai TC','Noto Sans TC','PingFang TC',sans-serif;
-  --script:'Caveat','LXGW WenKai TC',cursive;
-  --title-weight:700; --en-style:normal; --en-size:1.15;
+  /* 字體（預設 A：標題仙人掌明體、內文芫荽；⚙️ 可切換） */
+  --title:'Cactus Classical Serif','Noto Serif TC',serif;
+  --serif:'Cactus Classical Serif','Noto Serif TC',serif;
+  --hand:'Iansui','LXGW WenKai TC','Noto Sans TC',sans-serif;
+  --script:'Cormorant Garamond','Cactus Classical Serif',serif;
+  --title-weight:400; --en-style:italic; --en-size:1.05;
 }
+html[data-font="g"]{--title:'LXGW WenKai TC','Noto Serif TC',serif;--serif:'LXGW WenKai TC','Noto Serif TC',serif;--hand:'LXGW WenKai TC','Noto Sans TC',sans-serif;--script:'Caveat','LXGW WenKai TC',cursive;--title-weight:700;--en-style:normal;--en-size:1.15;}
 html[data-font="b"]{--title:'Noto Serif TC',serif;--serif:'Noto Serif TC',serif;--hand:'Noto Sans TC','PingFang TC',sans-serif;--script:'Cormorant Garamond','Noto Serif TC',serif;--title-weight:900;--en-style:italic;--en-size:1.05;}
 html[data-font="c"]{--title:'Huninn','Noto Sans TC',sans-serif;--serif:'Huninn','Noto Sans TC',sans-serif;--hand:'Noto Sans TC','PingFang TC',sans-serif;--script:'Caveat','Huninn',cursive;--title-weight:400;--en-style:normal;--en-size:1.15;}
 html[data-font="d"]{--title:'Iansui','LXGW WenKai TC',serif;--serif:'Iansui','LXGW WenKai TC',serif;--hand:'Iansui','Noto Sans TC',sans-serif;--script:'Cormorant Garamond','Iansui',serif;--title-weight:400;--en-style:italic;--en-size:1.05;}
