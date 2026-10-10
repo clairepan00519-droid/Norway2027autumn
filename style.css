@@ -2787,3 +2787,100 @@ html body .header-scene{margin:-6px -14px 0!important;}
 html body .header-art{height:clamp(220px,60vw,300px)!important;width:100%!important;object-fit:cover!important;object-position:74% 60%!important;-webkit-mask-image:linear-gradient(180deg,transparent 0,rgba(0,0,0,.5) 12%,#000 28%,#000 78%,transparent 100%),linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%)!important;mask-image:linear-gradient(180deg,transparent 0,rgba(0,0,0,.5) 12%,#000 28%,#000 78%,transparent 100%),linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%)!important;}
 html body .header-foot{margin:-44px 0 0!important;}
 @media (min-width:430px){html body .header-scene{margin-top:-6px!important;}}
+
+/* =====================================================================
+   nw4：版面改成「滿版插畫標頭＋底線分頁＋簡潔日期列」，標題用手寫字
+   ===================================================================== */
+@font-face{font-family:'NW ChenYu';src:url('fonts/title-chenyu.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Jason2';src:url('fonts/title-jason2.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Jason5';src:url('fonts/title-jason5.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Jason7';src:url('fonts/title-jason7.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Jason9';src:url('fonts/title-jason9.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Naikai';src:url('fonts/title-naikai.woff2') format('woff2');font-display:swap;}
+:root{--title:'NW ChenYu','Iansui',serif;--serif:'NW ChenYu','Iansui',serif;--hand:'Iansui','LXGW WenKai TC','Noto Sans TC',sans-serif;--title-weight:400;}
+html[data-tfont="jason2"]{--title:'NW Jason2','Iansui',serif;--serif:'NW Jason2','Iansui',serif;}
+html[data-tfont="jason5"]{--title:'NW Jason5','Iansui',serif;--serif:'NW Jason5','Iansui',serif;}
+html[data-tfont="jason7"]{--title:'NW Jason7','Iansui',serif;--serif:'NW Jason7','Iansui',serif;}
+html[data-tfont="jason9"]{--title:'NW Jason9','Iansui',serif;--serif:'NW Jason9','Iansui',serif;}
+html[data-tfont="naikai"]{--title:'NW Naikai','Iansui',serif;--serif:'NW Naikai','Iansui',serif;}
+html[data-tfont="wenkai"]{--title:'LXGW WenKai TC','Iansui',serif;--serif:'LXGW WenKai TC','Iansui',serif;}
+html[data-tfont="iansui"]{--title:'Iansui',serif;--serif:'Iansui',serif;}
+
+/* ---------- 滿版標頭 ---------- */
+html body .header.nw-hero{position:relative!important;display:block;padding:0!important;margin:0!important;background:#202848!important;background-image:none!important;color:#fff!important;border-radius:0 0 50% 50% / 0 0 34px 34px!important;overflow:hidden!important;min-height:clamp(340px,90vw,440px);box-shadow:0 18px 30px -24px rgba(32,40,72,.75)!important;}
+.nw-hero-img{position:absolute;inset:0;width:100%;height:100%;max-width:none!important;object-fit:cover;object-position:74% 55%;z-index:0;}
+.nw-hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(18,22,48,.5) 0,rgba(18,22,48,0) 26%),linear-gradient(90deg,rgba(18,22,48,.62) 0,rgba(18,22,48,.18) 52%,rgba(18,22,48,0) 72%),linear-gradient(0deg,rgba(18,22,48,.55) 0,rgba(18,22,48,0) 34%);}
+html body .nw-hero .header-top{position:absolute!important;left:0;right:0;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top,0px)) 14px 0!important;}
+html body .nw-hero .net-status,html body .nw-hero .cloud-sync-status{background:rgba(255,255,255,.16)!important;color:#fff!important;border:1px solid rgba(255,255,255,.28)!important;backdrop-filter:blur(6px);}
+html body .nw-hero .header-tools{gap:8px!important;}
+html body .nw-hero .ht-btn{width:40px!important;height:40px!important;min-width:40px;padding:0!important;display:inline-flex!important;align-items:center;justify-content:center;border-radius:50%!important;background:rgba(255,255,255,.14)!important;border:1px solid rgba(255,255,255,.3)!important;color:#fff!important;backdrop-filter:blur(6px);font-size:15px!important;font-weight:700;box-shadow:none!important;position:relative;}
+html body .nw-hero .ht-btn.edit,html body .nw-hero .ht-btn.on{background:#fff!important;color:var(--midnight)!important;}
+html body .nw-hero .ht-badge{position:absolute;top:-3px;right:-3px;}
+html body .nw-hero .header-title{position:absolute!important;z-index:2;left:22px;right:24%;top:calc(76px + env(safe-area-inset-top,0px));padding:0!important;text-align:left!important;transform:none!important;}
+html body .nw-hero .eyebrow{display:block!important;font-family:var(--hand)!important;font-style:normal!important;font-size:12.5px!important;letter-spacing:.34em!important;color:rgba(255,255,255,.88)!important;margin:0 0 10px!important;text-shadow:0 1px 6px rgba(0,0,0,.35)!important;font-weight:400!important;}
+html body .nw-hero h1{font-family:var(--title)!important;font-weight:var(--title-weight)!important;font-size:clamp(48px,15vw,66px)!important;line-height:1.1!important;letter-spacing:.04em!important;color:#fff!important;margin:0!important;text-shadow:0 3px 18px rgba(0,0,0,.35)!important;}
+.nw-hero-sub{margin:12px 0 0;font-size:14.5px;letter-spacing:.18em;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.45);line-height:1.6;}
+.nw-hero-dates{position:absolute;z-index:2;left:22px;bottom:30px;background:none;border:0;padding:0;text-align:left;color:#fff;font:inherit;cursor:pointer;text-shadow:0 1px 8px rgba(0,0,0,.45);}
+.nw-hero-dates .hd-range{display:flex;align-items:center;gap:10px;font-size:24px;letter-spacing:.06em;font-variant-numeric:tabular-nums;}
+.nw-hero-dates .hd-range i{display:inline-block;width:30px;height:1.5px;background:#fff;opacity:.85;}
+.nw-hero-dates b{display:block;font-size:20px;font-weight:500;letter-spacing:.12em;margin-top:4px;}
+.nw-hero-dates small{display:block;font-size:11.5px;letter-spacing:.12em;opacity:.82;margin-top:4px;}
+html body .nw-hero .preview-note{position:absolute;z-index:2;right:22px;bottom:16px;margin:0!important;font-size:10.5px!important;color:rgba(255,255,255,.8)!important;text-align:right;max-width:44%;}
+
+/* ---------- 出發前準備 ---------- */
+html body .todo-banner{position:relative;overflow:hidden;display:flex!important;align-items:center;gap:14px;width:calc(100% - 24px)!important;margin:16px 12px 2px!important;padding:14px 16px!important;border:0!important;border-radius:20px!important;background:linear-gradient(100deg,#FDEBD5 0,#FCE6DA 55%,#F7E9F1 100%)!important;box-shadow:0 8px 20px -16px rgba(193,111,37,.6)!important;text-align:left;}
+html body .todo-banner .tb-ic{flex:none;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.75);color:var(--copper);display:flex;align-items:center;justify-content:center;filter:none!important;position:relative;z-index:1;}
+html body .todo-banner .tb-txt{position:relative;z-index:1;flex:1;min-width:0;}
+html body .todo-banner b{display:block;font-size:19px!important;letter-spacing:.14em;color:var(--midnight)!important;font-weight:700;}
+html body .todo-banner small{display:block;font-size:13.5px!important;letter-spacing:.1em;color:var(--ink-soft)!important;margin-top:2px;}
+.tb-mtn{position:absolute;right:34px;bottom:0;width:150px;height:56px;color:rgba(193,111,37,.12);z-index:0;}
+html body .todo-banner em{position:relative;z-index:1;font-style:normal;font-size:28px!important;color:var(--copper)!important;line-height:1;}
+
+/* ---------- 底線分頁 ---------- */
+#mobileSearch[hidden]{display:none!important;}
+html body #mobileSearch{margin:10px 12px 0!important;}
+html body #dayTools{display:flex!important;gap:0!important;align-items:flex-end;margin:14px 12px 0!important;padding:0 2px!important;border-bottom:1px solid var(--line);background:transparent!important;overflow:visible!important;flex-wrap:nowrap!important;}
+html body #dayTools .day-tool{flex:1 1 auto;min-width:0;background:transparent!important;border:0!important;box-shadow:none!important;color:var(--ink-soft)!important;font-size:16.5px!important;letter-spacing:.12em;padding:10px 2px 12px!important;border-radius:0!important;position:relative;min-height:0!important;font-weight:400!important;}
+html body #dayTools .day-tool.active{color:var(--midnight)!important;font-weight:700!important;}
+html body #dayTools .day-tool.active::after{display:block!important;content:""!important;position:absolute;left:24%;right:24%;bottom:-1px;height:3px;border-radius:3px;background:var(--copper)!important;}
+html body #dayTools .nw-search-btn{flex:0 0 40px;color:var(--midnight)!important;display:flex;justify-content:center;}
+html body #dayTools .nw-search-btn.active::after{left:20%;right:20%;}
+
+/* ---------- 日期列 ---------- */
+html body #dayScroll{display:flex!important;gap:0!important;align-items:stretch;padding:10px 2px 14px!important;margin:0 12px!important;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;background:transparent!important;}
+html body #dayScroll::-webkit-scrollbar{display:none;}
+html body #dayScroll .day-chip{flex:0 0 auto;min-width:68px;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:16px!important;padding:9px 8px 11px!important;margin:0!important;position:relative;transform:none!important;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;}
+html body #dayScroll .day-chip+.day-chip::before{content:"";position:absolute;left:0;top:28%;height:44%;width:1px;background:var(--line);}
+html body #dayScroll .day-chip.active::before,html body #dayScroll .day-chip.active+.day-chip::before{display:none;}
+html body #dayScroll .day-chip .d{font-family:var(--hand)!important;font-size:19px!important;font-weight:400!important;color:var(--ink)!important;letter-spacing:.02em;}
+html body #dayScroll .day-chip .m{font-size:12px!important;color:var(--ink-soft)!important;letter-spacing:.06em;}
+html body #dayScroll .day-chip.active{background:var(--midnight)!important;}
+html body #dayScroll .day-chip.active .d,html body #dayScroll .day-chip.active .m{color:#fff!important;}
+html body #dayScroll .day-chip.active::after{content:"";position:absolute;left:50%;bottom:-4px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--copper);border:2px solid var(--paper);}
+html body #dayScroll .day-chip.is-today .m{color:#037E77!important;}
+html body #dayScroll .nw-today .d{font-size:15px!important;color:var(--copper)!important;}
+
+/* ---------- 每天的開頭 ---------- */
+html body .day-card-head.nw-dayhead{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:18px 16px 4px!important;margin:0!important;}
+html body .day-card-head.nw-dayhead::before,html body .day-card-head.nw-dayhead::after{display:none!important;}
+html body .nw-dayhead .day-eyebrow{display:flex;gap:4px;font-family:var(--hand)!important;font-style:normal!important;font-size:13.5px!important;letter-spacing:.16em!important;color:var(--ink-soft)!important;margin:0!important;}
+html body .nw-dayhead .region{font-family:var(--title)!important;font-weight:var(--title-weight)!important;font-size:clamp(30px,9.4vw,40px)!important;line-height:1.25!important;letter-spacing:.02em!important;color:var(--midnight)!important;margin:6px 0 2px!important;text-wrap:balance;word-break:keep-all;}
+html body .nw-dayhead h2{font-family:var(--hand)!important;font-size:16px!important;letter-spacing:.1em!important;color:var(--ink-soft)!important;margin:4px 0 0!important;font-weight:400!important;}
+.nw-day-art{position:relative;margin:14px 0 0;border-radius:20px;overflow:hidden;aspect-ratio:16/9.4;background:linear-gradient(180deg,#D9E3F4 0,#EEE9F5 100%);box-shadow:0 10px 22px -16px rgba(32,40,72,.55);}
+.nw-day-art img{width:100%;height:100%;object-fit:cover;object-position:50% 42%;transform:scale(1.1);display:block;}
+.nw-day-tag{position:absolute;top:12px;right:12px;max-width:70%;padding:5px 13px;border-radius:999px;background:rgba(253,235,213,.95);color:var(--midnight);font-size:13px;letter-spacing:.08em;line-height:1.4;box-shadow:0 4px 10px -6px rgba(32,40,72,.4);}
+.nw-day-route{display:flex;align-items:flex-start;gap:8px;margin:14px 2px 0;}
+.nw-day-route svg{flex:none;color:var(--copper);margin-top:2px;}
+.nw-day-route span{font-size:17px;letter-spacing:.03em;color:var(--ink);line-height:1.5;}
+.nw-day-route i{font-style:normal;color:var(--copper);margin:0 9px;}
+html body .nw-dayhead .nw-strip-facts{margin:4px 2px 0 30px;font-size:13.5px;letter-spacing:.06em;}
+html body .nw-dayhead .stay-quick-card{margin-top:12px!important;}
+
+/* ---------- 底部導覽：線條圖示 ---------- */
+html body .bottom-nav{background:rgba(255,255,255,.97)!important;border:1px solid var(--line)!important;box-shadow:0 12px 30px -16px rgba(32,40,72,.45)!important;}
+html body .bottom-nav button{color:#8F92B3!important;background:transparent!important;box-shadow:none!important;gap:3px!important;}
+html body .bottom-nav .nav-svg{display:block;}
+html body .bottom-nav button .lb{font-family:var(--hand)!important;letter-spacing:.1em;font-size:12.5px!important;}
+html body .bottom-nav button.active{background:transparent!important;color:var(--midnight)!important;box-shadow:none!important;}
+html body .bottom-nav button.active .nav-svg{stroke-width:2.1;}
+html body .bottom-nav button.active::after{content:"";display:block;width:6px;height:6px;border-radius:50%;background:var(--copper);margin-top:1px;}

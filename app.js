@@ -1079,7 +1079,9 @@ function refreshAllDates(){
   ['renderRouteTimeline','renderDocsList','renderStayOverview','renderTripDateCard','updateHeaderDates','renderTodoBanner'].forEach(fn=>{try{if(typeof window[fn]==='function')window[fn]();}catch(e){console.warn(fn,e);}});
 }
 function updateHeaderDates(){
-  const el=document.getElementById('headerDates');if(el)el.textContent=tripRangeText();
+  const el=document.getElementById('headerDates');if(!el)return;
+  const a=isoParts(days[0].iso),b=isoParts(days[days.length-1].iso),p=n=>String(n).padStart(2,'0');
+  el.innerHTML=`<span class="hd-range">${p(a.m)}.${p(a.d)} <i></i> ${p(b.m)}.${p(b.d)}</span><b>${days.length} 日慢旅</b><small>${a.y}・日期暫定，尚未訂票</small>`;
 }
 function renderTripDateCard(){
   const el=document.getElementById('tripDateCard');if(!el)return;
@@ -1617,14 +1619,10 @@ document.addEventListener('visibilitychange',()=>{
 
 function renderDayChips(){
   const today=tripTodayIndex();
-  dayScroll.innerHTML = `<button class="today-chip" onclick="goToToday()">今日</button>`
-    +`<div class="day-chip special-chip ${activeDay==='eat'?'active':''}" onclick="setActiveDay('eat')"><div class="d"><img class="chip-ic" src="images/nav-food.webp" alt=""></div><div class="m">吃·挪威</div></div>`
-    +`<div class="day-chip special-chip ${activeDay==='shop'?'active':''}" onclick="setActiveDay('shop')"><div class="d"><img class="chip-ic" src="images/nav-shopping.webp" alt=""></div><div class="m">逛·挪威</div></div>`
-    +days.map((d,i)=>`
-    <div class="day-chip ${i===activeDay?'active':''} ${i===today?'is-today':''}${daySnowy(i)?' snowy':''}" data-i="${i}"${daySnowy(i)?' title="預報大雪或強風"':''} onclick="setActiveDay(${i})">
-      <div class="d">${d.date}</div>
-      <div class="m">D${d.dayNum}・${d.weekday}</div>
-    </div>`).join('');
+  dayScroll.innerHTML = `<button type="button" class="day-chip nw-today${today>=0?' live':''}" onclick="goToToday()"><div class="d">今日</div><div class="m">${today>=0?'D'+days[today].dayNum:'—'}</div></button>`
+    +days.map((d,i)=>`<button type="button" class="day-chip ${i===activeDay?'active':''} ${i===today?'is-today':''}${daySnowy(i)?' snowy':''}" data-i="${i}"${daySnowy(i)?' title="預報大雪或強風"':''} onclick="setActiveDay(${i})" aria-pressed="${i===activeDay}"><div class="d">${d.date}</div><div class="m">D${d.dayNum}</div></button>`).join('');
+  const act=dayScroll.querySelector('.day-chip.active');
+  if(act)requestAnimationFrame(()=>{const r=act.offsetLeft-(dayScroll.clientWidth-act.offsetWidth)/2;dayScroll.scrollTo({left:Math.max(0,r),behavior:'auto'});});
   if(typeof renderMarksBar==='function'&&typeof marksStore!=='undefined')renderMarksBar();
   if(typeof renderDayTools==='function')renderDayTools();
 }
@@ -2019,11 +2017,13 @@ function renderDayContent(){
   const swapNote=v.swapped?`<div class="nw-swap-note${v.swapWarn?' warn':''}">⇄ 這天換成原本 D${days[v.ci].dayNum} 的行程。${v.swapWarn?'跨住宿區或碰到交通日，請自己檢查住宿、租車、航班與船票日期。':''}</div>`:'';
 
   dayContent.innerHTML = `${todayRemindHTML()}
-    <div class="day-card-head">
-      <div class="day-eyebrow"><span>DAY ${pad}</span><i></i><span>${d.date}（${d.weekday}）${v.twTime?'・台灣時間':''}</span></div>
+    <div class="day-card-head nw-dayhead">
+      <div class="day-eyebrow"><span>DAY ${pad}</span><span>・</span><span>${d.date}（${d.weekday}）${v.twTime?'・台灣時間':''}</span></div>
       <div class="region">${escHtml(v.title)}</div>
       <h2>${escHtml(v.dayDesc)}</h2>
-      <div class="weather-strip"><div class="ico img-ico"><img src="${escAttr(v.img)}" alt="" loading="lazy"></div><div class="txt"><b>${escHtml(v.enRegion)}</b>${stripFactsHTML(v)}</div></div>
+      <div class="nw-day-art"><img src="${escAttr(v.img)}" alt="D${d.dayNum} ${escAttr(v.title)}" loading="lazy"><span class="nw-day-tag">${escHtml(v.region)}</span></div>
+      <div class="nw-day-route"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span>${escHtml(v.enRegion).split(' → ').join('<i>→</i>')}</span></div>
+      ${stripFactsHTML(v)}
       ${dayChoiceHTML(v)}
       ${swapNote}
       ${dayNotesHTML(v)}
@@ -3370,7 +3370,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw3-2026-10-10';
+const APP_VERSION='nw4-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3623,9 +3623,9 @@ function toggleUiMode(){
 function toggleTextSize(){setTextSize(document.body.classList.contains('large-text')?0:1);}
 function syncHeaderControls(){
   const m=document.getElementById('modeBtn');
-  if(m){const e=currentUiMode()==='edit';m.textContent=e?'✓ 完成編輯':'✎ 編輯';m.classList.toggle('edit',e);m.title=e?'改完了，回到只看行程的旅行模式':'進入編輯模式，可以修改行程';m.setAttribute('aria-label',m.title);}
+  if(m){const e=currentUiMode()==='edit';m.innerHTML=e?'<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5 10-11"/></svg>':'<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l4.2-1 10.4-10.4a2 2 0 0 0 0-2.8l-.4-.4a2 2 0 0 0-2.8 0L5 15.8 4 20z"/><path d="M13.5 7.5l3 3"/></svg>';m.classList.toggle('edit',e);m.title=e?'改完了，回到只看行程的旅行模式':'進入編輯模式，可以修改行程';m.setAttribute('aria-label',m.title);}
   const t=document.getElementById('sizeBtn');
-  if(t){const big=document.body.classList.contains('large-text');t.textContent=big?'字縮小':'字放大';t.classList.toggle('on',big);t.setAttribute('aria-label',big?'把字縮回標準大小':'把字放大');}
+  if(t){const big=document.body.classList.contains('large-text');t.textContent='Aa';t.classList.toggle('on',big);t.setAttribute('aria-label',big?'把字縮回標準大小':'把字放大');}
   let bar=document.getElementById('editModeBar');
   if(!bar&&document.querySelector('.app')){bar=document.createElement('div');bar.id='editModeBar';bar.className='edit-mode-bar';bar.innerHTML='<span>✎ 編輯模式中：可以修改、新增、刪除</span><button type="button" onclick="setUiMode(\'travel\')">完成編輯</button>';document.querySelector('.app').prepend(bar);}
 }
@@ -3752,18 +3752,20 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
 
 /* ---------- 字體（每支手機各自選，存在這台裝置） ---------- */
 const FONT_OPTIONS=[
-  {k:'a',name:'仙人掌明體＋芫荽',en:'Cormorant',desc:'預設：古典明體標題，內文細手寫'},
-  {k:'g',name:'霞鶩文楷',en:'Caveat',desc:'手寫楷書，和北海道版同一套'},
-  {k:'b',name:'思源宋體＋思源黑體',en:'Cormorant',desc:'粗宋體標題，內文清楚好讀'},
-  {k:'c',name:'粉圓',en:'Caveat',desc:'圓圓的標題，內文用黑體'},
-  {k:'d',name:'芫荽',en:'Cormorant',desc:'細細的手寫字，整站同一套'},
-  {k:'e',name:'仙人掌明體＋文楷',en:'Cormorant',desc:'古典明體標題，內文文楷'},
-  {k:'f',name:'昭源黑體',en:'Cormorant',desc:'俐落的現代黑體'}
+  {k:'chenyu',name:'辰宇落雁體',desc:'細細的鋼筆手寫，最像參考圖'},
+  {k:'jason7',name:'清松手寫體７・飄逸',desc:'流暢的行書感'},
+  {k:'jason5',name:'清松手寫體５・行楷',desc:'端正的行楷'},
+  {k:'jason9',name:'清松手寫體９・文青',desc:'文青筆記風'},
+  {k:'jason2',name:'清松手寫體２・秀氣',desc:'秀氣小巧'},
+  {k:'naikai',name:'內海字體',desc:'溫暖的原子筆手寫'},
+  {k:'wenkai',name:'霞鶩文楷',desc:'手寫楷書（北海道版內文）'},
+  {k:'iansui',name:'芫荽',desc:'和內文同一套'}
 ];
-function currentFont(){const v=document.documentElement.getAttribute('data-font');return /^[a-g]$/.test(v||'')?v:'a';}
-function setFont(k){if(k==='a')document.documentElement.removeAttribute('data-font');else document.documentElement.setAttribute('data-font',k);try{localStorage.setItem('norway_font_v1',k);}catch(e){}document.querySelectorAll('.font-opt').forEach(b=>b.classList.toggle('on',b.dataset.font===k));}
-function fontOptionsHTML(){const cur=currentFont();return `<div class="font-opts">${FONT_OPTIONS.map(o=>`<button type="button" class="font-opt${o.k===cur?' on':''}" data-font="${o.k}" onclick="setFont('${o.k}')"><span><b style="${fontPreviewStyle(o.k)}">狐光漫遊</b><small>${o.name}・${o.desc}</small></span></button>`).join('')}</div>`;}
-function fontPreviewStyle(k){const t={a:"'Cactus Classical Serif'",g:"'LXGW WenKai TC'",b:"'Noto Serif TC'",c:"'Huninn'",d:"'Iansui'",e:"'Cactus Classical Serif'",f:"'Chiron Hei HK'"}[k];return `font-family:${t},serif!important`;}
+const FONT_FAMILY={chenyu:"'NW ChenYu'",jason7:"'NW Jason7'",jason5:"'NW Jason5'",jason9:"'NW Jason9'",jason2:"'NW Jason2'",naikai:"'NW Naikai'",wenkai:"'LXGW WenKai TC'",iansui:"'Iansui'"};
+const DEFAULT_TITLE_FONT='chenyu';
+function currentFont(){const v=document.documentElement.getAttribute('data-tfont');return FONT_FAMILY[v]?v:DEFAULT_TITLE_FONT;}
+function setFont(k){if(!FONT_FAMILY[k])return;document.documentElement.setAttribute('data-tfont',k);try{localStorage.setItem('norway_tfont_v1',k);}catch(e){}document.querySelectorAll('.font-opt').forEach(b=>b.classList.toggle('on',b.dataset.font===k));}
+function fontOptionsHTML(){const cur=currentFont();return `<div class="font-opts">${FONT_OPTIONS.map(o=>`<button type="button" class="font-opt${o.k===cur?' on':''}" data-font="${o.k}" onclick="setFont('${o.k}')"><span><b style="font-family:${FONT_FAMILY[o.k]},serif!important">狐光漫遊・山海之間</b><small>${o.name}${o.k===DEFAULT_TITLE_FONT?'（預設）':''}・${o.desc}</small></span></button>`).join('')}</div>`;}
 /* ---------- 工具面板（備份、版本、安裝成 App） ---------- */
 let deferredInstall=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;});
@@ -3777,7 +3779,7 @@ function openToolsSheet(){
   const wrap=document.createElement('div');wrap.id='toolsSheet';wrap.className='sheet-wrap';
   wrap.innerHTML=`<div class="sheet" role="dialog" aria-label="工具與設定"><div class="sheet-grab"></div><div class="sheet-head"><b>⚙️ 工具與設定</b><button type="button" data-close aria-label="關閉">✕</button></div><div class="sheet-body">
     ${CLOUD_CONFIGURED?`<section><h4>👤 帳號</h4><p class="sheet-note">目前登入：<b>${escHtml(myEmail()||'沒有登入')}</b></p><div class="sheet-row one"><button type="button" data-act="logout">登出／換帳號</button></div></section>`:''}
-    <section><h4>🔤 字體</h4><p class="sheet-note">只改這支手機的顯示。</p>${fontOptionsHTML()}</section>
+    <section><h4>🔤 標題字體</h4><p class="sheet-note">只改這支手機的標題字，內文維持芫荽。</p>${fontOptionsHTML()}</section>
     <section><h4>📲 安裝成 App</h4>${install}</section>
     <section><h4>離線使用</h4><p class="sheet-note" id="offlineStatusRow">檢查中…</p><div class="sheet-row one"><button type="button" data-act="precache">下載全部圖片到這台裝置</button></div><p class="sheet-note" style="margin-top:6px">網頁本身與你的資料會自動保留；圖片需要下載一次，之後沒網路也能看。</p></section>
     <section><h4>小驚喜</h4><div class="sheet-row one"><button type="button" data-act="surprise">來一則小知識／笑話</button></div></section>
@@ -3814,10 +3816,12 @@ function renderDayTools(){
   if(typeof activeDay==='number')lastNumericDay=activeDay;
   const numeric=typeof activeDay==='number';
   const cur=numeric?(activeSubTabStore[activeDay]||'main'):'';
-  const tools=[['itinerary','行程'],['weather','天氣'],['transport','交通'],['routemap','路線圖'],['eat','逛吃']];
-  const isOn=t=>t==='itinerary'?(numeric&&(cur==='main'||cur==='more')):cur===t;
-  el.innerHTML=tools.map(([t,l])=>`<button type="button" class="day-tool t-${t}${isOn(t)?' active':''}" data-type="${t}" aria-pressed="${isOn(t)}" onclick="goDayTool('${t}')">${l}</button>`).join('');
+  const tools=[['itinerary','行程'],['weather','天氣'],['transport','交通'],['routemap','路線'],['eat','吃逛']];
+  const isOn=t=>t==='itinerary'?(numeric&&(cur==='main'||cur==='more')):(t==='eat'&&!numeric)?true:cur===t;
+  const searchOpen=!document.getElementById('mobileSearch')?.hidden;
+  el.innerHTML=tools.map(([t,l])=>`<button type="button" class="day-tool t-${t}${isOn(t)?' active':''}" data-type="${t}" aria-pressed="${isOn(t)}" onclick="goDayTool('${t}')">${l}</button>`).join('')+`<button type="button" class="day-tool nw-search-btn${searchOpen?' active':''}" aria-label="搜尋全部行程" onclick="toggleSearch()"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button>`;
 }
+function toggleSearch(force){const b=document.getElementById('mobileSearch');if(!b)return;const show=typeof force==='boolean'?force:b.hidden;b.hidden=!show;renderDayTools();if(show)setTimeout(()=>document.getElementById('globalSearchMobile')?.focus(),50);else runGlobalSearch('');}
 function goDayTool(t){
   setTab('itinerary');
   if(typeof activeDay!=='number'){activeDay=lastNumericDay;renderDayChips();renderDayContent();}
@@ -5137,7 +5141,7 @@ function renderTodoBanner(){
   if(!beforeTrip||!left.length){el?.remove();return;}
   const late=left.filter(t=>{const n=todoDaysLeft(t.due);return n!=null&&n<=3;}).length;
   if(!el){el=document.createElement('button');el.type='button';el.id='todoBanner';el.className='todo-banner';el.onclick=goToTodos;host.prepend(el);}
-  el.innerHTML=`<span class="tb-ic">✅</span><span class="tb-txt"><b>出發前待辦還有 ${left.length} 項</b>${late?`<small>${late} 項快到期或已過期</small>`:'<small>點這裡查看、勾選</small>'}</span><em>›</em>`;
+  el.innerHTML=`<span class="tb-ic"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10.5a.5.5 0 0 1-.5-.5V4a.5.5 0 0 1 .5-.5z"/><path d="M14 3.5V8h4M9 12h6M9 15.5h6M9 8.5h2.5"/></svg></span><span class="tb-txt"><b>出發前準備</b><small>還有 ${left.length} 項待辦${late?`・${late} 項快到期`:''}</small></span><svg class="tb-mtn" viewBox="0 0 160 60" aria-hidden="true"><path d="M0 60L38 22l18 16 26-30 30 34 18-14 30 32z" fill="currentColor"/></svg><em>›</em>`;
 }
 function goToTodos(){const sec=document.getElementById('todoSection');if(sec)sec.open=true;setTab('guide');setTimeout(()=>document.getElementById('todoSection')?.scrollIntoView({behavior:'smooth',block:'start'}),80);}
 

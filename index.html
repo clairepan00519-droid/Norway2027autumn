@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#F6F5FA">
-<script>try{var f=localStorage.getItem("norway_font_v1");if(/^[a-g]$/.test(f||""))document.documentElement.setAttribute("data-font",f);}catch(e){}</script>
+<script>try{var f=localStorage.getItem("norway_tfont_v1");if(/^(chenyu|jason[2579]|naikai|wenkai|iansui)$/.test(f||""))document.documentElement.setAttribute("data-tfont",f);}catch(e){}</script>
 <script>/* hk13：開場動畫一打開就先蓋住畫面，不等整個網頁載完 */
 try{var d=document.documentElement;if((window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone||/[?&]splash=1/.test(location.search)){d.classList.add("show-splash");var seen=false;try{seen=sessionStorage.getItem("norwaySplashSeen")==="1";sessionStorage.setItem("norwaySplashSeen","1");}catch(e){}if(!seen||/[?&]splash=1/.test(location.search)){d.classList.add("splash-now");var v=["travel","map","wakeup"][Math.floor(Math.random()*3)];d.setAttribute("data-splash",v);var l=document.createElement("link");l.rel="preload";l.as="image";l.href="images/"+({travel:"splash-travel",map:"logo",wakeup:"splash-coffee"})[v]+".webp";document.head.appendChild(l);}}}catch(e){}</script>
 <style>html.splash-now,html.splash-now body{background:#F6F5FA;}html.splash-now #norwaySplash{display:block!important;}</style>
@@ -33,9 +33,9 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&family=Huninn&family=Iansui&family=Cactus+Classical+Serif&family=Chiron+Hei+HK:wght@400;700&family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@1,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=nw3">
-<link rel="stylesheet" href="splash.css?v=nw3">
-<link rel="stylesheet" href="daiwei/daiwei-widget.css?v=nw3">
+<link rel="stylesheet" href="style.css?v=nw4">
+<link rel="stylesheet" href="splash.css?v=nw4">
+<link rel="stylesheet" href="daiwei/daiwei-widget.css?v=nw4">
 </head>
 <body class="family-locked">
 <div id="norwaySplash" class="splash" hidden aria-label="狐光漫遊載入中">
@@ -51,7 +51,7 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
     <div class="splash__title"><strong>狐光漫遊</strong><span>在峽灣慢行，等一場北方的光</span></div>
   </div>
 </div>
-<script src="splash.js?v=nw3"></script>
+<script src="splash.js?v=nw4"></script>
 
 <div id="familyGate" class="family-gate" aria-hidden="false">
   <div class="family-gate-card">
@@ -91,35 +91,34 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
 
 <div class="app">
 
-  <!-- Header -->
-  <div class="header" id="main-header">
+  <!-- Header：滿版插畫，文字壓在畫面上 -->
+  <div class="header nw-hero" id="main-header">
+    <img class="nw-hero-img" src="images/header.webp" alt="" width="1800" height="600" decoding="async">
     <div class="header-top">
       <div class="header-status">
         <div class="net-status" id="netStatus"><span class="net-dot online"></span><span class="net-txt">線上</span></div>
         <div class="cloud-sync-status" id="cloudSyncStatus">☁️ 同步中</div>
       </div>
       <div class="header-tools">
-        <button type="button" class="ht-btn ht-fav" id="favCorner" onclick="openMarksPanel('fav')" aria-label="收藏與預約">★<span class="ht-badge" id="favBadge" style="display:none"></span></button>
-        <button type="button" class="ht-pill" id="modeBtn" onclick="toggleUiMode()">✎ 編輯</button>
-        <button type="button" class="ht-pill" id="sizeBtn" onclick="toggleTextSize()">字放大</button>
-        <button type="button" class="ht-btn" onclick="openToolsSheet()" aria-label="工具與設定">⚙️</button>
+        <button type="button" class="ht-btn ht-fav" id="favCorner" onclick="openMarksPanel('fav')" aria-label="收藏與預約"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.6 9.6l5.8-.8z"/></svg><span class="ht-badge" id="favBadge" style="display:none"></span></button>
+        <button type="button" class="ht-btn" id="sizeBtn" onclick="toggleTextSize()" aria-label="把字放大">Aa</button>
+        <button type="button" class="ht-btn" id="modeBtn" onclick="toggleUiMode()" aria-label="進入編輯模式"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l4.2-1 10.4-10.4a2 2 0 0 0 0-2.8l-.4-.4a2 2 0 0 0-2.8 0L5 15.8 4 20z"/><path d="M13.5 7.5l3 3"/></svg></button>
+        <button type="button" class="ht-btn" onclick="openToolsSheet()" aria-label="工具與設定"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg></button>
       </div>
     </div>
     <div class="header-title">
-      <div class="eyebrow">Arctic Fox · Fjords · Northern Lights</div>
-      <h1>狐光漫遊<small>在峽灣慢行，等一場北方的光</small></h1>
+      <div class="eyebrow">NORWAY · 2027</div>
+      <h1>狐光漫遊</h1>
+      <p class="nw-hero-sub">在峽灣慢行，等一場北方的光。</p>
     </div>
-    <div class="header-scene">
-      <img class="header-art" src="images/header.webp" alt="" width="1800" height="600" decoding="async">
-    </div>
-    <div class="header-foot"><button type="button" class="dates" id="headerDates" onclick="setTab('route');setTimeout(()=>document.getElementById('tripDateCard')?.scrollIntoView({behavior:'smooth',block:'center'}),120)">2027.9.24 出發 – 10.13 返台・20天</button><span class="nw-placeholder-chip">占位日期・未訂票</span></div>
-    <div class="preview-note">單機預覽：尚未連接家人同步，資料只存在這台裝置</div>
+    <button type="button" class="nw-hero-dates" id="headerDates" onclick="setTab('route');setTimeout(()=>document.getElementById('tripDateCard')?.scrollIntoView({behavior:'smooth',block:'center'}),120)" aria-label="旅程日期，點了可以修改出發日"></button>
+    <div class="preview-note">單機預覽：資料只存在這台裝置</div>
     <span id="spotCount" hidden>--</span>
   </div>
 
   <!-- ================= ITINERARY VIEW ================= -->
   <div class="view active" id="view-itinerary">
-    <div class="mobile-global-search">
+    <div class="mobile-global-search" id="mobileSearch" hidden>
       <div class="global-search-input-wrap"><span>⌕</span><input id="globalSearchMobile" type="search" placeholder="搜尋全部 20 天行程…" oninput="runGlobalSearch(this.value)"></div>
       <div id="globalSearchResultsMobile" class="global-search-results"></div>
     </div>
@@ -297,10 +296,10 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
 
   <!-- Bottom Nav -->
   <div class="bottom-nav" role="tablist">
-    <button class="nav-btn active" onclick="setTab('itinerary')"><img class="nav-img" src="images/nav-itinerary.webp" alt="" width="34" height="34"><span class="lb">行程</span></button>
-    <button class="nav-btn" onclick="setTab('route')"><img class="nav-img" src="images/nav-route.webp" alt="" width="34" height="34"><span class="lb">環線</span></button>
-    <button class="nav-btn" onclick="setTab('guide')"><img class="nav-img" src="images/nav-guide.webp" alt="" width="34" height="34"><span class="lb">指南</span></button>
-    <button class="nav-btn" onclick="setTab('weather')"><img class="nav-img" src="images/nav-weather.webp" alt="" width="34" height="34"><span class="lb">天氣</span></button>
+    <button class="nav-btn active" onclick="setTab('itinerary')"><svg viewBox="0 0 24 24" width="26" height="26" class="nav-svg" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 19.5l6.2-10 3.6 5.5 2.7-3.7 6.5 8.2z"/><path d="M8.7 9.5l1.6 2.6 1.4-1"/></svg><span class="lb">行程</span></button>
+    <button class="nav-btn" onclick="setTab('route')"><svg viewBox="0 0 24 24" width="26" height="26" class="nav-svg" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5l5.5-2.5 7 2.5L21 4v13.5l-5.5 2.5-7-2.5L3 20z"/><path d="M8.5 4v13.5M15.5 6.5V20"/></svg><span class="lb">環線</span></button>
+    <button class="nav-btn" onclick="setTab('guide')"><svg viewBox="0 0 24 24" width="26" height="26" class="nav-svg" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.8 8.2l-2.2 5.4-5.4 2.2 2.2-5.4z"/></svg><span class="lb">指南</span></button>
+    <button class="nav-btn" onclick="setTab('weather')"><svg viewBox="0 0 24 24" width="26" height="26" class="nav-svg" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18.5h10a4 4 0 0 0 .4-8 5.5 5.5 0 0 0-10.6 1.3A3.4 3.4 0 0 0 7 18.5z"/><path d="M16.5 3.5v1.6M20.6 5.3l-1.1 1.1M22 9.5h-1.6"/></svg><span class="lb">天氣</span></button>
   </div>
 </div>
 
@@ -372,10 +371,10 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
 
 <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="restoreBackupFile(event)">
 
-<script src="config.js?v=nw3"></script>
-<script src="daiwei/daiwei-content.js?v=nw3"></script>
-<script src="daiwei/daiwei-widget.js?v=nw3"></script>
-<script src="app.js?v=nw3"></script>
+<script src="config.js?v=nw4"></script>
+<script src="daiwei/daiwei-content.js?v=nw4"></script>
+<script src="daiwei/daiwei-widget.js?v=nw4"></script>
+<script src="app.js?v=nw4"></script>
 
 </body>
 </html>
