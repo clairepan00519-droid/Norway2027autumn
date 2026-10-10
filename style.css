@@ -2770,3 +2770,20 @@ html body #familyGateButton{background:var(--midnight)!important;color:#fff!impo
 .font-opt small{display:block;font-size:12px;color:var(--ink-soft);}
 .font-opt i{font-size:15px;color:var(--space);}
 body.large-text .nw-notes2 li,body.large-text .nw-strip-facts{font-size:16px;}
+
+/* ---------- nw3：標頭改成北海道式「插畫融進底色」 ---------- */
+html body .header{background:linear-gradient(180deg,#F7F6FB 0,#EEEDF7 55%,#E9EEF4 100%)!important;padding:calc(8px + env(safe-area-inset-top,0px)) 14px 14px!important;border-radius:0 0 30px 30px!important;overflow:hidden!important;}
+html body .header-title{position:relative!important;z-index:3;text-align:left!important;padding:6px 4px 0 6px!important;}
+html body .header .eyebrow{font-size:calc(16px * var(--en-size))!important;color:var(--space)!important;letter-spacing:.02em!important;margin:2px 0 2px!important;}
+html body .header h1{font-size:44px!important;letter-spacing:.16em!important;color:var(--midnight)!important;line-height:1.15!important;margin:0!important;text-shadow:0 0 12px #F4F3FA,0 0 22px #F4F3FA!important;}
+html body .header h1 small{font-size:14px!important;letter-spacing:.12em!important;color:var(--ink-soft)!important;margin-top:8px!important;text-shadow:0 0 8px #F4F3FA,0 0 14px #F4F3FA;}
+html body .header-scene{margin:-34px -14px 0!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important;z-index:1;}
+html body .header-art{aspect-ratio:auto!important;height:auto!important;object-fit:cover;-webkit-mask-image:linear-gradient(180deg,transparent 0,rgba(0,0,0,.35) 14%,#000 34%,#000 80%,transparent 100%),linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)!important;-webkit-mask-composite:source-in;mask-image:linear-gradient(180deg,transparent 0,rgba(0,0,0,.35) 14%,#000 34%,#000 80%,transparent 100%),linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)!important;mask-composite:intersect;}
+html body .header-foot{position:relative;z-index:3;margin:-30px 0 0!important;}
+html body .header .dates{background:rgba(255,255,255,.88)!important;backdrop-filter:blur(4px);box-shadow:0 6px 16px -10px rgba(32,40,72,.5);font-size:13px!important;padding:6px 16px!important;}
+.nw-placeholder-chip{background:rgba(253,235,213,.92)!important;}
+@media (min-width:430px){html body .header-scene{margin-top:-44px!important;}}
+html body .header-scene{margin:-6px -14px 0!important;}
+html body .header-art{height:clamp(220px,60vw,300px)!important;width:100%!important;object-fit:cover!important;object-position:74% 60%!important;-webkit-mask-image:linear-gradient(180deg,transparent 0,rgba(0,0,0,.5) 12%,#000 28%,#000 78%,transparent 100%),linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%)!important;mask-image:linear-gradient(180deg,transparent 0,rgba(0,0,0,.5) 12%,#000 28%,#000 78%,transparent 100%),linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%)!important;}
+html body .header-foot{margin:-44px 0 0!important;}
+@media (min-width:430px){html body .header-scene{margin-top:-6px!important;}}
