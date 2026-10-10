@@ -3370,7 +3370,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw5-2026-10-10';
+const APP_VERSION='nw6-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3752,27 +3752,11 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
 
 /* ---------- 字體（每支手機各自選，存在這台裝置） ---------- */
 const FONT_OPTIONS=[
-  {k:'chenyu',name:'辰宇落雁體',desc:'細細的鋼筆手寫，最像參考圖'},
-  {k:'jason7',name:'清松手寫體７・飄逸',desc:'流暢的行書感'},
-  {k:'jason5',name:'清松手寫體５・行楷',desc:'端正的行楷'},
-  {k:'jason9',name:'清松手寫體９・文青',desc:'文青筆記風'},
-  {k:'jason2',name:'清松手寫體２・秀氣',desc:'秀氣小巧'},
-  {k:'naikai',name:'內海字體',desc:'溫暖的原子筆手寫'},
+  {k:'chenyu',name:'辰宇落雁體',desc:'細細的鋼筆手寫'},
   {k:'wenkai',name:'霞鶩文楷',desc:'手寫楷書（北海道版內文）'},
-  {k:'iansui',name:'芫荽',desc:'和內文同一套'},
-  {k:'jason1',name:'清松手寫體１・圓潤',desc:'圓圓胖胖的鋼珠筆'},
-  {k:'jason3',name:'清松手寫體３・呆萌',desc:'歪歪的可愛筆跡，很呆維'},
-  {k:'jason6',name:'清松手寫體６・Q萌',desc:'圓滾滾的 Q 版字'},
-  {k:'jason8',name:'清松手寫體８・隨性',desc:'隨手寫的筆記感'},
-  {k:'jason4',name:'清松手寫體４・POP',desc:'粗粗的海報 POP 字'},
-  {k:'kose',name:'小賴字體',desc:'瀨戶體風格的圓潤手寫'},
-  {k:'pearl',name:'假珍珠',desc:'圓頭粗筆，像奶茶店招牌'},
-  {k:'marker',name:'霞鶩漫黑',desc:'麥克筆寫的粗黑體'},
-  {k:'masa',name:'正風毛筆',desc:'端正的毛筆字'},
-  {k:'bakudai',name:'莫大毛筆',desc:'奔放的大毛筆'},
-  {k:'cubic',name:'俐方體11號',desc:'像素點陣，像復古遊戲'}
+  {k:'iansui',name:'芫荽',desc:'和內文同一套'}
 ];
-const FONT_FAMILY={chenyu:"'NW ChenYu'",jason7:"'NW Jason7'",jason5:"'NW Jason5'",jason9:"'NW Jason9'",jason2:"'NW Jason2'",naikai:"'NW Naikai'",wenkai:"'LXGW WenKai TC'",iansui:"'Iansui'",jason1:"'NW Jason1'",jason3:"'NW Jason3'",jason6:"'NW Jason6'",jason8:"'NW Jason8'",jason4:"'NW Jason4'",kose:"'NW Kose'",pearl:"'NW Pearl'",marker:"'NW Marker'",masa:"'NW Masa'",bakudai:"'NW Bakudai'",cubic:"'NW Cubic'"};
+const FONT_FAMILY={chenyu:"'NW ChenYu'",wenkai:"'LXGW WenKai TC'",iansui:"'Iansui'"};
 const DEFAULT_TITLE_FONT='chenyu';
 function currentFont(){const v=document.documentElement.getAttribute('data-tfont');return FONT_FAMILY[v]?v:DEFAULT_TITLE_FONT;}
 function setFont(k){if(!FONT_FAMILY[k])return;document.documentElement.setAttribute('data-tfont',k);try{localStorage.setItem('norway_tfont_v1',k);}catch(e){}document.querySelectorAll('.font-opt').forEach(b=>b.classList.toggle('on',b.dataset.font===k));}
