@@ -2075,19 +2075,21 @@ const WMO = {
 };
 function wmoInfo(code){ return WMO[code] || ['🌡️','—']; }
 /* 呆維天氣圖：依天氣代碼與風速切換（秋天的挪威多半是雨，北部偶爾初雪） */
-const WX_IMG={clear:['images/mood-happy.webp','晴'],cloudy:['images/mood-relaxed.webp','多雲'],overcast:['images/fox-rest.webp','陰天'],light:['images/mood-cold.webp','小雪'],heavy:['images/mood-cold.webp','大雪'],blowing:['images/mood-cold.webp','風雪'],sleet:['images/mood-disappointed.webp','下雨'],windy:['images/mood-tired.webp','強風'],icy:['images/mood-cold.webp','路面結冰']};
+const WX_IMG={sunny:['images/wx-sunny.webp','晴天'],cloudy:['images/wx-partly-cloudy.webp','多雲'],overcast:['images/wx-overcast.webp','陰天'],fog:['images/wx-fog.webp','霧'],rain:['images/wx-rain.webp','雨天'],windrain:['images/wx-wind-rain.webp','風雨'],windy:['images/wx-wind.webp','強風'],light:['images/wx-snow.webp','小雪'],heavy:['images/wx-snow.webp','大雪'],blowing:['images/wx-snow.webp','風雪'],sleet:['images/wx-sleet.webp','雨夾雪／凍雨'],icy:['images/wx-sleet.webp','路面結冰']};
 function wxKind(code,wind){
   code=Number(code);wind=Number(wind)||0;
   const snow=[71,73,75,77,85,86].includes(code);
   if(snow&&wind>=30)return 'blowing';
   if([75,86].includes(code))return 'heavy';
   if(snow)return 'light';
-  if(code>=95)return 'sleet';
-  if((code>=51&&code<=67)||(code>=80&&code<=82))return 'sleet';
+  if([56,57,66,67].includes(code))return 'sleet';
+  const rain=code>=95||(code>=51&&code<=65)||(code>=80&&code<=82);
+  if(rain)return (wind>=30||code>=95)?'windrain':'rain';
   if(wind>=40)return 'windy';
-  if(code===3||code===45||code===48)return 'overcast';
+  if(code===45||code===48)return 'fog';
+  if(code===3)return 'overcast';
   if(code===2)return 'cloudy';
-  return 'clear';
+  return 'sunny';
 }
 function wxImgHTML(code,wind,cls='wx-img'){const [f,l]=WX_IMG[wxKind(code,wind)];return `<img class="${cls}" src="${f}" alt="${l}" title="${l}" width="64" height="64" loading="lazy" decoding="async">`;}
 function feelsText(cw){return cw&&cw.apparent_temperature!=null?`體感 ${Math.round(cw.apparent_temperature)}°`:'';}
@@ -2870,7 +2872,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=69').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=70').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3372,7 +3374,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw8-2026-10-10';
+const APP_VERSION='nw9-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -4654,7 +4656,7 @@ function toggleSpotDetails(key){
 /* =====================================================================
    v56：訂位連結、營業時間、照片縮圖＋大圖檢視、交通新增／刪除／圖片、修正導航視窗、新插圖
    ===================================================================== */
-const ART={lying:'images/fox-rest.webp',suitcase:'images/fox-point.webp',photo:'images/fox-upload.webp',heart:'images/mood-moved.webp',rain:'images/mood-disappointed.webp',search:'images/fox-fact.webp',car:'images/fox-complete.webp',sleep:'images/fox-rest.webp'};
+const ART={lying:'images/fox-rest.webp',suitcase:'images/fox-point.webp',photo:'images/fox-upload.webp',heart:'images/mood-moved.webp',rain:'images/wx-rain.webp',search:'images/fox-fact.webp',car:'images/fox-complete.webp',sleep:'images/fox-rest.webp'};
 function emptyArtHTML(text,art){return `<div class="empty-art"><img src="${art||ART.lying}" alt="" loading="lazy"><p>${text}</p></div>`;}
 
 /* ---------- 網址整理 ---------- */
@@ -5154,12 +5156,12 @@ const REVIEW_MOODS=[
   ['surprised','驚喜','撿到意外的風景'],
   ['relaxed','放鬆','慢慢走也很好'],
   ['moved','感動','想把這一刻留下'],
-  ['tired','疲累','電量剩一格'],
-  ['cold','冷冷的','風好大，但很值得'],
-  ['disappointed','小失落','天氣不給力，下次再來'],
-  ['farewell','捨不得','還不想說再見']];
-/* hk26：拿掉「低落」「不順心」，改成「有點可惜」；更早期的心情代碼自動對應 */
-const OLD_MOOD_MAP={great:'happy',good:'relaxed',ok:'relaxed',sad:'disappointed'};
+  ['satisfied','滿足','吃飽喝足，剛剛好'],
+  ['excited','期待','明天也好想快點出發'],
+  ['cozy','療癒','被風景摸摸頭'],
+  ['treasured','珍藏','收進心裡的那一頁']];
+/* nw9：心情換成八種正向心情；舊的心情代碼自動對應到最接近的新心情 */
+const OLD_MOOD_MAP={great:'happy',good:'relaxed',ok:'relaxed',sad:'relaxed',tired:'cozy',cold:'satisfied',disappointed:'relaxed',farewell:'treasured'};
 function moodInfo(m){m=OLD_MOOD_MAP[m]||m;const x=REVIEW_MOODS.find(z=>z[0]===m);return x?{key:x[0],label:x[1],sub:x[2],img:`images/mood-${x[0]}.webp`}:null;}
 /* v95：心情可複選，存成 "excited,touched"（舊的單一值也相容） */
 function moodList(m){const seen=new Set();return String(m||'').split(',').map(x=>OLD_MOOD_MAP[x.trim()]||x.trim()).filter(x=>x&&!seen.has(x)&&seen.add(x)&&REVIEW_MOODS.some(z=>z[0]===x));}
