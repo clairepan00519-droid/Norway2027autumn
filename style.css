@@ -2791,7 +2791,7 @@ html body .header-foot{margin:-44px 0 0!important;}
 /* =====================================================================
    nw4：版面改成「滿版插畫標頭＋底線分頁＋簡潔日期列」，標題用手寫字
    ===================================================================== */
-@font-face{font-family:'NW ChenYu';src:url('fonts/title-chenyu.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW ChenYu';src:url('fonts/title-chenyu.woff2?v=nw10') format('woff2');font-display:swap;}
 :root{--title:'NW ChenYu','Iansui',serif;--serif:'NW ChenYu','Iansui',serif;--hand:'Iansui','LXGW WenKai TC','Noto Sans TC',sans-serif;--title-weight:400;}
 html[data-tfont="wenkai"]{--title:'LXGW WenKai TC','Iansui',serif;--serif:'LXGW WenKai TC','Iansui',serif;}
 html[data-tfont="iansui"]{--title:'Iansui',serif;--serif:'Iansui',serif;}
@@ -2856,8 +2856,8 @@ html body .day-card-head.nw-dayhead::before,html body .day-card-head.nw-dayhead:
 html body .nw-dayhead .day-eyebrow{display:flex;gap:4px;font-family:var(--hand)!important;font-style:normal!important;font-size:13.5px!important;letter-spacing:.16em!important;color:var(--ink-soft)!important;margin:0!important;}
 html body .nw-dayhead .region{font-family:var(--title)!important;font-weight:var(--title-weight)!important;font-size:clamp(30px,9.4vw,40px)!important;line-height:1.25!important;letter-spacing:.02em!important;color:var(--midnight)!important;margin:6px 0 2px!important;text-wrap:balance;word-break:keep-all;}
 html body .nw-dayhead h2{font-family:var(--hand)!important;font-size:16px!important;letter-spacing:.1em!important;color:var(--ink-soft)!important;margin:4px 0 0!important;font-weight:400!important;}
-.nw-day-art{position:relative;margin:14px 0 0;border-radius:20px;overflow:hidden;aspect-ratio:16/9.4;background:linear-gradient(180deg,#D9E3F4 0,#EEE9F5 100%);box-shadow:0 10px 22px -16px rgba(32,40,72,.55);}
-.nw-day-art img{width:100%;height:100%;object-fit:cover;object-position:50% 42%;transform:scale(1.1);display:block;}
+.nw-day-art{position:relative;margin:14px 0 0;border-radius:20px;overflow:hidden;aspect-ratio:2/1;max-height:220px;background:linear-gradient(180deg,#D9E3F4 0,#EEE9F5 100%);box-shadow:0 10px 22px -16px rgba(32,40,72,.55);}
+.nw-day-art img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block;}
 .nw-day-tag{position:absolute;top:12px;right:12px;max-width:70%;padding:5px 13px;border-radius:999px;background:rgba(253,235,213,.95);color:var(--midnight);font-size:13px;letter-spacing:.08em;line-height:1.4;box-shadow:0 4px 10px -6px rgba(32,40,72,.4);}
 .nw-day-route{display:flex;align-items:flex-start;gap:8px;margin:14px 2px 0;}
 .nw-day-route svg{flex:none;color:var(--copper);margin-top:2px;}
@@ -2874,3 +2874,71 @@ html body .bottom-nav button .lb{font-family:var(--hand)!important;letter-spacin
 html body .bottom-nav button.active{background:transparent!important;color:var(--midnight)!important;box-shadow:none!important;}
 html body .bottom-nav button.active .nav-svg{stroke-width:2.1;}
 html body .bottom-nav button.active::after{content:"";display:block;width:6px;height:6px;border-radius:50%;background:var(--copper);margin-top:1px;}
+
+/* =====================================================================
+   nw8：標頭字清楚、底部導覽換回呆維圖示、整體多一點色彩、大字模式
+   ===================================================================== */
+/* 標頭：左側加深一層夜色，字加描邊陰影，手寫標題在亮處也看得清楚 */
+.nw-hero::after{background:linear-gradient(180deg,rgba(14,18,44,.55) 0,rgba(14,18,44,0) 24%),radial-gradient(90% 72% at 16% 48%,rgba(14,18,44,.82) 0,rgba(14,18,44,.5) 55%,rgba(14,18,44,0) 82%),linear-gradient(0deg,rgba(14,18,44,.7) 0,rgba(14,18,44,0) 38%)!important;}
+html body .nw-hero h1{-webkit-text-stroke:1.1px #fff;text-shadow:0 0 2px rgba(10,14,40,.95),0 2px 6px rgba(10,14,40,.8),0 4px 22px rgba(10,14,40,.6)!important;}
+html body .nw-hero .eyebrow{color:#fff!important;font-weight:600!important;text-shadow:0 0 2px rgba(10,14,40,.9),0 1px 8px rgba(10,14,40,.7)!important;}
+html body .nw-hero .nw-hero-sub{display:inline-block;padding:3px 10px;margin-left:-10px;border-radius:999px;background:rgba(14,18,44,.42);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);font-size:15px;font-weight:600;letter-spacing:.12em;text-shadow:0 0 2px rgba(10,14,40,.95),0 1px 10px rgba(10,14,40,.75);}
+html body .nw-hero .nw-hero-dates{text-shadow:0 0 2px rgba(10,14,40,.95),0 1px 10px rgba(10,14,40,.75);}
+html body .nw-hero .nw-hero-dates .hd-range{font-weight:600;}
+html body .nw-hero .nw-hero-dates small{opacity:.95;}
+html body .nw-hero .preview-note{text-shadow:0 0 2px rgba(10,14,40,.9);}
+
+/* 底部導覽：呆維插畫圖示 */
+html body .bottom-nav .nav-img{display:block;width:48px!important;height:48px!important;margin:-6px 0 -3px;border-radius:0!important;opacity:.78;filter:saturate(.8);transition:transform .2s,opacity .2s,filter .2s;}
+html body .bottom-nav button.active .nav-img{opacity:1;filter:none;transform:translateY(-2px) scale(1.12);}
+html body .bottom-nav button{gap:0!important;}
+body.large-text .bottom-nav .nav-img{width:52px!important;height:52px!important;}
+
+/* 色彩：極光青綠、天藍、藍紫、淡紫、暖杏輪流點綴（淡色底，不做滿版高飽和） */
+html body{background:radial-gradient(80% 45% at 0% 0%,rgba(4,179,169,.16),transparent 70%),radial-gradient(70% 45% at 100% 8%,rgba(136,139,194,.28),transparent 70%),radial-gradient(70% 50% at 0% 100%,rgba(253,201,143,.26),transparent 70%),radial-gradient(70% 50% at 100% 100%,rgba(0,148,189,.12),transparent 70%),var(--paper)!important;background-attachment:fixed!important;}
+html body .section-card{position:relative;overflow:hidden;}
+html body .section-card::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,var(--aurora),var(--cerulean) 35%,var(--periwinkle) 65%,var(--peach));opacity:.85;pointer-events:none;}
+html body .view>.section-card:nth-of-type(4n+1){background:linear-gradient(180deg,#F1FAF9 0,#fff 120px)!important;}
+html body .view>.section-card:nth-of-type(4n+2){background:linear-gradient(180deg,#F2F1FB 0,#fff 120px)!important;}
+html body .view>.section-card:nth-of-type(4n+3){background:linear-gradient(180deg,#FFF5EA 0,#fff 120px)!important;}
+html body .view>.section-card:nth-of-type(4n){background:linear-gradient(180deg,#EEF6FB 0,#fff 120px)!important;}
+html body .nw-dayhead .day-eyebrow{color:var(--cerulean)!important;}
+html body .nw-dayhead h2{color:var(--periwinkle)!important;}
+html body .nw-day-route svg{color:var(--aurora);}
+html body .day-chip .d{color:var(--periwinkle);}
+html body .day-chip.active{background:linear-gradient(150deg,var(--midnight) 0,#3A4A94 100%)!important;}
+html body #dayTools .day-tool.t-itinerary.active::after{background:var(--copper)!important;}
+html body #dayTools .day-tool.t-weather.active::after{background:var(--cerulean)!important;}
+html body #dayTools .day-tool.t-transport.active::after{background:var(--lavender)!important;}
+html body #dayTools .day-tool.t-routemap.active::after{background:var(--aurora)!important;}
+html body #dayTools .day-tool.t-eat.active::after{background:var(--peach)!important;}
+html body .spots-seg button.on{background:linear-gradient(135deg,#E5F6F4,#ECEBF7)!important;border-color:var(--aurora)!important;}
+.nw-route-list li:nth-child(5n+1){background:#E8F6F4;}.nw-route-list li:nth-child(5n+1) span{color:#038B83;}
+.nw-route-list li:nth-child(5n+2){background:#E6F2F8;}.nw-route-list li:nth-child(5n+2) span{color:#007A9C;}
+.nw-route-list li:nth-child(5n+3){background:#ECEFFA;}.nw-route-list li:nth-child(5n+3) span{color:#4D63AE;}
+.nw-route-list li:nth-child(5n+4){background:#F1EEF8;}.nw-route-list li:nth-child(5n+4) span{color:#6C69A8;}
+.nw-route-list li:nth-child(5n){background:#FDF0E2;}.nw-route-list li:nth-child(5n) span{color:var(--copper);}
+.pack-group:nth-of-type(3n+1) .checklist-group-head{background:linear-gradient(120deg,#E5F5F3,#F7FBFB)!important;}
+.pack-group:nth-of-type(3n+2) .checklist-group-head{background:linear-gradient(120deg,#ECEBF8,#F9F8FD)!important;}
+.pack-group:nth-of-type(3n) .checklist-group-head{background:linear-gradient(120deg,#FCEEDD,#FDF9F4)!important;}
+.shop-group.shop-snack .checklist-group-head{background:linear-gradient(120deg,#F0E9F7,#FAF7FD)!important;}
+.shop-group.shop-icecream .checklist-group-head{background:linear-gradient(120deg,#E4F1F8,#F7FBFD)!important;}
+
+/* 出發日移到 ⚙️ 工具裡 */
+.sheet .nw-date-card label{display:none;}
+.sheet .nw-date-card .sub{font-size:12px;margin-top:4px;}
+
+/* 大字模式：統一放大 1.3 倍（之前好幾條規則互相蓋掉，實際只放大 1.18） */
+html body.large-text .view{zoom:1.3!important;}
+
+/* nw10：心情標題用手寫體，每種心情一個顏色 */
+html body .mood-opt{gap:1px;background:linear-gradient(180deg,color-mix(in srgb,var(--mc,#6880C8) 9%,#fff) 0,#fff 100%)!important;border-color:color-mix(in srgb,var(--mc,#6880C8) 28%,#fff)!important;}
+html body .mood-opt .mood-title{font-family:var(--title)!important;font-weight:var(--title-weight)!important;font-size:21px!important;line-height:1.25;color:var(--mc,#35407E)!important;letter-spacing:.04em;margin-top:2px;-webkit-text-stroke:.35px currentColor;}
+html body .mood-opt .mood-word{display:inline-block;margin:2px 0 1px;padding:0 9px;border-radius:999px;font-size:11.5px!important;font-weight:700;color:#fff!important;background:var(--mc,#6880C8);}
+html body .mood-opt.on{border-color:var(--mc,#5261B1)!important;background:color-mix(in srgb,var(--mc,#6880C8) 14%,#fff)!important;box-shadow:0 4px 14px color-mix(in srgb,var(--mc,#5261B1) 30%,transparent)!important;}
+html body .mood-opt.on .mood-check{background:var(--mc,#5261B1)!important;border-color:var(--mc,#5261B1)!important;}
+html body .rv-moods .rv-mood{gap:5px;padding:3px 11px;background:color-mix(in srgb,var(--mc,#6880C8) 12%,#fff)!important;color:var(--mc,#35407E)!important;border:1px solid color-mix(in srgb,var(--mc,#6880C8) 30%,#fff);}
+html body .rv-moods .rv-mood b{font-family:var(--title)!important;font-weight:var(--title-weight)!important;font-size:17px;letter-spacing:.03em;-webkit-text-stroke:.3px currentColor;}
+html body .rv-moods .rv-mood small{font-size:11px;font-weight:700;opacity:.8;}
+body.large-text .mood-opt .mood-title{font-size:23px!important;}
+html body .day-review h3{font-size:21px!important;color:var(--midnight)!important;}

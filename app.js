@@ -2075,19 +2075,21 @@ const WMO = {
 };
 function wmoInfo(code){ return WMO[code] || ['🌡️','—']; }
 /* 呆維天氣圖：依天氣代碼與風速切換（秋天的挪威多半是雨，北部偶爾初雪） */
-const WX_IMG={clear:['images/mood-happy.webp','晴'],cloudy:['images/mood-relaxed.webp','多雲'],overcast:['images/fox-rest.webp','陰天'],light:['images/mood-cold.webp','小雪'],heavy:['images/mood-cold.webp','大雪'],blowing:['images/mood-cold.webp','風雪'],sleet:['images/mood-disappointed.webp','下雨'],windy:['images/mood-tired.webp','強風'],icy:['images/mood-cold.webp','路面結冰']};
+const WX_IMG={sunny:['images/wx-sunny.webp','晴天'],cloudy:['images/wx-partly-cloudy.webp','多雲'],overcast:['images/wx-overcast.webp','陰天'],fog:['images/wx-fog.webp','霧'],rain:['images/wx-rain.webp','雨天'],windrain:['images/wx-wind-rain.webp','風雨'],windy:['images/wx-wind.webp','強風'],light:['images/wx-snow.webp','小雪'],heavy:['images/wx-snow.webp','大雪'],blowing:['images/wx-snow.webp','風雪'],sleet:['images/wx-sleet.webp','雨夾雪／凍雨'],icy:['images/wx-sleet.webp','路面結冰']};
 function wxKind(code,wind){
   code=Number(code);wind=Number(wind)||0;
   const snow=[71,73,75,77,85,86].includes(code);
   if(snow&&wind>=30)return 'blowing';
   if([75,86].includes(code))return 'heavy';
   if(snow)return 'light';
-  if(code>=95)return 'sleet';
-  if((code>=51&&code<=67)||(code>=80&&code<=82))return 'sleet';
+  if([56,57,66,67].includes(code))return 'sleet';
+  const rain=code>=95||(code>=51&&code<=65)||(code>=80&&code<=82);
+  if(rain)return (wind>=30||code>=95)?'windrain':'rain';
   if(wind>=40)return 'windy';
-  if(code===3||code===45||code===48)return 'overcast';
+  if(code===45||code===48)return 'fog';
+  if(code===3)return 'overcast';
   if(code===2)return 'cloudy';
-  return 'clear';
+  return 'sunny';
 }
 function wxImgHTML(code,wind,cls='wx-img'){const [f,l]=WX_IMG[wxKind(code,wind)];return `<img class="${cls}" src="${f}" alt="${l}" title="${l}" width="64" height="64" loading="lazy" decoding="async">`;}
 function feelsText(cw){return cw&&cw.apparent_temperature!=null?`體感 ${Math.round(cw.apparent_temperature)}°`:'';}
@@ -2541,7 +2543,9 @@ function persistPack(){ safeSetItem('norway_pack', packData); }
 const defaultShopData = [{name:'挪威棕起司 Brunost',qty:1,checked:false,img:null,cat:'supermarket',location:'超市'},{name:'Freia 牛奶巧克力',qty:1,checked:false,img:null,cat:'snack',location:'超市'},{name:'羊毛襪或毛衣',qty:1,checked:false,img:null,cat:'icecream',location:''},{name:'明信片與冰箱貼',qty:1,checked:false,img:null,cat:'souvenir',location:''}];
 let shopData = normalizeStructuredList('norway_shop', JSON.parse(localStorage.getItem('norway_shop')) || defaultShopData);
 function persistShop(){ safeSetItem('norway_shop', shopData); }
-const SHOP_CATS = {supermarket:{label:'🛒 超市', color:'#3B4A82'}, drugstore:{label:'💊 藥局保養', color:'#6880C8'}, snack:{label:'🍫 零食飲料', color:'#888BC2'}, icecream:{label:'🧶 毛織與戶外', color:'#C16F25'}, souvenir:{label:'🎁 紀念品', color:'#202848'}};
+const SHOP_CATS = {supermarket:{label:'🛒 超市', color:'#3B4A82'}, snack:{label:'🍫 零食飲料', color:'#888BC2'}, icecream:{label:'🧶 毛織與戶外', color:'#C16F25'}, souvenir:{label:'🎁 紀念品', color:'#202848'}};
+/* 已移除的分類（例如藥局保養）裡的舊項目歸到超市，不會消失 */
+const shopCat=it=>SHOP_CATS[it&&it.cat]?it.cat:'supermarket';
 
 const listSectionOpen = { pack:{}, shop:{supermarket:false, souvenir:false} };
 function toggleListSection(type, key){
@@ -2868,7 +2872,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=67').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=71').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3223,7 +3227,7 @@ function editShopItem(i){
   const it=shopData[i];if(!it)return;
   openFormModal({title:'✎ 修改購物項目',fields:[
     {id:'name',label:'名稱',value:it.name},
-    {id:'cat',label:'分類',type:'select',value:it.cat||'supermarket',options:Object.keys(SHOP_CATS).map(k=>({value:k,label:SHOP_CATS[k].label}))},
+    {id:'cat',label:'分類',type:'select',value:shopCat(it),options:Object.keys(SHOP_CATS).map(k=>({value:k,label:SHOP_CATS[k].label}))},
     {id:'location',label:'附註（品牌、規格、想買的店、預算…）',type:'textarea',rows:3,value:it.location||''}],
     onSave:v=>{if(!v.name){alert('請輸入名稱');return false;}it.name=v.name;it.cat=v.cat;it.location=v.location;persistShop();listSectionOpen.shop[v.cat]=true;renderShopList();},
     onDelete:()=>{delShop(i);}});
@@ -3370,7 +3374,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw6-2026-10-10';
+const APP_VERSION='nw10-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3774,6 +3778,7 @@ function openToolsSheet(){
   const wrap=document.createElement('div');wrap.id='toolsSheet';wrap.className='sheet-wrap';
   wrap.innerHTML=`<div class="sheet" role="dialog" aria-label="工具與設定"><div class="sheet-grab"></div><div class="sheet-head"><b>⚙️ 工具與設定</b><button type="button" data-close aria-label="關閉">✕</button></div><div class="sheet-body">
     ${CLOUD_CONFIGURED?`<section><h4>👤 帳號</h4><p class="sheet-note">目前登入：<b>${escHtml(myEmail()||'沒有登入')}</b></p><div class="sheet-row one"><button type="button" data-act="logout">登出／換帳號</button></div></section>`:''}
+    <section><h4>📅 出發日</h4><div id="tripDateCard" class="nw-date-card"></div></section>
     <section><h4>🔤 標題字體</h4><p class="sheet-note">只改這支手機的標題字，內文維持芫荽。</p>${fontOptionsHTML()}</section>
     <section><h4>📲 安裝成 App</h4>${install}</section>
     <section><h4>離線使用</h4><p class="sheet-note" id="offlineStatusRow">檢查中…</p><div class="sheet-row one"><button type="button" data-act="precache">下載全部圖片到這台裝置</button></div><p class="sheet-note" style="margin-top:6px">網頁本身與你的資料會自動保留；圖片需要下載一次，之後沒網路也能看。</p></section>
@@ -3797,7 +3802,7 @@ function openToolsSheet(){
     force:()=>{closeToolsSheet();forceRefreshApp();}
   };
   wrap.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>acts[b.dataset.act]&&acts[b.dataset.act]());
-  renderDeviceStatus();updateOfflineRow();
+  renderDeviceStatus();updateOfflineRow();renderTripDateCard();
 }
 
 /* =====================================================================
@@ -4208,7 +4213,7 @@ function dayEatPanelHTML(i){
 
 /* ---------- 購物清單：一個品項一張卡、多圖左右滑、說明文字在下方 ---------- */
 function shopCardHTML(it,i){
-  const imgs=shopImgs(it),meta=SHOP_CATS[it.cat||'supermarket']||SHOP_CATS.supermarket;
+  const imgs=shopImgs(it),meta=SHOP_CATS[shopCat(it)];
   const many=imgs.length>1;
   const slides=imgs.length?imgs.map(src=>`<div class="shop-car-slide" data-src="${escAttr(src)}" onclick="openAttachModal(this.dataset.src)"><img src="${escAttr(src)}" alt="${escAttr(it.name)}" loading="lazy" draggable="false"></div>`).join(''):`<div class="shop-car-slide ph"><img src="${NAV_IC.shopping}" alt=""></div>`;
   return `<article class="shop-card ${it.checked?'is-done':''}" data-shop="${i}"><div class="shop-car"><div class="shop-car-track">${slides}</div>${many?`<button type="button" class="shop-car-nav prev" onclick="shopCarMove(${i},-1)" aria-label="上一張">‹</button><button type="button" class="shop-car-nav next" onclick="shopCarMove(${i},1)" aria-label="下一張">›</button><div class="shop-car-dots">${imgs.map((_,k)=>`<i class="${k===0?'on':''}"></i>`).join('')}</div><span class="shop-car-count">1 / ${imgs.length}</span>`:''}<span class="shop-cat-tag" style="background:${meta.color}">${escHtml(meta.label.replace(/^\S+\s*/,''))}</span></div><div class="shop-card-body"><label class="shop-card-title"><input type="checkbox" ${it.checked?'checked':''} onchange="toggleShop(${i})"><span>${escHtml(it.name)}</span><em>× ${Number(it.qty)||1}</em></label>${it.location?`<p class="shop-card-note">${escHtml(it.location)}</p>`:''}</div></article>`;
@@ -4231,9 +4236,9 @@ function bindShopCarousels(root){
 function setShopFilter(f){window._shopFilter=f;renderShopList();}
 function shopGalleryHTML(){
   const filter=window._shopFilter||'all';
-  const counts={all:shopData.length};Object.keys(SHOP_CATS).forEach(k=>counts[k]=shopData.filter(x=>(x.cat||'supermarket')===k).length);
+  const counts={all:shopData.length};Object.keys(SHOP_CATS).forEach(k=>counts[k]=shopData.filter(x=>shopCat(x)===k).length);
   const chips=[['all','全部'],...Object.keys(SHOP_CATS).map(k=>[k,SHOP_CATS[k].label.replace(/^\S+\s*/,'')])].filter(([k])=>k==='all'||counts[k]>0).map(([k,l])=>`<button type="button" class="${filter===k?'on':''}" onclick="setShopFilter('${k}')">${escHtml(l)}<b>${counts[k]}</b></button>`).join('');
-  const list=shopData.map((it,i)=>({it,i})).filter(x=>filter==='all'||(x.it.cat||'supermarket')===filter);
+  const list=shopData.map((it,i)=>({it,i})).filter(x=>filter==='all'||shopCat(x.it)===filter);
   const done=list.filter(x=>x.it.checked).length;
   if(!shopData.length)return '<div class="empty-art"><img src="images/nav-shopping.webp" alt="" loading="lazy"><p>購物清單還是空的。<br>切到編輯模式新增項目與照片。</p></div>';
   return `<div class="shop-filter">${chips}</div><div class="shop-progress">已買 ${done} / ${list.length}</div><div class="shop-cards">${list.map(x=>shopCardHTML(x.it,x.i)).join('')}</div>`;
@@ -4247,7 +4252,7 @@ function renderShopList(){
   const wrap=document.getElementById('shopListWrap');if(!wrap)return;
   const edit=Object.keys(SHOP_CATS).map(catKey=>{
     const meta=SHOP_CATS[catKey];
-    const entries=shopData.map((it,i)=>({it,i})).filter(x=>(x.it.cat||'supermarket')===catKey);
+    const entries=shopData.map((it,i)=>({it,i})).filter(x=>shopCat(x.it)===catKey);
     const isOpen=listSectionOpen.shop[catKey]===true;
     const done=entries.filter(x=>x.it.checked).length;
     const itemsHTML=entries.length?entries.map(({it,i})=>shopItemEditHTML(it,i)).join(''):'<div class="empty compact">此清單目前沒有項目。</div>';
@@ -4651,7 +4656,7 @@ function toggleSpotDetails(key){
 /* =====================================================================
    v56：訂位連結、營業時間、照片縮圖＋大圖檢視、交通新增／刪除／圖片、修正導航視窗、新插圖
    ===================================================================== */
-const ART={lying:'images/fox-rest.webp',suitcase:'images/fox-point.webp',photo:'images/fox-upload.webp',heart:'images/mood-moved.webp',rain:'images/mood-disappointed.webp',search:'images/fox-fact.webp',car:'images/fox-complete.webp',sleep:'images/fox-rest.webp'};
+const ART={lying:'images/fox-rest.webp',suitcase:'images/fox-point.webp',photo:'images/fox-upload.webp',heart:'images/mood-moved.webp',rain:'images/wx-rain.webp',search:'images/fox-fact.webp',car:'images/fox-complete.webp',sleep:'images/fox-rest.webp'};
 function emptyArtHTML(text,art){return `<div class="empty-art"><img src="${art||ART.lying}" alt="" loading="lazy"><p>${text}</p></div>`;}
 
 /* ---------- 網址整理 ---------- */
@@ -5146,18 +5151,19 @@ function userRender(){const go=()=>{if(document.getElementById('formModal'))retu
 var reviewStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_reviews'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
 function persistReviews(){safeSetItem('norway_reviews',reviewStore);}
 /* v94：小雪雀心情（圖片 icon）；舊版的 great/good/ok/tired 自動對應 */
+/* nw10：[代碼, 心情, 手寫標題, 小字, 顏色] */
 const REVIEW_MOODS=[
-  ['happy','開心','今天真開心'],
-  ['surprised','驚喜','撿到意外的風景'],
-  ['relaxed','放鬆','慢慢走也很好'],
-  ['moved','感動','想把這一刻留下'],
-  ['tired','疲累','電量剩一格'],
-  ['cold','冷冷的','風好大，但很值得'],
-  ['disappointed','小失落','天氣不給力，下次再來'],
-  ['farewell','捨不得','還不想說再見']];
-/* hk26：拿掉「低落」「不順心」，改成「有點可惜」；更早期的心情代碼自動對應 */
-const OLD_MOOD_MAP={great:'happy',good:'relaxed',ok:'relaxed',sad:'disappointed'};
-function moodInfo(m){m=OLD_MOOD_MAP[m]||m;const x=REVIEW_MOODS.find(z=>z[0]===m);return x?{key:x[0],label:x[1],sub:x[2],img:`images/mood-${x[0]}.webp`}:null;}
+  ['happy','開心','尾巴搖不停','今天真開心','#E07A1F'],
+  ['surprised','驚喜','耳朵豎起來','撿到意外的風景','#0088B0'],
+  ['relaxed','放鬆','慢慢晃就好','慢慢走也很好','#03968C'],
+  ['moved','感動','心頭暖呼呼','想把這一刻留下','#D25E86'],
+  ['satisfied','滿足','肚子圓滾滾','吃飽喝足，剛剛好','#B5651D'],
+  ['excited','期待','明天快點來','明天也好想快點出發','#5A72C0'],
+  ['cozy','療癒','被風景抱抱','被風景摸摸頭','#8A6FC4'],
+  ['treasured','珍藏','收進口袋裡','收進心裡的那一頁','#34448E']];
+/* nw9：心情換成八種正向心情；舊的心情代碼自動對應到最接近的新心情 */
+const OLD_MOOD_MAP={great:'happy',good:'relaxed',ok:'relaxed',sad:'relaxed',tired:'cozy',cold:'satisfied',disappointed:'relaxed',farewell:'treasured'};
+function moodInfo(m){m=OLD_MOOD_MAP[m]||m;const x=REVIEW_MOODS.find(z=>z[0]===m);return x?{key:x[0],label:x[1],title:x[2],sub:x[3],color:x[4],img:`images/mood-${x[0]}.webp`}:null;}
 /* v95：心情可複選，存成 "excited,touched"（舊的單一值也相容） */
 function moodList(m){const seen=new Set();return String(m||'').split(',').map(x=>OLD_MOOD_MAP[x.trim()]||x.trim()).filter(x=>x&&!seen.has(x)&&seen.add(x)&&REVIEW_MOODS.some(z=>z[0]===x));}
 function myReviewName(){const w=todoWho();return w||'這支手機';}
@@ -5165,14 +5171,14 @@ function myEmail(){try{return (familyAuthSession&&familyAuthSession.email)||(rea
 function dayReviewHTML(i){
   const day=reviewStore[i]||{},me=accountKey();
   const entries=Object.entries(day).filter(([,r])=>r&&(r.text||r.img||r.mood)).sort((a,b)=>(a[0]===me?-1:b[0]===me?1:String(a[1].at||'').localeCompare(String(b[1].at||''))));
-  const card=([k,r])=>{const ms=moodList(r.mood).map(moodInfo);const mi=ms[0];return `<div class="rv-item${k===me?' mine':''}"><div class="rv-head">${mi?`<img class="rv-deer" src="${mi.img}" alt="${escAttr(mi.label)}" width="56" height="56">`:`<span class="rv-av">${escHtml(String(r.name||'?').slice(0,1).toUpperCase())}</span>`}<div class="rv-who"><b>${escHtml(r.name||'家人')}${k===me?'<em>（我）</em>':''}</b></div></div>${ms.length?`<div class="rv-moods">${ms.map((x,n)=>`<span class="rv-mood">${n?`<img src="${x.img}" alt="" width="26" height="26">`:''}${escHtml(x.label)}</span>`).join('')}</div>`:''}${r.text?`<p>${brText(r.text)}</p>`:''}${r.img?`<img class="rv-img" src="${escAttr(r.img)}" data-src="${escAttr(r.img)}" alt="" loading="lazy" onclick="openAttachModal(this.dataset.src)">`:''}${k===me?`<div class="rv-acts"><button type="button" onclick="editMyReview(${i})">修改</button><button type="button" class="rv-del" onclick="deleteMyReview(${i})">刪除</button></div>`:''}</div>`;};
+  const card=([k,r])=>{const ms=moodList(r.mood).map(moodInfo);const mi=ms[0];return `<div class="rv-item${k===me?' mine':''}"><div class="rv-head">${mi?`<img class="rv-deer" src="${mi.img}" alt="${escAttr(mi.label)}" width="56" height="56">`:`<span class="rv-av">${escHtml(String(r.name||'?').slice(0,1).toUpperCase())}</span>`}<div class="rv-who"><b>${escHtml(r.name||'家人')}${k===me?'<em>（我）</em>':''}</b></div></div>${ms.length?`<div class="rv-moods">${ms.map((x,n)=>`<span class="rv-mood" style="--mc:${x.color}" title="${escAttr(x.label)}">${n?`<img src="${x.img}" alt="" width="26" height="26">`:''}<b>${escHtml(x.title)}</b><small>${escHtml(x.label)}</small></span>`).join('')}</div>`:''}${r.text?`<p>${brText(r.text)}</p>`:''}${r.img?`<img class="rv-img" src="${escAttr(r.img)}" data-src="${escAttr(r.img)}" alt="" loading="lazy" onclick="openAttachModal(this.dataset.src)">`:''}${k===me?`<div class="rv-acts"><button type="button" onclick="editMyReview(${i})">修改</button><button type="button" class="rv-del" onclick="deleteMyReview(${i})">刪除</button></div>`:''}</div>`;};
   const mine=day[me]&&(day[me].text||day[me].img||day[me].mood);
   const email=myEmail();
   return `<section class="day-review"><h3><img src="images/fox-upload.webp" alt="" width="40" height="40">今日回顧</h3><p class="rv-sub">今天過得怎麼樣呀？選幾個呆維代表你的心情，再說說今天最喜歡的瞬間～全家都看得到喔</p>${entries.map(card).join('')||'<div class="rv-empty">還沒有人寫喔～<br>睡前來跟呆維說說今天吧！</div>'}${mine?'':`<button type="button" class="rv-add" onclick="editMyReview(${i})">＋ 寫我的回顧</button>`}${CLOUD_CONFIGURED?'':'<!--'}<p class="rv-acct">${email?`目前用 <b>${escHtml(email)}</b> 寫`:'目前沒有登入'}・<button type="button" class="rv-switch" onclick="logoutFamily()">不是你？換帳號</button></p>${CLOUD_CONFIGURED?'':'-->'}</section>`;
 }
 function moodPickerHTML(cur){
   const sel=moodList(cur);
-  return `<input type="hidden" data-f="mood" value="${escAttr(sel.join(','))}"><div class="mood-grid" role="group">${REVIEW_MOODS.map(([k,l,sub])=>`<button type="button" class="mood-opt${sel.includes(k)?' on':''}" data-mood="${k}" role="checkbox" aria-checked="${sel.includes(k)}"><i class="mood-check" aria-hidden="true">✓</i><img src="images/mood-${k}.webp" alt="" width="64" height="64"><b>${escHtml(l)}</b><small>${escHtml(sub)}</small></button>`).join('')}</div>`;
+  return `<input type="hidden" data-f="mood" value="${escAttr(sel.join(','))}"><div class="mood-grid" role="group">${REVIEW_MOODS.map(([k,l,t,sub,c])=>`<button type="button" class="mood-opt${sel.includes(k)?' on':''}" data-mood="${k}" role="checkbox" aria-checked="${sel.includes(k)}" aria-label="${escAttr(l+'：'+t)}" style="--mc:${c}"><i class="mood-check" aria-hidden="true">✓</i><img src="images/mood-${k}.webp" alt="" width="64" height="64"><b class="mood-title">${escHtml(t)}</b><small class="mood-word">${escHtml(l)}</small><small>${escHtml(sub)}</small></button>`).join('')}</div>`;
 }
 function initMoodPicker(wrap){
   const hid=wrap.querySelector('[data-f="mood"]');
