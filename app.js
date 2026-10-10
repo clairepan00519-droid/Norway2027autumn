@@ -1946,23 +1946,20 @@ function fuelPricePanel(day){
 }
 
 const BULB_SVG='<svg class="nw-bulb" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 0.6v1.2M3.2 4.2l.9.8M20.8 4.2l-.9.8M1 11h1.2M21.8 11H23" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
-function dayFactsHTML(v){
-  const rows=[];
-  if(v.departure)rows.push(['出門',escHtml(v.departure)]);
-  if(v.move)rows.push(['交通',escHtml(v.move)]);
-  if(v.driving&&v.driving!=='0')rows.push(['純駕車',`${escHtml(v.driving)}<small>估算，不含停留／天候延誤</small>`]);
-  else if(v.driving==='0')rows.push(['純駕車','不開車']);
-  if(!rows.length)return '';
-  return `<div class="nw-facts">${rows.map(([k,x])=>`<div><span>${k}</span><b>${x}</b></div>`).join('')}</div>`;
+function stripFactsHTML(v){
+  const bits=[];
+  if(v.departure)bits.push(`出門 ${escHtml(v.departure)}`);
+  if(v.move)bits.push(escHtml(v.move));
+  if(v.driving&&v.driving!=='0')bits.push(`純駕車 ${escHtml(v.driving)} <small>（估算，不含停留／天候延誤）</small>`);
+  return bits.length?`<span class="nw-strip-facts">${bits.join('・')}</span>`:'';
 }
 function dayNotesHTML(v){
   const has=x=>x&&String(x).trim()&&String(x).trim()!=='無';
-  const box=(cls,ic,label,text,chip)=>`<div class="nw-note ${cls}"><div class="nw-note-h"><span class="nw-note-ic">${ic}</span><b>${label}</b>${chip||''}</div><p>${brText(text)}</p></div>`;
-  let h='';
-  if(has(v.notes))h+=box('n-notes','📝','執行備註',v.notes);
-  if(has(v.rain))h+=box('n-rain','☔','雨天／天候備案',v.rain);
-  if(has(v.aurora))h+=box('n-aurora','✦','可選極光',v.aurora,'<em class="nw-chip">可選・不保證看到</em>');
-  return h?`<div class="nw-notes">${h}</div>`:'';
+  const li=[];
+  if(has(v.notes))li.push(`<li><b>備註</b>${brText(v.notes)}</li>`);
+  if(has(v.rain))li.push(`<li class="rain"><b>雨天備案</b>${brText(v.rain)}</li>`);
+  if(has(v.aurora))li.push(`<li class="aurora"><b>可選極光</b>${brText(v.aurora)}<em>不保證看到</em></li>`);
+  return li.length?`<ul class="nw-notes2">${li.join('')}</ul>`:'';
 }
 function dayChoiceHTML(v){
   if(!v.hasAlt)return '';
@@ -2022,19 +2019,17 @@ function renderDayContent(){
   const swapNote=v.swapped?`<div class="nw-swap-note${v.swapWarn?' warn':''}">⇄ 這天換成原本 D${days[v.ci].dayNum} 的行程。${v.swapWarn?'跨住宿區或碰到交通日，請自己檢查住宿、租車、航班與船票日期。':''}</div>`:'';
 
   dayContent.innerHTML = `${todayRemindHTML()}
-    <div class="day-card-head nw-head">
-      <div class="nw-head-art"><img src="${escAttr(v.img)}" alt="D${d.dayNum} ${escAttr(v.title)}" width="360" height="360" decoding="async"></div>
+    <div class="day-card-head">
       <div class="day-eyebrow"><span>DAY ${pad}</span><i></i><span>${d.date}（${d.weekday}）${v.twTime?'・台灣時間':''}</span></div>
-      <h2 class="nw-title">${escHtml(v.title)}</h2>
-      <div class="nw-en"><i></i><span>${escHtml(v.enRegion)}</span><i></i></div>
-      <div class="nw-tip">${BULB_SVG}<span>${escHtml(v.dayDesc)}</span></div>
+      <div class="region">${escHtml(v.title)}</div>
+      <h2>${escHtml(v.dayDesc)}</h2>
+      <div class="weather-strip"><div class="ico img-ico"><img src="${escAttr(v.img)}" alt="" loading="lazy"></div><div class="txt"><b>${escHtml(v.enRegion)}</b>${stripFactsHTML(v)}</div></div>
       ${dayChoiceHTML(v)}
       ${swapNote}
-      ${dayFactsHTML(v)}
       ${dayNotesHTML(v)}
       <div class="edit-only nw-head-acts"><button type="button" onclick="editDayInfo(${activeDay})">✎ 修改出門與提醒</button><button type="button" onclick="openDaySwapModal(${activeDay})">⇄ 和另一天調換</button><button type="button" onclick="restoreDayInfo(${activeDay})">↺ 還原</button></div>
+      ${stayQuickHTML}
     </div>
-    ${stayQuickHTML}
     <div id="daySnowSlot">${daySnowBannerHTML(activeDay)}</div>
     <div id="day-card-${activeDay}">
       <div class="subtab-content${['weather','transport','routemap','eat'].includes(curSubTab)?'':' active'}" data-type="spots">
@@ -3375,7 +3370,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw1-2026-10-10';
+const APP_VERSION='nw2-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3754,6 +3749,20 @@ function deleteMamaEntry(id){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('mamaModal'))closeMama();});
 
+
+/* ---------- 字體（每支手機各自選，存在這台裝置） ---------- */
+const FONT_OPTIONS=[
+  {k:'a',name:'霞鶩文楷',en:'Caveat',desc:'手寫楷書，和北海道版同一套'},
+  {k:'b',name:'思源宋體＋思源黑體',en:'Cormorant',desc:'粗宋體標題，內文清楚好讀'},
+  {k:'c',name:'粉圓',en:'Caveat',desc:'圓圓的標題，內文用黑體'},
+  {k:'d',name:'芫荽',en:'Cormorant',desc:'細細的手寫字，整站同一套'},
+  {k:'e',name:'仙人掌明體＋文楷',en:'Cormorant',desc:'古典明體標題，內文文楷'},
+  {k:'f',name:'昭源黑體',en:'Cormorant',desc:'俐落的現代黑體'}
+];
+function currentFont(){const v=document.documentElement.getAttribute('data-font');return /^[a-f]$/.test(v||'')?v:'a';}
+function setFont(k){if(k==='a')document.documentElement.removeAttribute('data-font');else document.documentElement.setAttribute('data-font',k);try{localStorage.setItem('norway_font_v1',k);}catch(e){}document.querySelectorAll('.font-opt').forEach(b=>b.classList.toggle('on',b.dataset.font===k));}
+function fontOptionsHTML(){const cur=currentFont();return `<div class="font-opts">${FONT_OPTIONS.map(o=>`<button type="button" class="font-opt${o.k===cur?' on':''}" data-font="${o.k}" onclick="setFont('${o.k}')" style="${fontPreviewStyle(o.k)}"><span><b>${String.fromCharCode(64+'abcdef'.indexOf(o.k)+1)}　狐光漫遊</b><small>${o.name}・${o.desc}</small></span></button>`).join('')}</div>`;}
+function fontPreviewStyle(k){const t={a:"'LXGW WenKai TC'",b:"'Noto Serif TC'",c:"'Huninn'",d:"'Iansui'",e:"'Cactus Classical Serif'",f:"'Chiron Hei HK'"}[k];return `font-family:${t},serif`;}
 /* ---------- 工具面板（備份、版本、安裝成 App） ---------- */
 let deferredInstall=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;});
@@ -3767,6 +3776,7 @@ function openToolsSheet(){
   const wrap=document.createElement('div');wrap.id='toolsSheet';wrap.className='sheet-wrap';
   wrap.innerHTML=`<div class="sheet" role="dialog" aria-label="工具與設定"><div class="sheet-grab"></div><div class="sheet-head"><b>⚙️ 工具與設定</b><button type="button" data-close aria-label="關閉">✕</button></div><div class="sheet-body">
     ${CLOUD_CONFIGURED?`<section><h4>👤 帳號</h4><p class="sheet-note">目前登入：<b>${escHtml(myEmail()||'沒有登入')}</b></p><div class="sheet-row one"><button type="button" data-act="logout">登出／換帳號</button></div></section>`:''}
+    <section><h4>🔤 字體</h4><p class="sheet-note">只改這支手機的顯示。</p>${fontOptionsHTML()}</section>
     <section><h4>📲 安裝成 App</h4>${install}</section>
     <section><h4>離線使用</h4><p class="sheet-note" id="offlineStatusRow">檢查中…</p><div class="sheet-row one"><button type="button" data-act="precache">下載全部圖片到這台裝置</button></div><p class="sheet-note" style="margin-top:6px">網頁本身與你的資料會自動保留；圖片需要下載一次，之後沒網路也能看。</p></section>
     <section><h4>小驚喜</h4><div class="sheet-row one"><button type="button" data-act="surprise">來一則小知識／笑話</button></div></section>

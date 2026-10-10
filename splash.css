@@ -63,14 +63,12 @@
 .splash__title strong{font-weight:400;}
 .splash__title strong{font-family:'ChenYuluoyan','LXGW WenKai TC',serif;font-size:clamp(40px,12vw,60px);}
 
-/* 狐光漫遊：夜色開場（呆維＋極光） */
-.splash{--sp-paper:#202848;--sp-paper-2:#151B36;--sp-ink:#fff;--sp-blue:#FDC98F;--sp-mist:#04B3A9;--sp-mustard:#E7C27D;
-  background:radial-gradient(90% 55% at 50% 30%,rgba(4,179,169,.22),rgba(4,179,169,0) 70%),radial-gradient(circle at 50% 40%,#2A3466 0,#202848 55%,#151B36 100%)!important;}
-.splash__skip{background:rgba(255,255,255,.1)!important;color:#fff!important;border-color:rgba(255,255,255,.3)!important;}
-.splash__sun{background:radial-gradient(circle,rgba(4,179,169,.35),rgba(4,179,169,0) 70%)!important;}
-.splash__bird{filter:drop-shadow(0 14px 26px rgba(0,0,0,.4));}
-.splash__title{font-family:'Noto Serif TC',serif!important;}
-.splash__title strong{font-family:'Noto Serif TC',serif!important;font-weight:900!important;color:#fff!important;letter-spacing:.1em;font-size:clamp(38px,11vw,56px)!important;}
-.splash__title strong::after{background:#E7C27D!important;}
-.splash__title span{font-family:'Noto Sans TC',sans-serif!important;color:#FDC98F!important;font-size:15px!important;}
-.flake{background:#E7C27D!important;box-shadow:0 0 8px rgba(231,194,125,.8)!important;width:5px!important;height:5px!important;}
+/* 狐光漫遊：淺色開場（呆維＋極光色） */
+.splash{background:radial-gradient(70% 45% at 20% 10%,rgba(4,179,169,.16),transparent 70%),radial-gradient(70% 45% at 85% 15%,rgba(209,192,221,.55),transparent 70%),radial-gradient(60% 40% at 80% 95%,rgba(246,218,221,.6),transparent 70%),#F6F5FA!important;}
+.splash__skip{background:#ffffffcc!important;color:#202848!important;border-color:#DEDCEB!important;}
+.splash__sun{background:radial-gradient(circle,rgba(4,179,169,.25),rgba(4,179,169,0) 70%)!important;}
+.splash__title{font-family:var(--title,'LXGW WenKai TC'),serif!important;}
+.splash__title strong{font-family:var(--title,'LXGW WenKai TC'),serif!important;font-weight:var(--title-weight,700)!important;color:#202848!important;letter-spacing:.12em;font-size:clamp(38px,11vw,54px)!important;}
+.splash__title strong::after{background:#C16F25!important;}
+.splash__title span{font-family:var(--hand,'LXGW WenKai TC'),sans-serif!important;color:#5E6386!important;font-size:15px!important;}
+.flake{background:#04B3A9!important;box-shadow:0 0 8px rgba(4,179,169,.6)!important;width:6px!important;height:6px!important;}
