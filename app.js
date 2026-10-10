@@ -2872,7 +2872,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=70').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=71').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3374,7 +3374,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw9-2026-10-10';
+const APP_VERSION='nw10-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5151,18 +5151,19 @@ function userRender(){const go=()=>{if(document.getElementById('formModal'))retu
 var reviewStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_reviews'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
 function persistReviews(){safeSetItem('norway_reviews',reviewStore);}
 /* v94：小雪雀心情（圖片 icon）；舊版的 great/good/ok/tired 自動對應 */
+/* nw10：[代碼, 心情, 手寫標題, 小字, 顏色] */
 const REVIEW_MOODS=[
-  ['happy','開心','今天真開心'],
-  ['surprised','驚喜','撿到意外的風景'],
-  ['relaxed','放鬆','慢慢走也很好'],
-  ['moved','感動','想把這一刻留下'],
-  ['satisfied','滿足','吃飽喝足，剛剛好'],
-  ['excited','期待','明天也好想快點出發'],
-  ['cozy','療癒','被風景摸摸頭'],
-  ['treasured','珍藏','收進心裡的那一頁']];
+  ['happy','開心','尾巴搖不停','今天真開心','#E07A1F'],
+  ['surprised','驚喜','耳朵豎起來','撿到意外的風景','#0088B0'],
+  ['relaxed','放鬆','慢慢晃就好','慢慢走也很好','#03968C'],
+  ['moved','感動','心頭暖呼呼','想把這一刻留下','#D25E86'],
+  ['satisfied','滿足','肚子圓滾滾','吃飽喝足，剛剛好','#B5651D'],
+  ['excited','期待','明天快點來','明天也好想快點出發','#5A72C0'],
+  ['cozy','療癒','被風景抱抱','被風景摸摸頭','#8A6FC4'],
+  ['treasured','珍藏','收進口袋裡','收進心裡的那一頁','#34448E']];
 /* nw9：心情換成八種正向心情；舊的心情代碼自動對應到最接近的新心情 */
 const OLD_MOOD_MAP={great:'happy',good:'relaxed',ok:'relaxed',sad:'relaxed',tired:'cozy',cold:'satisfied',disappointed:'relaxed',farewell:'treasured'};
-function moodInfo(m){m=OLD_MOOD_MAP[m]||m;const x=REVIEW_MOODS.find(z=>z[0]===m);return x?{key:x[0],label:x[1],sub:x[2],img:`images/mood-${x[0]}.webp`}:null;}
+function moodInfo(m){m=OLD_MOOD_MAP[m]||m;const x=REVIEW_MOODS.find(z=>z[0]===m);return x?{key:x[0],label:x[1],title:x[2],sub:x[3],color:x[4],img:`images/mood-${x[0]}.webp`}:null;}
 /* v95：心情可複選，存成 "excited,touched"（舊的單一值也相容） */
 function moodList(m){const seen=new Set();return String(m||'').split(',').map(x=>OLD_MOOD_MAP[x.trim()]||x.trim()).filter(x=>x&&!seen.has(x)&&seen.add(x)&&REVIEW_MOODS.some(z=>z[0]===x));}
 function myReviewName(){const w=todoWho();return w||'這支手機';}
@@ -5170,14 +5171,14 @@ function myEmail(){try{return (familyAuthSession&&familyAuthSession.email)||(rea
 function dayReviewHTML(i){
   const day=reviewStore[i]||{},me=accountKey();
   const entries=Object.entries(day).filter(([,r])=>r&&(r.text||r.img||r.mood)).sort((a,b)=>(a[0]===me?-1:b[0]===me?1:String(a[1].at||'').localeCompare(String(b[1].at||''))));
-  const card=([k,r])=>{const ms=moodList(r.mood).map(moodInfo);const mi=ms[0];return `<div class="rv-item${k===me?' mine':''}"><div class="rv-head">${mi?`<img class="rv-deer" src="${mi.img}" alt="${escAttr(mi.label)}" width="56" height="56">`:`<span class="rv-av">${escHtml(String(r.name||'?').slice(0,1).toUpperCase())}</span>`}<div class="rv-who"><b>${escHtml(r.name||'家人')}${k===me?'<em>（我）</em>':''}</b></div></div>${ms.length?`<div class="rv-moods">${ms.map((x,n)=>`<span class="rv-mood">${n?`<img src="${x.img}" alt="" width="26" height="26">`:''}${escHtml(x.label)}</span>`).join('')}</div>`:''}${r.text?`<p>${brText(r.text)}</p>`:''}${r.img?`<img class="rv-img" src="${escAttr(r.img)}" data-src="${escAttr(r.img)}" alt="" loading="lazy" onclick="openAttachModal(this.dataset.src)">`:''}${k===me?`<div class="rv-acts"><button type="button" onclick="editMyReview(${i})">修改</button><button type="button" class="rv-del" onclick="deleteMyReview(${i})">刪除</button></div>`:''}</div>`;};
+  const card=([k,r])=>{const ms=moodList(r.mood).map(moodInfo);const mi=ms[0];return `<div class="rv-item${k===me?' mine':''}"><div class="rv-head">${mi?`<img class="rv-deer" src="${mi.img}" alt="${escAttr(mi.label)}" width="56" height="56">`:`<span class="rv-av">${escHtml(String(r.name||'?').slice(0,1).toUpperCase())}</span>`}<div class="rv-who"><b>${escHtml(r.name||'家人')}${k===me?'<em>（我）</em>':''}</b></div></div>${ms.length?`<div class="rv-moods">${ms.map((x,n)=>`<span class="rv-mood" style="--mc:${x.color}" title="${escAttr(x.label)}">${n?`<img src="${x.img}" alt="" width="26" height="26">`:''}<b>${escHtml(x.title)}</b><small>${escHtml(x.label)}</small></span>`).join('')}</div>`:''}${r.text?`<p>${brText(r.text)}</p>`:''}${r.img?`<img class="rv-img" src="${escAttr(r.img)}" data-src="${escAttr(r.img)}" alt="" loading="lazy" onclick="openAttachModal(this.dataset.src)">`:''}${k===me?`<div class="rv-acts"><button type="button" onclick="editMyReview(${i})">修改</button><button type="button" class="rv-del" onclick="deleteMyReview(${i})">刪除</button></div>`:''}</div>`;};
   const mine=day[me]&&(day[me].text||day[me].img||day[me].mood);
   const email=myEmail();
   return `<section class="day-review"><h3><img src="images/fox-upload.webp" alt="" width="40" height="40">今日回顧</h3><p class="rv-sub">今天過得怎麼樣呀？選幾個呆維代表你的心情，再說說今天最喜歡的瞬間～全家都看得到喔</p>${entries.map(card).join('')||'<div class="rv-empty">還沒有人寫喔～<br>睡前來跟呆維說說今天吧！</div>'}${mine?'':`<button type="button" class="rv-add" onclick="editMyReview(${i})">＋ 寫我的回顧</button>`}${CLOUD_CONFIGURED?'':'<!--'}<p class="rv-acct">${email?`目前用 <b>${escHtml(email)}</b> 寫`:'目前沒有登入'}・<button type="button" class="rv-switch" onclick="logoutFamily()">不是你？換帳號</button></p>${CLOUD_CONFIGURED?'':'-->'}</section>`;
 }
 function moodPickerHTML(cur){
   const sel=moodList(cur);
-  return `<input type="hidden" data-f="mood" value="${escAttr(sel.join(','))}"><div class="mood-grid" role="group">${REVIEW_MOODS.map(([k,l,sub])=>`<button type="button" class="mood-opt${sel.includes(k)?' on':''}" data-mood="${k}" role="checkbox" aria-checked="${sel.includes(k)}"><i class="mood-check" aria-hidden="true">✓</i><img src="images/mood-${k}.webp" alt="" width="64" height="64"><b>${escHtml(l)}</b><small>${escHtml(sub)}</small></button>`).join('')}</div>`;
+  return `<input type="hidden" data-f="mood" value="${escAttr(sel.join(','))}"><div class="mood-grid" role="group">${REVIEW_MOODS.map(([k,l,t,sub,c])=>`<button type="button" class="mood-opt${sel.includes(k)?' on':''}" data-mood="${k}" role="checkbox" aria-checked="${sel.includes(k)}" aria-label="${escAttr(l+'：'+t)}" style="--mc:${c}"><i class="mood-check" aria-hidden="true">✓</i><img src="images/mood-${k}.webp" alt="" width="64" height="64"><b class="mood-title">${escHtml(t)}</b><small class="mood-word">${escHtml(l)}</small><small>${escHtml(sub)}</small></button>`).join('')}</div>`;
 }
 function initMoodPicker(wrap){
   const hid=wrap.querySelector('[data-f="mood"]');

@@ -2791,7 +2791,7 @@ html body .header-foot{margin:-44px 0 0!important;}
 /* =====================================================================
    nw4：版面改成「滿版插畫標頭＋底線分頁＋簡潔日期列」，標題用手寫字
    ===================================================================== */
-@font-face{font-family:'NW ChenYu';src:url('fonts/title-chenyu.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW ChenYu';src:url('fonts/title-chenyu.woff2?v=nw10') format('woff2');font-display:swap;}
 :root{--title:'NW ChenYu','Iansui',serif;--serif:'NW ChenYu','Iansui',serif;--hand:'Iansui','LXGW WenKai TC','Noto Sans TC',sans-serif;--title-weight:400;}
 html[data-tfont="wenkai"]{--title:'LXGW WenKai TC','Iansui',serif;--serif:'LXGW WenKai TC','Iansui',serif;}
 html[data-tfont="iansui"]{--title:'Iansui',serif;--serif:'Iansui',serif;}
@@ -2930,3 +2930,15 @@ html body .spots-seg button.on{background:linear-gradient(135deg,#E5F6F4,#ECEBF7
 
 /* 大字模式：統一放大 1.3 倍（之前好幾條規則互相蓋掉，實際只放大 1.18） */
 html body.large-text .view{zoom:1.3!important;}
+
+/* nw10：心情標題用手寫體，每種心情一個顏色 */
+html body .mood-opt{gap:1px;background:linear-gradient(180deg,color-mix(in srgb,var(--mc,#6880C8) 9%,#fff) 0,#fff 100%)!important;border-color:color-mix(in srgb,var(--mc,#6880C8) 28%,#fff)!important;}
+html body .mood-opt .mood-title{font-family:var(--title)!important;font-weight:var(--title-weight)!important;font-size:21px!important;line-height:1.25;color:var(--mc,#35407E)!important;letter-spacing:.04em;margin-top:2px;-webkit-text-stroke:.35px currentColor;}
+html body .mood-opt .mood-word{display:inline-block;margin:2px 0 1px;padding:0 9px;border-radius:999px;font-size:11.5px!important;font-weight:700;color:#fff!important;background:var(--mc,#6880C8);}
+html body .mood-opt.on{border-color:var(--mc,#5261B1)!important;background:color-mix(in srgb,var(--mc,#6880C8) 14%,#fff)!important;box-shadow:0 4px 14px color-mix(in srgb,var(--mc,#5261B1) 30%,transparent)!important;}
+html body .mood-opt.on .mood-check{background:var(--mc,#5261B1)!important;border-color:var(--mc,#5261B1)!important;}
+html body .rv-moods .rv-mood{gap:5px;padding:3px 11px;background:color-mix(in srgb,var(--mc,#6880C8) 12%,#fff)!important;color:var(--mc,#35407E)!important;border:1px solid color-mix(in srgb,var(--mc,#6880C8) 30%,#fff);}
+html body .rv-moods .rv-mood b{font-family:var(--title)!important;font-weight:var(--title-weight)!important;font-size:17px;letter-spacing:.03em;-webkit-text-stroke:.3px currentColor;}
+html body .rv-moods .rv-mood small{font-size:11px;font-weight:700;opacity:.8;}
+body.large-text .mood-opt .mood-title{font-size:23px!important;}
+html body .day-review h3{font-size:21px!important;color:var(--midnight)!important;}
