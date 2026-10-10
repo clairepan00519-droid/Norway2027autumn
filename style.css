@@ -2796,6 +2796,17 @@ html body .header-foot{margin:-44px 0 0!important;}
 @font-face{font-family:'NW Jason5';src:url('fonts/title-jason5.woff2') format('woff2');font-display:swap;}
 @font-face{font-family:'NW Jason7';src:url('fonts/title-jason7.woff2') format('woff2');font-display:swap;}
 @font-face{font-family:'NW Jason9';src:url('fonts/title-jason9.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Jason1';src:url('fonts/title-jason1.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Jason3';src:url('fonts/title-jason3.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Jason6';src:url('fonts/title-jason6.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Jason8';src:url('fonts/title-jason8.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Jason4';src:url('fonts/title-jason4.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Kose';src:url('fonts/title-kose.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Pearl';src:url('fonts/title-pearl.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Marker';src:url('fonts/title-marker.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Masa';src:url('fonts/title-masa.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Bakudai';src:url('fonts/title-bakudai.woff2') format('woff2');font-display:swap;}
+@font-face{font-family:'NW Cubic';src:url('fonts/title-cubic.woff2') format('woff2');font-display:swap;}
 @font-face{font-family:'NW Naikai';src:url('fonts/title-naikai.woff2') format('woff2');font-display:swap;}
 :root{--title:'NW ChenYu','Iansui',serif;--serif:'NW ChenYu','Iansui',serif;--hand:'Iansui','LXGW WenKai TC','Noto Sans TC',sans-serif;--title-weight:400;}
 html[data-tfont="jason2"]{--title:'NW Jason2','Iansui',serif;--serif:'NW Jason2','Iansui',serif;}
@@ -2805,6 +2816,17 @@ html[data-tfont="jason9"]{--title:'NW Jason9','Iansui',serif;--serif:'NW Jason9'
 html[data-tfont="naikai"]{--title:'NW Naikai','Iansui',serif;--serif:'NW Naikai','Iansui',serif;}
 html[data-tfont="wenkai"]{--title:'LXGW WenKai TC','Iansui',serif;--serif:'LXGW WenKai TC','Iansui',serif;}
 html[data-tfont="iansui"]{--title:'Iansui',serif;--serif:'Iansui',serif;}
+html[data-tfont="jason1"]{--title:'NW Jason1','Iansui',serif;--serif:'NW Jason1','Iansui',serif;}
+html[data-tfont="jason3"]{--title:'NW Jason3','Iansui',serif;--serif:'NW Jason3','Iansui',serif;}
+html[data-tfont="jason6"]{--title:'NW Jason6','Iansui',serif;--serif:'NW Jason6','Iansui',serif;}
+html[data-tfont="jason8"]{--title:'NW Jason8','Iansui',serif;--serif:'NW Jason8','Iansui',serif;}
+html[data-tfont="jason4"]{--title:'NW Jason4','Iansui',serif;--serif:'NW Jason4','Iansui',serif;}
+html[data-tfont="kose"]{--title:'NW Kose','Iansui',serif;--serif:'NW Kose','Iansui',serif;}
+html[data-tfont="pearl"]{--title:'NW Pearl','Iansui',serif;--serif:'NW Pearl','Iansui',serif;}
+html[data-tfont="marker"]{--title:'NW Marker','Iansui',serif;--serif:'NW Marker','Iansui',serif;}
+html[data-tfont="masa"]{--title:'NW Masa','Iansui',serif;--serif:'NW Masa','Iansui',serif;}
+html[data-tfont="bakudai"]{--title:'NW Bakudai','Iansui',serif;--serif:'NW Bakudai','Iansui',serif;}
+html[data-tfont="cubic"]{--title:'NW Cubic','Iansui',serif;--serif:'NW Cubic','Iansui',serif;}
 
 /* ---------- 滿版標頭 ---------- */
 html body .header.nw-hero{position:relative!important;display:block;padding:0!important;margin:0!important;background:#202848!important;background-image:none!important;color:#fff!important;border-radius:0 0 50% 50% / 0 0 34px 34px!important;overflow:hidden!important;min-height:clamp(340px,90vw,440px);box-shadow:0 18px 30px -24px rgba(32,40,72,.75)!important;}
