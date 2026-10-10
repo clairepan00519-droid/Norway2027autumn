@@ -33,9 +33,9 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&family=Huninn&family=Iansui&family=Cactus+Classical+Serif&family=Chiron+Hei+HK:wght@400;700&family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@1,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=nw7">
-<link rel="stylesheet" href="splash.css?v=nw7">
-<link rel="stylesheet" href="daiwei/daiwei-widget.css?v=nw7">
+<link rel="stylesheet" href="style.css?v=nw8">
+<link rel="stylesheet" href="splash.css?v=nw8">
+<link rel="stylesheet" href="daiwei/daiwei-widget.css?v=nw8">
 </head>
 <body class="family-locked">
 <div id="norwaySplash" class="splash" hidden aria-label="狐光漫遊載入中">
@@ -51,7 +51,7 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
     <div class="splash__title"><strong>狐光漫遊</strong><span>在峽灣慢行，等一場北方的光</span></div>
   </div>
 </div>
-<script src="splash.js?v=nw7"></script>
+<script src="splash.js?v=nw8"></script>
 
 <div id="familyGate" class="family-gate" aria-hidden="false">
   <div class="family-gate-card">
@@ -111,7 +111,7 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
       <h1>狐光漫遊</h1>
       <p class="nw-hero-sub">在峽灣慢行，等一場北方的光。</p>
     </div>
-    <button type="button" class="nw-hero-dates" id="headerDates" onclick="setTab('route');setTimeout(()=>document.getElementById('tripDateCard')?.scrollIntoView({behavior:'smooth',block:'center'}),120)" aria-label="旅程日期，點了可以修改出發日"></button>
+    <button type="button" class="nw-hero-dates" id="headerDates" onclick="openToolsSheet();setTimeout(()=>document.getElementById('tripDateCard')?.scrollIntoView({behavior:'smooth',block:'center'}),150)" aria-label="旅程日期，點了可以修改出發日"></button>
     <div class="preview-note">單機預覽：資料只存在這台裝置</div>
     <span id="spotCount" hidden>--</span>
   </div>
@@ -134,11 +134,10 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
       <div class="nw-en"><i></i><span>Bergen · Fjords · Lofoten · Tromsø</span><i></i></div>
     </div>
 
-    <div class="section-card nw-date-card" id="tripDateCard"></div>
 
     <div class="map-wrap" style="margin-top:0; padding-bottom:12px;">
       <div id="norwayRouteMap" class="svg-map-container" style="position:relative;">
-        <img id="handDrawnMapImg" src="images/map.webp" alt="挪威 20 日行程概念插畫：Bergen、峽灣、羅弗敦、Tromsø" loading="lazy" class="route-main-image" onclick="openAttachModal('images/map.webp')">
+        <img id="handDrawnMapImg" src="images/map.webp" alt="狐光漫遊行程總覽插畫：十段住宿與移動，含暫定日期與地點" loading="lazy" class="route-main-image" onclick="openAttachModal('images/map.webp')">
         <div id="mapFallback" style="display:none;">
           <input type="file" id="mapUploader" style="display:none;" accept="image/*" onchange="loadLocalMap(event)">
         </div>
@@ -269,20 +268,6 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
     </details>
 
     <div class="section-card" style="margin-bottom:14px;">
-      <h3>✦ 天氣、極光與我的地圖</h3>
-      <div class="sub">極光是可選活動，不保證看到；這裡沒有接即時極光或雲量資料，請看官方預報。也可以上傳自己截的地圖或船上平面圖，點圖可以放大。</div>
-      <div class="foliage-links">
-        <a href="https://www.yr.no/en/forecast/daily-table/1-305409/Norway/Troms/Troms%C3%B8/Troms%C3%B8" target="_blank" rel="noopener">yr.no・Tromsø 10 天預報</a>
-        <a href="https://www.yr.no/en/forecast/daily-table/1-272752/Norway/Nordland/Moskenes/Reine" target="_blank" rel="noopener">yr.no・Reine 10 天預報</a>
-        <a href="https://www.visittromso.no/northern-lights/faq" target="_blank" rel="noopener">Visit Tromsø・極光常見問題</a>
-        <a href="https://www.visittromso.no/6-reasons-to-visit-tromso-in-autumn" target="_blank" rel="noopener">Visit Tromsø・秋天的 Tromsø</a>
-        <a href="https://www.vegvesen.no/trafikkinformasjon/" target="_blank" rel="noopener">Statens vegvesen・道路狀況</a>
-      </div>
-      <div id="foliageMapGallery" class="foliage-map-gallery"></div>
-      <button class="foliage-upload-btn" onclick="document.getElementById('foliageMapFile').click()">📷 上傳地圖或截圖</button>
-      <input type="file" id="foliageMapFile" accept="image/*" multiple style="display:none" onchange="handleFoliageMapUpload(event)">
-    </div>
-    <div class="section-card" style="margin-bottom:14px;">
       <h3>🌧️ 雨雲與天氣圖</h3>
       <div class="sub">Windy 圖層可以看挪威沿岸的雨、風與雲；需要網路。</div>
       <div class="add-row" style="margin-bottom:10px;">
@@ -296,10 +281,10 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
 
   <!-- Bottom Nav -->
   <div class="bottom-nav" role="tablist">
-    <button class="nav-btn active" onclick="setTab('itinerary')"><svg viewBox="0 0 24 24" width="26" height="26" class="nav-svg" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 19.5l6.2-10 3.6 5.5 2.7-3.7 6.5 8.2z"/><path d="M8.7 9.5l1.6 2.6 1.4-1"/></svg><span class="lb">行程</span></button>
-    <button class="nav-btn" onclick="setTab('route')"><svg viewBox="0 0 24 24" width="26" height="26" class="nav-svg" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5l5.5-2.5 7 2.5L21 4v13.5l-5.5 2.5-7-2.5L3 20z"/><path d="M8.5 4v13.5M15.5 6.5V20"/></svg><span class="lb">環線</span></button>
-    <button class="nav-btn" onclick="setTab('guide')"><svg viewBox="0 0 24 24" width="26" height="26" class="nav-svg" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.8 8.2l-2.2 5.4-5.4 2.2 2.2-5.4z"/></svg><span class="lb">指南</span></button>
-    <button class="nav-btn" onclick="setTab('weather')"><svg viewBox="0 0 24 24" width="26" height="26" class="nav-svg" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18.5h10a4 4 0 0 0 .4-8 5.5 5.5 0 0 0-10.6 1.3A3.4 3.4 0 0 0 7 18.5z"/><path d="M16.5 3.5v1.6M20.6 5.3l-1.1 1.1M22 9.5h-1.6"/></svg><span class="lb">天氣</span></button>
+    <button class="nav-btn active" onclick="setTab('itinerary')"><img class="nav-img" src="images/nav-itinerary.webp" alt="" width="40" height="40" decoding="async"><span class="lb">行程</span></button>
+    <button class="nav-btn" onclick="setTab('route')"><img class="nav-img" src="images/nav-route.webp" alt="" width="40" height="40" decoding="async"><span class="lb">環線</span></button>
+    <button class="nav-btn" onclick="setTab('guide')"><img class="nav-img" src="images/nav-guide.webp" alt="" width="40" height="40" decoding="async"><span class="lb">指南</span></button>
+    <button class="nav-btn" onclick="setTab('weather')"><img class="nav-img" src="images/nav-weather.webp" alt="" width="40" height="40" decoding="async"><span class="lb">天氣</span></button>
   </div>
 </div>
 
@@ -371,10 +356,10 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
 
 <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="restoreBackupFile(event)">
 
-<script src="config.js?v=nw7"></script>
-<script src="daiwei/daiwei-content.js?v=nw7"></script>
-<script src="daiwei/daiwei-widget.js?v=nw7"></script>
-<script src="app.js?v=nw7"></script>
+<script src="config.js?v=nw8"></script>
+<script src="daiwei/daiwei-content.js?v=nw8"></script>
+<script src="daiwei/daiwei-widget.js?v=nw8"></script>
+<script src="app.js?v=nw8"></script>
 
 </body>
 </html>

@@ -2541,7 +2541,9 @@ function persistPack(){ safeSetItem('norway_pack', packData); }
 const defaultShopData = [{name:'挪威棕起司 Brunost',qty:1,checked:false,img:null,cat:'supermarket',location:'超市'},{name:'Freia 牛奶巧克力',qty:1,checked:false,img:null,cat:'snack',location:'超市'},{name:'羊毛襪或毛衣',qty:1,checked:false,img:null,cat:'icecream',location:''},{name:'明信片與冰箱貼',qty:1,checked:false,img:null,cat:'souvenir',location:''}];
 let shopData = normalizeStructuredList('norway_shop', JSON.parse(localStorage.getItem('norway_shop')) || defaultShopData);
 function persistShop(){ safeSetItem('norway_shop', shopData); }
-const SHOP_CATS = {supermarket:{label:'🛒 超市', color:'#3B4A82'}, drugstore:{label:'💊 藥局保養', color:'#6880C8'}, snack:{label:'🍫 零食飲料', color:'#888BC2'}, icecream:{label:'🧶 毛織與戶外', color:'#C16F25'}, souvenir:{label:'🎁 紀念品', color:'#202848'}};
+const SHOP_CATS = {supermarket:{label:'🛒 超市', color:'#3B4A82'}, snack:{label:'🍫 零食飲料', color:'#888BC2'}, icecream:{label:'🧶 毛織與戶外', color:'#C16F25'}, souvenir:{label:'🎁 紀念品', color:'#202848'}};
+/* 已移除的分類（例如藥局保養）裡的舊項目歸到超市，不會消失 */
+const shopCat=it=>SHOP_CATS[it&&it.cat]?it.cat:'supermarket';
 
 const listSectionOpen = { pack:{}, shop:{supermarket:false, souvenir:false} };
 function toggleListSection(type, key){
@@ -2868,7 +2870,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=68').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=69').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3223,7 +3225,7 @@ function editShopItem(i){
   const it=shopData[i];if(!it)return;
   openFormModal({title:'✎ 修改購物項目',fields:[
     {id:'name',label:'名稱',value:it.name},
-    {id:'cat',label:'分類',type:'select',value:it.cat||'supermarket',options:Object.keys(SHOP_CATS).map(k=>({value:k,label:SHOP_CATS[k].label}))},
+    {id:'cat',label:'分類',type:'select',value:shopCat(it),options:Object.keys(SHOP_CATS).map(k=>({value:k,label:SHOP_CATS[k].label}))},
     {id:'location',label:'附註（品牌、規格、想買的店、預算…）',type:'textarea',rows:3,value:it.location||''}],
     onSave:v=>{if(!v.name){alert('請輸入名稱');return false;}it.name=v.name;it.cat=v.cat;it.location=v.location;persistShop();listSectionOpen.shop[v.cat]=true;renderShopList();},
     onDelete:()=>{delShop(i);}});
@@ -3370,7 +3372,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw7-2026-10-10';
+const APP_VERSION='nw8-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3774,6 +3776,7 @@ function openToolsSheet(){
   const wrap=document.createElement('div');wrap.id='toolsSheet';wrap.className='sheet-wrap';
   wrap.innerHTML=`<div class="sheet" role="dialog" aria-label="工具與設定"><div class="sheet-grab"></div><div class="sheet-head"><b>⚙️ 工具與設定</b><button type="button" data-close aria-label="關閉">✕</button></div><div class="sheet-body">
     ${CLOUD_CONFIGURED?`<section><h4>👤 帳號</h4><p class="sheet-note">目前登入：<b>${escHtml(myEmail()||'沒有登入')}</b></p><div class="sheet-row one"><button type="button" data-act="logout">登出／換帳號</button></div></section>`:''}
+    <section><h4>📅 出發日</h4><div id="tripDateCard" class="nw-date-card"></div></section>
     <section><h4>🔤 標題字體</h4><p class="sheet-note">只改這支手機的標題字，內文維持芫荽。</p>${fontOptionsHTML()}</section>
     <section><h4>📲 安裝成 App</h4>${install}</section>
     <section><h4>離線使用</h4><p class="sheet-note" id="offlineStatusRow">檢查中…</p><div class="sheet-row one"><button type="button" data-act="precache">下載全部圖片到這台裝置</button></div><p class="sheet-note" style="margin-top:6px">網頁本身與你的資料會自動保留；圖片需要下載一次，之後沒網路也能看。</p></section>
@@ -3797,7 +3800,7 @@ function openToolsSheet(){
     force:()=>{closeToolsSheet();forceRefreshApp();}
   };
   wrap.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>acts[b.dataset.act]&&acts[b.dataset.act]());
-  renderDeviceStatus();updateOfflineRow();
+  renderDeviceStatus();updateOfflineRow();renderTripDateCard();
 }
 
 /* =====================================================================
@@ -4208,7 +4211,7 @@ function dayEatPanelHTML(i){
 
 /* ---------- 購物清單：一個品項一張卡、多圖左右滑、說明文字在下方 ---------- */
 function shopCardHTML(it,i){
-  const imgs=shopImgs(it),meta=SHOP_CATS[it.cat||'supermarket']||SHOP_CATS.supermarket;
+  const imgs=shopImgs(it),meta=SHOP_CATS[shopCat(it)];
   const many=imgs.length>1;
   const slides=imgs.length?imgs.map(src=>`<div class="shop-car-slide" data-src="${escAttr(src)}" onclick="openAttachModal(this.dataset.src)"><img src="${escAttr(src)}" alt="${escAttr(it.name)}" loading="lazy" draggable="false"></div>`).join(''):`<div class="shop-car-slide ph"><img src="${NAV_IC.shopping}" alt=""></div>`;
   return `<article class="shop-card ${it.checked?'is-done':''}" data-shop="${i}"><div class="shop-car"><div class="shop-car-track">${slides}</div>${many?`<button type="button" class="shop-car-nav prev" onclick="shopCarMove(${i},-1)" aria-label="上一張">‹</button><button type="button" class="shop-car-nav next" onclick="shopCarMove(${i},1)" aria-label="下一張">›</button><div class="shop-car-dots">${imgs.map((_,k)=>`<i class="${k===0?'on':''}"></i>`).join('')}</div><span class="shop-car-count">1 / ${imgs.length}</span>`:''}<span class="shop-cat-tag" style="background:${meta.color}">${escHtml(meta.label.replace(/^\S+\s*/,''))}</span></div><div class="shop-card-body"><label class="shop-card-title"><input type="checkbox" ${it.checked?'checked':''} onchange="toggleShop(${i})"><span>${escHtml(it.name)}</span><em>× ${Number(it.qty)||1}</em></label>${it.location?`<p class="shop-card-note">${escHtml(it.location)}</p>`:''}</div></article>`;
@@ -4231,9 +4234,9 @@ function bindShopCarousels(root){
 function setShopFilter(f){window._shopFilter=f;renderShopList();}
 function shopGalleryHTML(){
   const filter=window._shopFilter||'all';
-  const counts={all:shopData.length};Object.keys(SHOP_CATS).forEach(k=>counts[k]=shopData.filter(x=>(x.cat||'supermarket')===k).length);
+  const counts={all:shopData.length};Object.keys(SHOP_CATS).forEach(k=>counts[k]=shopData.filter(x=>shopCat(x)===k).length);
   const chips=[['all','全部'],...Object.keys(SHOP_CATS).map(k=>[k,SHOP_CATS[k].label.replace(/^\S+\s*/,'')])].filter(([k])=>k==='all'||counts[k]>0).map(([k,l])=>`<button type="button" class="${filter===k?'on':''}" onclick="setShopFilter('${k}')">${escHtml(l)}<b>${counts[k]}</b></button>`).join('');
-  const list=shopData.map((it,i)=>({it,i})).filter(x=>filter==='all'||(x.it.cat||'supermarket')===filter);
+  const list=shopData.map((it,i)=>({it,i})).filter(x=>filter==='all'||shopCat(x.it)===filter);
   const done=list.filter(x=>x.it.checked).length;
   if(!shopData.length)return '<div class="empty-art"><img src="images/nav-shopping.webp" alt="" loading="lazy"><p>購物清單還是空的。<br>切到編輯模式新增項目與照片。</p></div>';
   return `<div class="shop-filter">${chips}</div><div class="shop-progress">已買 ${done} / ${list.length}</div><div class="shop-cards">${list.map(x=>shopCardHTML(x.it,x.i)).join('')}</div>`;
@@ -4247,7 +4250,7 @@ function renderShopList(){
   const wrap=document.getElementById('shopListWrap');if(!wrap)return;
   const edit=Object.keys(SHOP_CATS).map(catKey=>{
     const meta=SHOP_CATS[catKey];
-    const entries=shopData.map((it,i)=>({it,i})).filter(x=>(x.it.cat||'supermarket')===catKey);
+    const entries=shopData.map((it,i)=>({it,i})).filter(x=>shopCat(x.it)===catKey);
     const isOpen=listSectionOpen.shop[catKey]===true;
     const done=entries.filter(x=>x.it.checked).length;
     const itemsHTML=entries.length?entries.map(({it,i})=>shopItemEditHTML(it,i)).join(''):'<div class="empty compact">此清單目前沒有項目。</div>';

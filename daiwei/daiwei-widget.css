@@ -28,3 +28,7 @@ body.large-text .snowbird-bubble small,body.large-text .snowbird-controls button
 @media(max-width:480px){.snowbird-widget{width:72px}.snowbird-bird{width:72px;height:72px}.snowbird-bubble{bottom:78px}}
 /* hk17：一小段（到標點為止）盡量放在同一行 */
 .snowbird-bubble .sb-ph{display:inline-block;max-width:100%;}
+/* nw8：小驚喜改用網站字體（內文芫荽、標題跟著 ⚙️ 選的標題字） */
+.snowbird-widget,.snowbird-widget button,.snowbird-bubble p,.snowbird-controls button{font-family:var(--hand,'Iansui','Noto Sans TC',sans-serif)!important}
+.snowbird-bubble small{font-family:var(--title,'Iansui',serif)!important;font-size:14px;letter-spacing:.06em;color:#6880C8}
+.snowbird-bubble{background:linear-gradient(180deg,#F1FAF9 0,#FFFCF8 70%);border-color:#A8D9D4}

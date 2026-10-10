@@ -1,5 +1,5 @@
 /* 狐光漫遊（挪威）：App Shell、圖片與已瀏覽內容離線快取 */
-const CACHE_VERSION='norway-trip-nw7';
+const CACHE_VERSION='norway-trip-nw8';
 const SHELL_CACHE=`norway-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE=`norway-runtime-${CACHE_VERSION}`;
 /* 圖片快取獨立於版本：更新網站不會清掉已下載的圖片，也不必重新下載 */
