@@ -2969,3 +2969,36 @@ html body .nw-dayhead>.nw-strip-facts{margin:10px 4px 0!important;font-size:13px
 .nrc-copy strong{font-size:18px;}
 .nrc-copy strong{word-break:keep-all;overflow-wrap:break-word;}
 .nrc-copy strong i{margin:0 1px;}
+
+/* nw12：小驚喜卡片＝深靛藍底＋蜜桃色邊框；角落呆維用新版圖包 */
+html body .surprise-card{background:linear-gradient(160deg,#26305A 0,#202848 60%,#1B2240 100%)!important;border:2px solid var(--peach)!important;border-radius:20px!important;box-shadow:0 14px 34px rgba(14,18,44,.45),0 0 0 4px rgba(253,201,143,.12)!important;padding:14px 16px 14px!important;}
+html body .surprise-card p{color:#F6F4FA!important;font-size:15.5px!important;line-height:1.8!important;}
+html body .sc-tag{background:var(--peach)!important;color:#202848!important;font-family:var(--title)!important;font-weight:var(--title-weight)!important;font-size:15px!important;padding:2px 12px!important;letter-spacing:.06em;}
+html body .sc-x{background:rgba(255,255,255,.12)!important;color:#FDEBD5!important;border:1px solid rgba(253,201,143,.45)!important;}
+html body .sc-more{background:var(--peach)!important;color:#202848!important;}
+html body .sc-art{width:84px!important;top:-62px!important;right:56px!important;filter:drop-shadow(0 4px 8px rgba(14,18,44,.4))!important;}
+html body .critter-peek img{filter:drop-shadow(0 3px 6px rgba(14,18,44,.35))!important;}
+
+/* nw12：標頭弧形改小、標題行距收緊 */
+html body .header.nw-hero{border-radius:0 0 22px 22px!important;min-height:clamp(300px,80vw,400px)!important;}
+html body .nw-hero .eyebrow{margin:0 0 2px!important;}
+html body .nw-hero h1{line-height:1.02!important;}
+html body .nw-hero .nw-hero-sub{margin-top:6px!important;}
+/* 可收合的標題卡片（住宿總覽、交通…）縮小 */
+html body .compact-section-summary{padding:9px 12px!important;gap:10px!important;min-height:0!important;}
+html body .compact-section-summary .cs-art{width:46px!important;height:46px!important;flex:none;object-fit:contain;}
+html body .compact-section-summary h3{font-size:17px!important;margin:0!important;line-height:1.3!important;}
+html body .compact-section-summary .sub{font-size:12px!important;line-height:1.45!important;margin-top:1px!important;}
+html body .compact-section-summary em{font-size:11.5px!important;padding:3px 10px!important;}
+html body .view>.compact-section{margin-bottom:10px!important;}
+/* 打包／購物清單：拿掉外面那一層框，只留一個框 */
+html body .checklist-group{border:0!important;box-shadow:none!important;background:transparent!important;overflow:visible!important;border-radius:0!important;}
+html body .checklist-group-head{box-shadow:none!important;}
+html body .checklist-group-body.open{background:#fff;border:1px solid var(--line);border-top:0;border-radius:0 0 16px 16px;margin:-10px 4px 0;padding-top:12px!important;}
+/* 待辦、降雪的標題跟其他卡片標題同一種字 */
+html body .snow-sum span b,html body .todo-sum b{font-family:var(--title)!important;font-weight:var(--title-weight)!important;font-size:19px!important;color:var(--midnight)!important;letter-spacing:.04em;}
+/* nw12：換行整理——避免最後一行只剩一兩個字、日期標籤不拆行 */
+html body p,html body li,html body .sub,html body small,html body .tc-text,html body .surprise-card p{text-wrap:pretty;line-break:strict;}
+html body h1,html body h2,html body h3,html body h4,html body summary small,html body .compact-section-summary .sub,html body .snow-sum small,html body .todo-sum small{text-wrap:balance;}
+html body .transport-day,html body .rt-day,html body .day-chip .d,html body .sc-tag{white-space:nowrap;}
+.surprise-card p .ph{display:inline-block;max-width:100%;}

@@ -1081,7 +1081,7 @@ function refreshAllDates(){
 function updateHeaderDates(){
   const el=document.getElementById('headerDates');if(!el)return;
   const a=isoParts(days[0].iso),b=isoParts(days[days.length-1].iso),p=n=>String(n).padStart(2,'0');
-  el.innerHTML=`<span class="hd-range">${p(a.m)}.${p(a.d)} <i></i> ${p(b.m)}.${p(b.d)}</span><b>${days.length} 日慢旅</b><small>${a.y}・日期暫定，尚未訂票</small>`;
+  el.innerHTML=`<span class="hd-range">${p(a.m)}.${p(a.d)} <i></i> ${p(b.m)}.${p(b.d)}</span><small>${a.y}・日期暫定，尚未訂票</small>`;
 }
 function renderTripDateCard(){
   const el=document.getElementById('tripDateCard');if(!el)return;
@@ -2412,7 +2412,7 @@ function renderSnowPanel(){
         <div><small>接下來12h</small><b>${fmtCm(s.next12)}<i>cm</i></b></div>
       </div>
       ${s.next12>=0.5?`<div class="snow-when">❄ ${s.startIn<=0?'現在或馬上':s.startIn+' 小時後'}開始下雪${s.gust>=50?`，陣風 ${Math.round(s.gust)} km/h`:''}</div>`:''}
-      <div class="snow-road${/滑/.test(roadHint(s))?' icy':''}">${/滑/.test(roadHint(s))?'<img class="wx-img sm" src="images/weather/snowbird-icy-path.webp" alt="路面結冰" width="40" height="40">':''}<span><b>路面</b>${escHtml(roadHint(s))}</span></div>
+      <div class="snow-road${/滑/.test(roadHint(s))?' icy':''}">${/滑/.test(roadHint(s))?'<img class="wx-img sm" src="images/wx-sleet.webp" alt="路面結冰" width="40" height="40">':''}<span><b>路面</b>${escHtml(roadHint(s))}</span></div>
     </div>`;
   }).join('');
   /* 提醒：接下來 12 小時有雪的地點＋行程日預報大雪 */
@@ -2871,7 +2871,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=72').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=73').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3373,7 +3373,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw11-2026-10-10';
+const APP_VERSION='nw12-2026-10-11';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3797,7 +3797,7 @@ function openToolsSheet(){
     diag:()=>{closeToolsSheet();diagnoseCloud();},
     precache:()=>startOfflinePrecache(true),
     logout:()=>{closeToolsSheet();logoutFamily();},
-    surprise:()=>{closeToolsSheet();if(window.snowbird){window.snowbird.resume&&0;window.snowbird.open();}},
+    surprise:()=>{closeToolsSheet();showSurprise();},
     force:()=>{closeToolsSheet();forceRefreshApp();}
   };
   wrap.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>acts[b.dataset.act]&&acts[b.dataset.act]());
@@ -3993,7 +3993,7 @@ function accountKey(){
   return 'a'+hash36(String(email||'guest').toLowerCase());
 }
 /* (v54 已改寫) */
-const SURPRISE_LABEL={tip:'小知識',joke:'笑話',photo:'旅程照片'};
+const SURPRISE_LABEL={tip:'小知識',joke:'笑話',care:'呆維碎碎念',photo:'旅程照片'};
 function closeSurprise(){document.getElementById('surpriseCard')?.remove();}
 /* (v54 已改寫) */
 /* 內容庫管理（指南頁，只在編輯模式出現） */
@@ -4036,7 +4036,9 @@ function critterLayer(){let l=document.getElementById('critterLayer');if(!l){l=d
 function critterBusy(){
   return document.hidden||reducedMotion()||document.body.classList.contains('mama-open')||document.body.classList.contains('family-locked')||!!document.getElementById('formModal')||!!document.getElementById('toolsSheet')||!!document.getElementById('surpriseCard')||!!document.getElementById('spotEditModal')?.classList.contains('active');
 }
-function pickCritter(){let img,n=0;do{img=CRITTER_IMGS[Math.floor(Math.random()*CRITTER_IMGS.length)];n++;}while(img===critter.last&&n<6);critter.last=img;return img;}
+/* nw12：角落探頭用新版小驚喜呆維（整隻、有道具） */
+const PEEK_IMGS=['welcome','guide','surprise','complete','rest','photo','fact','joke'].map(n=>`images/sp-${n}.webp`);
+function pickCritter(){let img,n=0;do{img=PEEK_IMGS[Math.floor(Math.random()*PEEK_IMGS.length)];n++;}while(img===critter.last&&n<6);critter.last=img;return img;}
 function leafBurst(x,y){
   const l=critterLayer();
   for(let i=0;i<5;i++){
@@ -4052,7 +4054,7 @@ function spawnPeek(){
   const l=critterLayer();if(l.querySelector('.critter-peek'))return false;
   const side=Math.random()<.5?'left':'right';
   const el=document.createElement('div');el.className='critter-peek '+side;
-  el.innerHTML=`<img src="${pickCritter()}" alt="" style="width:${44+Math.round(Math.random()*10)}px" draggable="false">`;
+  el.innerHTML=`<img src="${pickCritter()}" alt="" style="width:${62+Math.round(Math.random()*8)}px" draggable="false">`;
   el.addEventListener('click',()=>{const r=el.getBoundingClientRect();leafBurst(r.left+r.width/2,r.top+r.height/2);el.classList.add('hop');setTimeout(()=>el.classList.remove('in'),500);showSurprise();});
   l.appendChild(el);
   requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('in')));
@@ -4062,7 +4064,7 @@ function spawnPeek(){
 }
 /* (v54 已改寫) */   /* 之後約每 4–8 分鐘一次 */
 /* (v54 已改寫) */
-document.addEventListener('DOMContentLoaded',()=>{initSurprises();try{initSnowbird();}catch(e){console.warn(e)}});
+document.addEventListener('DOMContentLoaded',()=>{initSurprises();startCritters();});
 
 /* =====================================================================
    v52：吃逛資料以「吃·北海道／逛·北海道」為本體、可排入某天的食衣住；
@@ -4506,6 +4508,11 @@ function nextSurprise(mode){
   safeSetItem('norway_tips_seen',tipsSeen);
   return pick;
 }
+/* 依標點切成一小段一小段，換行盡量落在逗號、句號之後 */
+function phraseWrapHTML(t){
+  const parts=String(t).match(/[^，、。；：！？!?）」』]+[，、。；：！？!?）」』]*|[，、。；：！？!?）」』]+/g)||[String(t)];
+  return parts.map(x=>`<span class="ph">${escHtml(x)}</span>`).join('');
+}
 function showSurprise(mode){
   const m=(mode==='more')?'more':'first';
   const item=nextSurprise(m);
@@ -4513,7 +4520,7 @@ function showSurprise(mode){
   closeSurprise();
   const card=document.createElement('div');card.id='surpriseCard';card.className='surprise-card';
   const img=item.img?`<img class="sc-img" src="${escAttr(item.img)}" alt="" loading="lazy">`:'';
-  card.innerHTML=`<div class="sc-head"><span class="sc-tag ${item.type}">${SURPRISE_LABEL[item.type]||'小驚喜'}</span><button type="button" class="sc-x" aria-label="關閉">✕</button></div>${(typeof SURPRISE_ART!=='undefined'&&SURPRISE_ART[item.type]&&!item.img)?`<img class="sc-art" src="${SURPRISE_ART[item.type]}" alt="">`:''}${img}${item.text?`<p>${escHtml(item.text)}</p>`:''}<div class="sc-actions"><button type="button" class="sc-more">再來一則</button></div>`;
+  card.innerHTML=`<div class="sc-head"><span class="sc-tag ${item.type}">${SURPRISE_LABEL[item.type]||'小驚喜'}</span><button type="button" class="sc-x" aria-label="關閉">✕</button></div>${(typeof SURPRISE_ART!=='undefined'&&SURPRISE_ART[item.type]&&!item.img)?`<img class="sc-art" src="${SURPRISE_ART[item.type]}" alt="">`:''}${img}${item.text?`<p>${phraseWrapHTML(item.text)}</p>`:''}<div class="sc-actions"><button type="button" class="sc-more">再來一則</button></div>`;
   document.body.appendChild(card);
   card.querySelector('.sc-x').onclick=closeSurprise;
   card.querySelector('.sc-more').onclick=()=>showSurprise('more');
@@ -4855,7 +4862,7 @@ function transportAddBarHTML(dayIdx){
 }
 
 /* ---------- 新插圖用在合適的地方 ---------- */
-const SURPRISE_ART={tip:ART.search,joke:ART.photo,care:ART.heart};
+const SURPRISE_ART={tip:'images/sp-fact.webp',joke:'images/sp-joke.webp',care:'images/sp-rest.webp',photo:'images/sp-photo.webp'};
 (function extendArt(){
   CRITTER_IMGS.push(ART.suitcase,ART.photo,ART.heart,ART.search,ART.car);
 })();
@@ -5136,8 +5143,8 @@ function renderTodoBanner(){
   const host=document.getElementById('view-itinerary');if(!host)return;
   let el=document.getElementById('todoBanner');
   const left=todoData.filter(t=>!t.done);
-  const beforeTrip=osloISO()<days[0].iso;
-  if(!beforeTrip||!left.length){el?.remove();return;}
+  /* nw12：出發前準備只放在指南頁，行程頁不再顯示提示卡 */
+  el?.remove();return;
   const late=left.filter(t=>{const n=todoDaysLeft(t.due);return n!=null&&n<=3;}).length;
   if(!el){el=document.createElement('button');el.type='button';el.id='todoBanner';el.className='todo-banner';el.onclick=goToTodos;host.prepend(el);}
   el.innerHTML=`<span class="tb-ic"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10.5a.5.5 0 0 1-.5-.5V4a.5.5 0 0 1 .5-.5z"/><path d="M14 3.5V8h4M9 12h6M9 15.5h6M9 8.5h2.5"/></svg></span><span class="tb-txt"><b>出發前準備</b><small>還有 ${left.length} 項待辦${late?`・${late} 項快到期`:''}</small></span><svg class="tb-mtn" viewBox="0 0 160 60" aria-hidden="true"><path d="M0 60L38 22l18 16 26-30 30 34 18-14 30 32z" fill="currentColor"/></svg><em>›</em>`;
