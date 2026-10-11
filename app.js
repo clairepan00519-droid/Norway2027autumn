@@ -771,8 +771,8 @@ function S(name, cat, desc, opts={}){
   return Object.assign({name, cat, desc, tags:[], park:null, tip:null, dur:null, note:null, link:null, linkLabel:'查看網頁', img:null, hours:null, docMap:null, customInfo:null, recDishes:null, fullDesc:null}, opts);
 }
 
-/* ============ 狐光漫遊：挪威 20 天每日行程（依 Norway_2027_20days 規劃草案） ============
-   2027/9/24–10/13 為未訂票的占位日期；所有航班、船班、住宿都未預訂。
+/* ============ 狐光漫遊：挪威 20 天每日行程（依「新版 20 日安排」與 titles.csv） ============
+   2027/10/10–10/29 為暫定日期；所有航班、船班、住宿都未預訂。
    車程是規劃估算，不含停留與天候延誤；營業時間、票價、班次都要出發前再確認。 */
 const DAYIMG=i=>`images/day${String(i+1).padStart(2,'0')}.webp`;
 const WEAR_WEST='西部峽灣多雨：防水外套＋刷毛中層，鞋子要防水好走';
@@ -781,128 +781,137 @@ const WEAR_TROMSO='北極圈秋天：防風保暖層、毛帽手套；早晚可�
 const WEAR_FLIGHT='機上帶一件保暖外套，落地就能穿';
 /* 住宿分段（dayIdx 從 0 起算）：同一段只建一張住宿卡，連住的每一天都顯示同一間 */
 const STAY_SEGMENTS=[
-  {id:'stay-bergen-1',from:1,nights:2,area:'Bergen',label:'Bergen',kind:'stay',tip:'步行或市區交通方便，這兩晚還不需要租車。',nav:'Bergen sentrum'},
-  {id:'stay-aurland',from:3,nights:3,area:'Aurland／Flåm',label:'Aurland／Flåm',kind:'stay',tip:'廚房、停車；優先 Aurland 峽灣邊。',nav:'Aurlandsvangen'},
-  {id:'stay-bergen-2',from:6,nights:1,area:'Bergen 機場附近',label:'Bergen 機場附近',kind:'stay',tip:'方便還車與隔天國內航班；確認往機場的方式。',nav:'Bergen Airport Flesland'},
-  {id:'stay-svolvaer-1',from:7,nights:2,area:'Svolvær',label:'Svolvær',kind:'stay',tip:'停車、港區與採買便利。',nav:'Svolvær'},
-  {id:'stay-reine',from:9,nights:3,area:'Reine／Hamnøy',label:'Reine／Hamnøy',kind:'stay',tip:'廚房、停車、戶外天空視野。照片裡的露台不代表可以安全看極光。',nav:'Reine, Lofoten'},
-  {id:'stay-svolvaer-2',from:12,nights:1,area:'Svolvær',label:'Svolvær（登船前緩衝）',kind:'stay',tip:'登船前一晚；先確認隔天寄物與還車。若無法寄物，可改住有寄物服務的旅館。',nav:'Svolvær'},
-  {id:'stay-ship',from:13,nights:1,area:'沿岸郵輪',label:'沿岸郵輪 獨立艙房',kind:'ship',tip:'Svolvær → Tromsø 北行 port-to-port；確認是否含餐。',nav:'Svolvær Hurtigruten terminal'},
-  {id:'stay-tromso',from:14,nights:4,area:'Tromsø／Kvaløya',label:'Tromsø／近市區 Kvaløya',kind:'stay',tip:'廚房、停車；兼顧市區與海岸，不選太偏遠的房源。',nav:'Tromsø'}
+  {id:'stay-tromso',from:1,nights:4,area:'Tromsø',label:'Tromsø',kind:'stay',tip:'市區交通方便、暖氣、廚房；租車期間可停車。D6 登船日另保留房間到晚餐後。',nav:'Tromsø sentrum'},
+  {id:'stay-ship',from:5,nights:1,area:'沿岸船旅',label:'沿岸船旅 艙房',kind:'ship',tip:'Tromsø → Svolvær 南下；10/15 深夜到碼頭，出航日是 10/16。艙房、登船時間與碼頭以訂單為準。',nav:'Tromsø Hurtigruten terminal'},
+  {id:'stay-svolvaer-1',from:6,nights:3,area:'Svolvær',label:'Svolvær',kind:'stay',tip:'靠近碼頭、可晚到入住、停車。',nav:'Svolvær'},
+  {id:'stay-reine',from:9,nights:3,area:'Reine／Hamnøy',label:'Reine／Hamnøy',kind:'stay',tip:'海景、廚房、私人停車、搬行李容易。只有早班機的話，D12 晚改住 Leknes。',nav:'Reine, Lofoten'},
+  {id:'stay-bergen-1',from:12,nights:1,area:'Bergen',label:'Bergen（第 1 晚）',kind:'stay',tip:'機場與隔天取車接駁方便。',nav:'Bergen'},
+  {id:'stay-aurland',from:13,nights:3,area:'Aurland／Flåm',label:'Aurland／Flåm',kind:'stay',tip:'活動交通、停車、採買距離。',nav:'Aurlandsvangen'},
+  {id:'stay-bergen-2',from:16,nights:1,area:'Bergen',label:'Bergen（第 2 晚）',kind:'stay',tip:'還車後步行到 Bryggen 方便；確認隔天往機場的方式。',nav:'Bryggen, Bergen'},
+  {id:'stay-ams',from:17,nights:1,area:'阿姆斯特丹機場周邊',label:'阿姆斯特丹機場周邊',kind:'stay',tip:'接駁方便，保留回程緩衝。',nav:'Amsterdam Airport Schiphol'}
 ];
 function staySegmentOf(i){return STAY_SEGMENTS.find(s=>i>=s.from&&i<s.from+s.nights)||null;}
-const hotelSpot=(seg)=>S(seg.kind==='ship'?'沿岸郵輪艙房（尚未預訂）':`${seg.label} 住宿（尚未預訂）`,'hotel',seg.kind==='ship'?'Svolvær → Tromsø 北行，1 晚跨 2 天。':`Airbnb 為主，連住 ${seg.nights} 晚；房源請自己填入。`,{tags:[seg.kind==='ship'?'船上 1 晚':`連住 ${seg.nights} 晚`,'待確認'],dur:seg.kind==='ship'?'1 晚（船上）':`${seg.nights} 晚`,fullDesc:`選房重點：${seg.tip}\n名稱、地址、Airbnb 連結、入住／退房時間，請在編輯模式填入。`,mapQuery:seg.nav,stayId:seg.id});
+const hotelSpot=(seg)=>S(seg.kind==='ship'?'沿岸船旅艙房（尚未預訂）':`${seg.label} 住宿（尚未預訂）`,'hotel',seg.kind==='ship'?'Tromsø → Svolvær 南下，深夜登船、隔天傍晚抵達。':`連住 ${seg.nights} 晚；房源請自己填入。`,{tags:[seg.kind==='ship'?'船上 1 晚':`連住 ${seg.nights} 晚`,'待確認'],dur:seg.kind==='ship'?'1 晚（船上）':`${seg.nights} 晚`,fullDesc:`選房重點：${seg.tip}\n名稱、地址、訂房連結、入住／退房時間，請在編輯模式填入。`,mapQuery:seg.nav,stayId:seg.id});
+const AURORA_OPT='晚間可選：先吃飯休息，再依晴空與精神決定，不必每天夜駕。參加深夜團後，隔天改彈性休息。';
 const days = [
-{dayNum:"1",region:"台灣 → 阿姆斯特丹",enRegion:"Taipei → Amsterdam",title:"向北方寄出自己",dayDesc:"從台灣啟程，把日常留在雲下",overnight:"機上",departure:"依航班",move:"國際航班",driving:null,notes:"依華航班表決定出發與抵達日。台灣出發日以台灣時間為準。",rain:"",aurora:"",wear:WEAR_FLIGHT,weatherIco:"✈️",twTime:true,spots:[
-  S("台北 → 阿姆斯特丹（華航）","transport","搭華航台北→阿姆斯特丹，不安排地面觀光。",{dur:"依航班",fullDesc:"依華航班表決定出發與抵達日；航班尚未預訂。這天以台灣時間為準。",mapQuery:"Taoyuan International Airport"})
+{dayNum:"1",region:"台灣 → 阿姆斯特丹",enRegion:"Taipei → Amsterdam",title:"把日常留在雲下",dayDesc:"帶著期待，向北方出發。",overnight:"機上",departure:"依航班",move:"國際航班",driving:null,notes:"只移動，不安排地面觀光。台灣出發日以台灣時間為準。",rain:"",aurora:"",wear:WEAR_FLIGHT,weatherIco:"✈️",twTime:true,spots:[
+  S("台北 → 阿姆斯特丹（華航）","transport","搭華航往阿姆斯特丹，只移動。",{dur:"依航班",fullDesc:"航班尚未預訂；出發與抵達時間依華航實際班表。",mapQuery:"Taoyuan International Airport"})
 ],moreSpots:[]},
-{dayNum:"2",region:"阿姆斯特丹 → Bergen",enRegion:"Amsterdam → Bergen",title:"港灣的第一封信",dayDesc:"抵達 Bergen，讓海風慢慢叫醒旅程",overnight:"Bergen｜第1/2晚",departure:"依航班",move:"飛機＋機場交通",driving:null,notes:"抵達當天不取車、不長途開車。",rain:"咖啡館或直接休息",aurora:"",wear:WEAR_WEST,weatherIco:"✈️",spots:[
-  S("阿姆斯特丹 → Bergen BGO","transport","在阿姆斯特丹轉機，飛往 Bergen。",{dur:"依航班",fullDesc:"依實際航班轉機；航段尚未預訂。",mapQuery:"Bergen Airport Flesland"}),
-  S("入住或寄放行李","activity","先入住或寄放行李，晚到就直接吃飯休息。",{fullDesc:"精神好再出門；累了就不加行程。",mapQuery:"Bergen sentrum"}),
-  S("Vågen 港邊輕散步","attraction","精神好才逛港邊、順路買食材。",{dur:"約1小時",fullDesc:"抵達日只走住宿附近，買好隔天早餐的食材就回去休息。",mapQuery:"Vågen, Bergen"})
+{dayNum:"2",region:"阿姆斯特丹 → Tromsø",enRegion:"Amsterdam → Tromsø",title:"初見北方的港",dayDesc:"轉機之後，先讓自己慢下來。",overnight:"Tromsø｜第1/4晚",departure:"依航班",move:"航班＋機場接駁",driving:null,notes:"不取車。接駁入住、採買；早到且精神好才去港邊散步。",rain:"直接入住休息",aurora:"",wear:WEAR_TROMSO,weatherIco:"✈️",spots:[
+  S("阿姆斯特丹 → Tromsø TOS","transport","在阿姆斯特丹轉機飛 Tromsø。",{dur:"依航班",fullDesc:"航段尚未預訂。",mapQuery:"Tromsø Airport"}),
+  S("接駁入住、採買","activity","機場接駁到住宿，順路超市採買。",{mapQuery:"Tromsø sentrum"}),
+  S("港邊散步（早到才去）","attraction","早到且精神好才在港邊走一走。",{dur:"約1小時",mapQuery:"Tromsø havn"})
 ],moreSpots:[]},
-{dayNum:"3",region:"Bergen 木屋港區與纜車",enRegion:"Bryggen · Fløibanen",title:"木屋與山上的風",dayDesc:"穿過 Bryggen，再從高處看看這座城",overnight:"Bergen｜第2/2晚",departure:"11:00",move:"步行＋市區交通",driving:"0",notes:"纜車視雲量與風況調整，不排長步道。",rain:"博物館、咖啡館；核對當日營業",aurora:"",wear:WEAR_WEST,weatherIco:"🏘️",spots:[
-  S("Bryggen 木屋區與港口","attraction","11:00–13:00 慢慢走木屋巷弄與港邊。",{dur:"約2小時",fullDesc:"Bryggen 是漢薩同盟時期留下的港邊木造建築群，1979 年列入世界遺產，目前約有 62 棟建築；歷經多次火災後，都依舊有的樣式與工法重建。窄巷之間可以慢慢逛。",mapQuery:"Bryggen, Bergen",link:"https://riksantikvaren.no/en/world-heritage/bryggen-in-bergen/",linkLabel:"世界遺產介紹"}),
-  S("Fløibanen 纜車與山頂短步行","activity","14:00–16:30 天氣好才搭，在山頂短步行。",{dur:"約2.5小時",fullDesc:"雲太低或風太大就改天或取消；山頂只走短程，不排長步道。",mapQuery:"Fløibanen, Bergen"}),
-  S("午餐","food","13:00–14:00 在港區或市中心午餐。",{dur:"約1小時",fullDesc:"店家與營業時間請當天確認。"})
+{dayNum:"3",region:"Tromsø · Fjellheisen",enRegion:"Tromsø · Fjellheisen",title:"在城市上方看海",dayDesc:"晴天登高，雨天把故事留給博物館。",overnight:"Tromsø｜第2/4晚",departure:"11:00",move:"步行＋市區交通",driving:"0",notes:"北部以 16:00–16:30 回住宿為目標。纜車看雲量與風況決定，取消的話 D5 可整天改搭纜車。",rain:"Polaria 或極地博物館選一；核對當日營業",aurora:AURORA_OPT,wear:WEAR_TROMSO,weatherIco:"🚡",spots:[
+  S("Storgata、港區與木造教堂","attraction","11:00 從 Storgata 慢慢走到港區與木造教堂。",{dur:"約2小時",mapQuery:"Storgata, Tromsø"}),
+  S("午餐","food","在市中心或港區午餐。",{dur:"約1小時",fullDesc:"店家與營業時間請當天確認。",mapQuery:"Tromsø sentrum"}),
+  S("Fjellheisen 纜車（晴天）","activity","晴天下午搭纜車上山看城市與海。",{dur:"約1.5小時",fullDesc:"上方 Storsteinen 站海拔 421 公尺，上山大約 4 分鐘。雲太低或風太大就不搭。",mapQuery:"Fjellheisen, Tromsø",link:"https://fjellheisen.no/en/",linkLabel:"纜車官網"}),
+  S("北極大教堂（外觀，順路短停）","attraction","順路看外觀就好。",{dur:"約20分鐘",mapQuery:"Ishavskatedralen, Tromsø"})
 ],moreSpots:[]},
-{dayNum:"4",region:"Bergen → Voss → Aurland",enRegion:"Bergen → Voss → Aurland",title:"住進峽灣的懷裡",dayDesc:"經 Voss 前往 Aurland，把步調交給山水",overnight:"Aurland／Flåm｜第1/3晚",departure:"10:30–11:00",move:"自駕",driving:"約3–3.5小時",notes:"含取車、午餐、停留抓 5–6 小時；優先主幹道路。",rain:"取消沿途散步，直接入住",aurora:"",wear:WEAR_WEST,weatherIco:"🚗",spots:[
-  S("退房、取車，離開 Bergen","transport","租車①：Bergen 取車。",{fullDesc:"取車點（機場或市區）依票價與營業時間決定，尚未預訂。",mapQuery:"Bergen"}),
-  S("Voss 午餐與簡單散步","attraction","途中在 Voss 午餐、走一走。",{dur:"約1–1.5小時",mapQuery:"Voss, Norway"}),
-  S("Aurland 入住、買食材","activity","下午到 Aurland，入住後在住宿附近看峽灣、煮飯。",{mapQuery:"Aurlandsvangen"})
+{dayNum:"4",region:"Kvaløya · Sommarøy",enRegion:"Tromsø → Kvaløya → Sommarøy",title:"海風把島嶼吹亮",dayDesc:"沿著海岸走，把停留交給喜歡的風景。",overnight:"Tromsø｜第3/4晚",departure:"10:30",move:"取車＋自駕",driving:"約2.5–3小時",notes:"10:30 取車（租車①）。只在合法停車區短停，約 14:30 返程；取車延誤就減少停點。",rain:"大風、結冰或視野差就改市區活動",aurora:AURORA_OPT,wear:WEAR_TROMSO,weatherIco:"🌊",spots:[
+  S("Tromsø 取車（租車①）","transport","10:30 取車。",{fullDesc:"取車點與時間依租車訂單；尚未預訂。",mapQuery:"Tromsø"}),
+  S("沿 Kvaløya 前往 Sommarøy","transport","途中只在合法停車區短停。",{dur:"往返約2.5–3小時（估算）",mapQuery:"Sommarøy"}),
+  S("Sommarøy 午餐與海灘","attraction","午餐、海灘短散步，約 14:30 返程。",{dur:"約2小時",mapQuery:"Sommarøy"})
 ],moreSpots:[]},
-{dayNum:"5",region:"Nærøyfjord 峽灣遊船",enRegion:"Flåm → Nærøyfjord → Gudvangen",title:"山海之間，一葉船",dayDesc:"航入 Nærøyfjord，聽峽灣安靜地說話",overnight:"Aurland／Flåm｜第2/3晚",departure:"10:30–11:00",move:"短程自駕＋遊船＋接駁",driving:"約0.5小時，不含船",notes:"船＋接駁整體約 3.5 小時；船班未確認，車不帶上船。",rain:"一般下雨仍可搭有室內艙的船；停航則和 D6 互換",aurora:"",wear:WEAR_WEST,weatherIco:"⛴️",spots:[
-  S("Nærøyfjord 峽灣遊船（Flåm → Gudvangen）","activity","選接近中午的可售班次，經 Aurlandsfjord、Nærøyfjord。",{dur:"船＋接駁約3.5小時",fullDesc:"Nærøyfjord 屬於 2005 年列入世界遺產的西挪威峽灣。Flåm 往 Gudvangen 的船單程約 2 小時，船是全電動的；到 Gudvangen 再搭接駁巴士回 Flåm。船班還沒確認。",mapQuery:"Flåm",link:"https://www.norwaysbest.com/en/flam/things-to-do/fjord-cruise-naeroyfjord",linkLabel:"峽灣船官方頁"}),
-  S("接駁巴士回 Flåm，取車回住宿","transport","Gudvangen 搭接駁巴士回 Flåm，再開回 Aurland。",{fullDesc:"船＋巴士的循環行程約 3.5 小時，下午末段自由休息。",mapQuery:"Flåm",link:"https://www.norwaysbest.com/en/flam/things-to-do/shuttle-bus-flam-gudvangen",linkLabel:"接駁巴士官方頁"})
+{dayNum:"5",region:"Ersfjordbotn",enRegion:"Tromsø → Ersfjordbotn",title:"一杯咖啡，一座峽灣",dayDesc:"在山與海之間，留一個安靜的下午。",overnight:"Tromsø｜第4/4晚",departure:"11:00",move:"自駕",driving:"約1–1.5小時",notes:"下午回城。D3 纜車沒搭成，今天可以整天改搭纜車，但不再疊加遠程海岸。",rain:"室內咖啡、採買、休息",aurora:AURORA_OPT,wear:WEAR_TROMSO,weatherIco:"☕",spots:[
+  S("Ersfjordbotn 峽灣","attraction","11:00 出發，在峽灣邊散步看山。",{dur:"約2小時",mapQuery:"Ersfjordbotn"}),
+  S("Bryggejentene（有營業再選）","food","峽灣邊的咖啡小屋，有營業才去。",{fullDesc:"營業時間請當天確認。",mapQuery:"Bryggejentene, Ersfjordbotn"}),
+  S("下午回城","activity","下午回 Tromsø 休息。",{mapQuery:"Tromsø"})
 ],moreSpots:[]},
-{dayNum:"6",region:"Flåmsbana 與 Stegastein",enRegion:"Flåmsbana · Myrdal · Stegastein",title:"搭火車去雲的深處",dayDesc:"沿 Flåmsbana 看山谷，再探望高處的峽灣",overnight:"Aurland／Flåm｜第3/3晚",departure:"10:30–11:00",move:"自駕＋火車",driving:"約1–1.5小時，含觀景台往返",notes:"鐵道優先；觀景台可以移到 D5。只走 Aurland 到 Stegastein，不穿越季節性山路。",rain:"保留鐵道；低雲或結冰就取消觀景台",aurora:"",wear:WEAR_WEST,weatherIco:"🚆",spots:[
-  S("Flåmsbana 景觀鐵道（往返 Myrdal）","activity","Flåm 出發往返 Myrdal，約 2 小時，依實際班次。",{dur:"往返約2小時",fullDesc:"Flåmsbana 全長約 20 公里，從 Flåm 爬升約 863 公尺到 Myrdal，最陡的坡度是 55‰，單程約 1 小時，1940 年通車。",mapQuery:"Flåm stasjon",link:"https://www.norwaysbest.com/en/flam/flam-railway-technical-information",linkLabel:"鐵道技術資料"}),
-  S("Stegastein 觀景台","attraction","14:30–16:30 天氣好、道路狀況合適才去。",{dur:"約2小時（含往返）",fullDesc:"只走 Aurlandsvangen 到 Stegastein 這段：這段進出道路全年開放，但全年開放不等於每天路況都安全；後面的 Aurlandsfjellet 山路是季節性開放，不穿越。低雲或結冰就取消。",mapQuery:"Stegastein viewpoint",link:"https://www.nasjonaleturistveger.no/en/routes/aurlandsfjellet/",linkLabel:"國家觀光路線"}),
-  S("Flåm 午餐或散步","food","搭完火車在 Flåm 午餐或簡單走走。",{mapQuery:"Flåm"})
+{dayNum:"6",region:"Tromsø · 深夜登船",enRegion:"Tromsø → 沿岸船旅",title:"把步調交給潮汐",dayDesc:"白天休息，深夜再走向碼頭。",overnight:"沿岸船旅｜艙房1晚",departure:"自然醒",move:"還車＋計程車＋船",driving:"依還車點",notes:"10/15 深夜到 Tromsø 碼頭，出航日期是 10/16。保留 Tromsø 房間到晚餐後休息；艙房、登船時間與碼頭以訂單為準。夜間船段不保證看到白天峽灣景。",rain:"在住宿休息",aurora:"",wear:WEAR_TROMSO,weatherIco:"🚢",spots:[
+  S("休息、整理行李","activity","白天慢慢休息、整理行李。",{mapQuery:"Tromsø"}),
+  S("還車（租車①）","transport","下午還車。",{mapQuery:"Tromsø"}),
+  S("晚餐後休息","food","晚餐後回房間休息，等深夜出發。",{}),
+  S("深夜計程車到碼頭登船","transport","深夜搭計程車到碼頭，登上南下沿岸船。",{dur:"依船班",fullDesc:"Hurtigruten 或 Havila 依日期與艙房擇一；尚未確認 2027 年精確班次。",mapQuery:"Tromsø Hurtigruten terminal",link:"https://www.hurtigruten.com/en/port-to-port",linkLabel:"Hurtigruten 港到港"})
 ],moreSpots:[]},
-{dayNum:"7",region:"Aurland → Bergen，還車",enRegion:"Aurland → Gudvangen → Voss → Bergen",title:"回望西岸",dayDesc:"沿來時的路返回 Bergen，收好峽灣的片刻",overnight:"Bergen 機場附近｜1晚",departure:"11:00",move:"自駕",driving:"約3–3.5小時",notes:"不額外繞 Hardanger、山路或其他峽灣；D8 航班可能需要早起。",rain:"直接返回、還車休息",aurora:"",wear:WEAR_WEST,weatherIco:"🚗",spots:[
-  S("退房，經 Gudvangen、Voss 回 Bergen","transport","沿來時路回 Bergen，途中只選一處午餐或咖啡停留。",{dur:"約3–3.5小時（估算）",mapQuery:"Bergen"}),
-  S("還車（租車①）、入住機場附近","transport","下午還車，入住機場附近，整理隔天國內航班的行李。",{mapQuery:"Bergen Airport Flesland"})
+{dayNum:"7",region:"沿岸船旅 → Svolvær",enRegion:"沿岸船旅 → Svolvær",title:"沿著群島向南",dayDesc:"睡醒看海，傍晚在漁港靠岸。",overnight:"Svolvær｜第1/3晚",departure:"船上自然醒",move:"沿岸船旅",driving:null,notes:"目前骨架約 18:30 抵達 Svolvær，下船直接入住吃飯，不租車西行。",rain:"船內看景、休息",aurora:"",wear:WEAR_LOFOTEN,weatherIco:"🚢",spots:[
+  S("船上看群島、休息","activity","自然醒，在船上看群島與海岸。",{}),
+  S("抵達 Svolvær","transport","約 18:30 抵達（依船班）。",{mapQuery:"Svolvær Hurtigruten terminal"}),
+  S("入住、晚餐","food","下船直接入住、吃飯休息。",{mapQuery:"Svolvær"})
 ],moreSpots:[]},
-{dayNum:"8",region:"飛往羅弗敦 Svolvær",enRegion:"Bergen → Svolvær",title:"飛向群島的光",dayDesc:"抵達 Svolvær，展開羅弗敦的新篇章",overnight:"Svolvær｜第1/2晚",departure:"依航班",move:"國內航班＋自駕",driving:"約10–30分鐘，若抵達 SVJ",notes:"優先 SVJ 抵達。若改飛 Leknes 需重算車程；若改 Evenes，開往 Svolvær 約 2.5–3 小時，必須另排白天抵達與緩衝，不能直接套用本日。",rain:"航班延誤則刪除散步",aurora:"住宿附近可選觀察，累就休息",wear:WEAR_LOFOTEN,weatherIco:"✈️",spots:[
-  S("Bergen → Svolvær SVJ","transport","國內航班；依班表可能經 Bodø 等地轉機。",{dur:"依航班",fullDesc:"航段尚未預訂；優先選抵達 SVJ 的班次。",mapQuery:"Svolvær Airport Helle"}),
-  S("取車（租車②）、採買","transport","Svolvær 取車，順路超市採買。",{mapQuery:"Svolvær"}),
-  S("Svolvær 港口散步","attraction","入住後只逛港口附近。",{dur:"約1小時",mapQuery:"Svolvær havn"})
+{dayNum:"8",region:"Henningsvær",enRegion:"Svolvær → Henningsvær",title:"漁港裡的小日子",dayDesc:"在街角、咖啡與海風之間慢慢逛。",overnight:"Svolvær｜第2/3晚",departure:"11:00",move:"取車＋自駕",driving:"約1–1.5小時",notes:"10/17 是星期日，取車要先確認；不能取的話，今天改逛 Svolvær／Kabelvåg，D9 取車去 Henningsvær，海灘候選刪掉。15:30 返程。",rain:"縮短戶外行程，咖啡館與小店需核對營業",aurora:AURORA_OPT,wear:WEAR_LOFOTEN,weatherIco:"⚓",spots:[
+  S("Svolvær 取車（租車②）","transport","11:00 取車（星期日要先確認）。",{mapQuery:"Svolvær"}),
+  S("Henningsvær 港口街道、午餐咖啡","attraction","逛港口、小店，在村裡午餐、喝咖啡。",{dur:"半天",mapQuery:"Henningsvær"}),
+  S("Henningsvær 足球場（有興趣才去）","attraction","只從公共區域看。",{dur:"約30分鐘",mapQuery:"Henningsvær Stadion"}),
+  S("Rørvikstranda（短停）","attraction","回程短停看海灘，15:30 返程。",{dur:"約20分鐘",mapQuery:"Rørvikstranda"})
 ],moreSpots:[]},
-{dayNum:"9",region:"Henningsvær 漁村慢遊",enRegion:"Svolvær → Henningsvær",title:"海上的小小村落",dayDesc:"在 Henningsvær，慢逛港口與咖啡館",overnight:"Svolvær｜第2/2晚",departure:"11:00",move:"自駕",driving:"往返約1–1.5小時",notes:"不為搶拍照點久候；遇到旅行團先逛小店再回來。",rain:"縮短戶外行程；咖啡館與藝廊需核對營業",aurora:"附近低光害處短時間觀察，非長途追光",wear:WEAR_LOFOTEN,weatherIco:"⚓",spots:[
-  S("Henningsvær 港口、小店與咖啡館","attraction","11:00 出發，逛港口、小店、咖啡館，在村裡午餐。",{dur:"半天",mapQuery:"Henningsvær"}),
-  S("Henningsvær 球場與島嶼景色","attraction","在公共區域散步，看球場與島嶼。",{dur:"約30分鐘",fullDesc:"只從公共區域觀看，不進入私人區域；下午回 Svolvær。",mapQuery:"Henningsvær Stadion"})
-],moreSpots:[]},
-{dayNum:"10",region:"沿 E10 西行，入住 Reine",enRegion:"Svolvær → Leknes → Reine",title:"向群島深處去",dayDesc:"一路穿過海灣與橋梁，午後住進 Reine 的小屋",overnight:"Reine／Hamnøy｜第1/3晚",departure:"11:00",move:"自駕",driving:"約2.5–3小時",notes:"含停留抓 5–6 小時；這天不加海灘大繞路。",rain:"直接走主線到住宿",aurora:"住處附近觀察，優先不開車",wear:WEAR_LOFOTEN,weatherIco:"🌉",spots:[
-  S("沿 E10 往西","transport","退房後往西；途中只選 1–2 處安全停車點看景。",{dur:"約2.5–3小時（估算）",mapQuery:"Leknes"}),
-  S("入住 Reine／Hamnøy 小屋","activity","下午入住，在小屋休息。",{mapQuery:"Reine, Lofoten"}),
-  S("Leknes 午餐、超市補給","food","在 Leknes 一帶午餐，順便補給。",{mapQuery:"Leknes"})
-],moreSpots:[]},
-{dayNum:"11",region:"Hamnøy、Sakrisøy、Reine",enRegion:"Hamnøy · Sakrisøy · Reine",title:"漁屋亮起的地方",dayDesc:"慢逛 Hamnøy、Sakrisøy 與 Reine，在海邊吃飯、散步",overnight:"Reine／Hamnøy｜第2/3晚",departure:"11:00",move:"自駕＋短步行",driving:"合計約0.5–1小時",notes:"不排 Reinebringen 登山；橋上與道路邊不違規停車、不走入私人露台。",rain:"只選一個村落與餐廳，其餘時間休息",aurora:"小屋附近可選觀察",wear:WEAR_LOFOTEN,weatherIco:"🏠",spots:[
-  S("Hamnøy 漁屋與海灣","attraction","在公共觀景位置看漁屋、海灣。",{dur:"約1小時",fullDesc:"橋上與道路邊不違規停車，也不走進私人露台。",mapQuery:"Hamnøy"}),
-  S("Sakrisøy 海邊散步","attraction","Sakrisøy 午餐與海邊散步。",{dur:"約1.5小時",mapQuery:"Sakrisøy"}),
-  S("Reine 港口與村落","attraction","慢遊港口與村落，下午回小屋休息。",{dur:"約1.5小時",mapQuery:"Reine, Lofoten"})
-],moreSpots:[]},
-{dayNum:"12",region:"Ramberg 海灘與 Flakstad",enRegion:"Ramberg · Flakstad",title:"白沙與秋日海風",dayDesc:"看 Ramberg 海灘，走過 Flakstad 海岸",overnight:"Reine／Hamnøy｜第3/3晚",departure:"11:00",move:"自駕",driving:"合計約1.5–2小時",notes:"兩組擇一，不能全部塞進同一天。",rain:"改 Å／Sørvågen 短程散步與咖啡；博物館需查秋季開放",aurora:"小屋附近可選觀察",wear:WEAR_LOFOTEN,weatherIco:"🏖️",
-  alt:{title:"走到群島的句點",dayDesc:"在 Å 與 Sørvågen，慢讀漁村的日常",region:"Å 與 Sørvågen 漁村",enRegion:"Å · Sørvågen",driving:"未估算，出發前用地圖確認",rain:"只選一個村落短程散步與咖啡；博物館需查秋季開放",img:"images/fox-point.webp"},
+{dayNum:"9",region:"Kabelvåg · Vågan",enRegion:"Svolvær → Kabelvåg",title:"今天留一點空白",dayDesc:"小鎮慢逛，晴天也可以換成白沙海岸。",overnight:"Svolvær｜第3/3晚",departure:"11:00",move:"自駕",driving:"約1小時",notes:"預設近程、下午留白。晴天可以整天換成 Haukland＋Uttakleiv，兩條路線不疊加。",rain:"縮短散步，留在住宿休息",aurora:AURORA_OPT,wear:WEAR_LOFOTEN,weatherIco:"⛪",
+  choices:[{k:'A',label:'Kabelvåg＋Vågan（預設）'},{k:'B',label:'晴天：Haukland＋Uttakleiv',region:"Haukland · Uttakleiv",enRegion:"Svolvær → Haukland → Uttakleiv",driving:"約3小時",rain:"晴天才換這條；下雨就回預設",img:"images/day09-alt.webp"}],
   spots:[
-  S("Ramberg 海灘","attraction","短步行、拍照。",{dur:"約1小時",mapQuery:"Ramberg beach, Flakstad",alt:"A"}),
-  S("Flakstad 教堂周邊與海岸","attraction","午餐後到 Flakstad 教堂周邊與海岸，下午回住宿。",{dur:"約1小時",mapQuery:"Flakstad kirke",alt:"A"}),
-  S("Å 漁村","attraction","整天改逛漁村：Å 散步、咖啡。",{dur:"約2小時",fullDesc:"博物館秋季是否開放，出發前要查。",mapQuery:"Å i Lofoten",alt:"B"}),
-  S("Sørvågen 港邊","attraction","Sørvågen 港邊短程散步，下午回住宿。",{dur:"約1小時",mapQuery:"Sørvågen",alt:"B"})
+  S("Kabelvåg 小鎮慢逛","attraction","小鎮街道與港邊慢慢走。",{dur:"約1.5小時",mapQuery:"Kabelvåg",alt:"A"}),
+  S("Vågan Church","attraction","羅弗敦的大木造教堂，看外觀與周邊。",{dur:"約30分鐘",fullDesc:"開放參觀時間請出發前確認。",mapQuery:"Vågan kirke",alt:"A"}),
+  S("下午留白","activity","回住宿休息或在附近散步。",{alt:"A"}),
+  S("Haukland 海灘","attraction","白沙海灘短散步。",{dur:"約1小時",mapQuery:"Haukland beach",alt:"B"}),
+  S("Uttakleiv 海灘","attraction","短散步；不走完整的連接步道。",{dur:"約1小時",mapQuery:"Uttakleiv beach",alt:"B"})
 ],moreSpots:[]},
-{dayNum:"13",region:"返回 Svolvær，船旅前緩衝",enRegion:"Reine → Svolvær",title:"把群島收進口袋",dayDesc:"返回 Svolvær，留一點時間整理風景",overnight:"Svolvær｜1晚",departure:"11:00",move:"自駕",driving:"直回約2.5–3小時",notes:"繞 Haukland 純駕車可能增加約 0.5–1 小時；避免為了繞路而夜駕。",rain:"直接回 Svolvær，不繞海灘",aurora:"有精神才在附近觀察",wear:WEAR_LOFOTEN,weatherIco:"🚗",spots:[
-  S("沿 E10 返回 Svolvær","transport","退房後直回 Svolvær。",{dur:"約2.5–3小時（估算）",mapQuery:"Svolvær"}),
-  S("Haukland 海灘（晴天且時間夠才去）","attraction","可選；否則直回。",{dur:"約1小時",mapQuery:"Haukland beach"}),
-  S("入住、洗衣、整理行李","activity","確認明天的寄物、還車與登船方式。",{mapQuery:"Svolvær"})
+{dayNum:"10",region:"Leknes → Reine／Hamnøy",enRegion:"Svolvær → Leknes → Reine",title:"沿著 E10，住進山海",dayDesc:"少停幾站，把時間留給抵達後的風景。",overnight:"Reine／Hamnøy｜第1/3晚",departure:"10:30–11:00",move:"自駕",driving:"約2.5–3小時",notes:"最多一兩個短停，不塞 Nusfjord 或全部海灘；15:00–16:00 入住。",rain:"直接走主線到住宿",aurora:AURORA_OPT,wear:WEAR_LOFOTEN,weatherIco:"🌉",spots:[
+  S("退房，沿 E10 往西","transport","10:30–11:00 退房出發。",{dur:"約2.5–3小時（估算）",mapQuery:"Leknes"}),
+  S("Leknes 午餐、採買","food","在 Leknes 午餐、超市補給。",{mapQuery:"Leknes"}),
+  S("Reine／Hamnøy 入住","activity","15:00–16:00 入住，在小屋休息。",{mapQuery:"Reine, Lofoten"})
 ],moreSpots:[]},
-{dayNum:"14",region:"Svolvær 港區與郵輪登船",enRegion:"Svolvær → 北行沿岸郵輪",title:"今晚，住在海上",dayDesc:"告別港口，登上向北航行的船",overnight:"沿岸郵輪｜獨立艙房1晚",departure:"退房約11:00；晚間登船",move:"還車＋步行／計程車＋船",driving:"依還車點",notes:"船班與艙房待確認；晚間登船是作息例外，不是完整 48 小時航程。若寄物無法解決，前一晚可改住有寄物服務的旅館。",rain:"港區室內休息；停航需啟動額外住宿＋替代交通，不保證當日能飛走",aurora:"依風況與精神到甲板觀察",wear:WEAR_LOFOTEN,weatherIco:"🚢",spots:[
-  S("行李寄放或延後退房","activity","退房前確認行李寄放，或預先付費延後退房。",{fullDesc:"不要假設 Airbnb 可以寄物，出發前先問清楚。"}),
-  S("Svolvær 港口與咖啡館","attraction","輕鬆逛港口、咖啡館；不安排另一段出海活動。",{mapQuery:"Svolvær havn"}),
-  S("還車（租車②）","transport","依租車門市營業時間還車，必要時搭計程車到港口。",{fullDesc:"SVJ 機場取車、港區附近還車是否可行要先確認，不同據點可能收費。車不帶上郵輪。",mapQuery:"Svolvær"}),
-  S("北行沿岸郵輪 Svolvær → Tromsø","transport","晚餐後登船，獨立艙房 1 晚。",{dur:"約十幾小時（1 晚跨 2 天）",fullDesc:"Hurtigruten 或 Havila 依日期、艙房與時間擇一，預計晚間登船、隔天下午抵達。尚未確認 2027 年的精確船班；途中不保證進 Trollfjord，也不保證能下船觀光。",mapQuery:"Svolvær Hurtigruten terminal",link:"https://www.hurtigruten.com/en/port-to-port",linkLabel:"Hurtigruten 港到港"})
+{dayNum:"11",region:"Hamnøy · Sakrisøy · Reine",enRegion:"Hamnøy · Sakrisøy · Reine",title:"紅屋、黃屋與一片海",dayDesc:"三個村落，收藏同一片海的不同顏色。",overnight:"Reine／Hamnøy｜第2/3晚",departure:"11:00",move:"自駕＋短步行",driving:"約0.5–1小時",notes:"慢拍照、午餐咖啡，約 16:00 回住宿。橋上與道路邊不違規停車、不走進私人露台。",rain:"只選一個村落與餐廳，其餘時間休息",aurora:AURORA_OPT,wear:WEAR_LOFOTEN,weatherIco:"🏠",spots:[
+  S("Hamnøy 紅屋","attraction","在公共觀景位置看紅色漁屋。",{dur:"約1小時",mapQuery:"Hamnøy"}),
+  S("Sakrisøy 黃屋","attraction","黃色漁屋與海邊散步。",{dur:"約1小時",mapQuery:"Sakrisøy"}),
+  S("Reine 港口","attraction","港口與村落慢慢逛。",{dur:"約1.5小時",mapQuery:"Reine, Lofoten"}),
+  S("Anita’s Sjømat 或 Bringen Kaffebar（有營業再選）","food","午餐或咖啡，有營業才去。",{fullDesc:"營業時間請當天確認。",mapQuery:"Anita's Sjømat, Sakrisøy"})
 ],moreSpots:[]},
-{dayNum:"15",region:"船上沿岸風景，抵達 Tromsø",enRegion:"沿岸郵輪 → Tromsø",title:"醒來仍在風景裡",dayDesc:"看海岸從窗外經過，午後抵達 Tromsø",overnight:"Tromsø／近市區 Kvaløya｜第1/4晚",departure:"船上早餐後自由活動",move:"沿岸郵輪＋市區交通",driving:"可不取車",notes:"D14–D15 是 1 晚跨 2 天，通常十幾小時；請訂獨立艙房並確認餐食。取車可以延到 D16。",rain:"船內看景；若延誤就直接入住",aurora:"住處可選觀察，不排必參加的極光團",wear:WEAR_TROMSO,weatherIco:"🚢",spots:[
-  S("船上看島嶼與海岸","activity","船上早餐後看島嶼、海岸與山景。",{}),
-  S("抵達 Tromsø","transport","預計下午抵達，確切時間依船班。",{mapQuery:"Tromsø Hurtigruten terminal"}),
-  S("入住、買食材","activity","晚餐後休息，不加景點。",{mapQuery:"Tromsø"})
+{dayNum:"12",region:"Nusfjord",enRegion:"Reine → Nusfjord",title:"走進老漁村的午後",dayDesc:"木屋與港灣之間，慢慢走、好好吃。",overnight:"Reine／Hamnøy｜第3/3晚",departure:"11:00",move:"自駕",driving:"約2–2.5小時",notes:"有天光才加 Ramberg 短停。風雨大整天改 Sørvågen＋Å，兩條路線不疊加。只有早班機的話，今晚改住 Leknes。",rain:"改 Sørvågen＋Å（切換到 B）",aurora:AURORA_OPT,wear:WEAR_LOFOTEN,weatherIco:"🏘️",
+  choices:[{k:'A',label:'Nusfjord（主推）'},{k:'B',label:'風雨：Sørvågen＋Å',region:"Sørvågen · Å",enRegion:"Reine → Sørvågen → Å",driving:"近程，出發前用地圖確認",rain:"只選一個村落短程散步與咖啡",img:"images/day12-alt.webp"}],
+  spots:[
+  S("Nusfjord 古漁村","attraction","老漁村慢慢逛、午餐。",{dur:"約2–3小時",fullDesc:"村內部分區域可能收入場費，出發前確認。",mapQuery:"Nusfjord",alt:"A"}),
+  S("Ramberg 海灘（有天光才短停）","attraction","回程有天光才停一下。",{dur:"約20分鐘",mapQuery:"Ramberg beach, Flakstad",alt:"A"}),
+  S("Sørvågen 港邊","attraction","港邊短程散步。",{dur:"約1小時",mapQuery:"Sørvågen",alt:"B"}),
+  S("Å 漁村","attraction","漁村散步、咖啡。",{dur:"約1.5小時",fullDesc:"博物館秋季是否開放，出發前要查。",mapQuery:"Å i Lofoten",alt:"B"})
 ],moreSpots:[]},
-{dayNum:"16",region:"Tromsø 市區與 Fjellheisen",enRegion:"Tromsø · Fjellheisen",title:"城市上方的天空",dayDesc:"漫步 Tromsø，天晴時登高看山海",overnight:"Tromsø／近市區 Kvaløya｜第2/4晚",departure:"11:00",move:"市區交通／取車",driving:"約0.5–1小時",notes:"纜車可以和 D18 互換；極光團只列可選，優先選 D16 或 D17 其中一晚。",rain:"Polaria 或博物館，查營業與票價",aurora:"可選極光團，可能深夜才回；隔天縮短白天行程",wear:WEAR_TROMSO,weatherIco:"🚡",spots:[
-  S("取車（租車③）或市區散步","transport","11:00 取車，或先在市區散步。",{mapQuery:"Tromsø"}),
-  S("Tromsø 港區與市中心","attraction","港區、市中心午餐與散步。",{dur:"約2小時",mapQuery:"Tromsø sentrum"}),
-  S("Fjellheisen 纜車","activity","午後天氣好再搭。",{dur:"約1.5小時",fullDesc:"上方 Storsteinen 站海拔 421 公尺，上山約 4 分鐘。看雲量與風況決定，也可以改到 D18。",mapQuery:"Fjellheisen, Tromsø"}),
-  S("北極大教堂（外觀）","attraction","順路看外觀。",{dur:"約20分鐘",mapQuery:"Ishavskatedralen, Tromsø"})
+{dayNum:"13",region:"Leknes → Bergen",enRegion:"Reine → Leknes → Bergen",title:"把島嶼收進行李",dayDesc:"今天專心移動，抵達後好好休息。",overnight:"Bergen｜第1晚",departure:"約11:00",move:"自駕＋還車＋航班",driving:"約1–1.25小時（到機場）",notes:"Leknes 機場還車（租車②，異地還車要先確認）。想 11:00 離開 Reine，優先找下午班機。",rain:"直接去機場",aurora:"",wear:WEAR_WEST,weatherIco:"✈️",spots:[
+  S("Reine → Leknes 機場，還車（租車②）","transport","退房後開往 Leknes 機場還車。",{dur:"約1–1.25小時（估算）",fullDesc:"Leknes 航班與異地還車要先對齊。",mapQuery:"Leknes Airport"}),
+  S("Leknes → Bergen","transport","國內航班，可能經 Bodø 轉機。",{dur:"依航班",mapQuery:"Bergen Airport Flesland"}),
+  S("抵達 Bergen，吃飯休息","food","入住後吃飯、早點休息。",{mapQuery:"Bergen"})
 ],moreSpots:[]},
-{dayNum:"17",region:"Kvaløya 至 Sommarøy 海岸",enRegion:"Kvaløya → Sommarøy",title:"海風帶路的小島",dayDesc:"沿 Kvaløya 前往 Sommarøy，停在喜歡的海岸",overnight:"Tromsø／近市區 Kvaløya｜第3/4晚",departure:"11:00",move:"自駕",driving:"往返約2.5–3小時",notes:"若 D16 極光團晚回，今天延後出門，改去較近的 Ersfjordbotn；Sommarøy 視 D18 天氣再安排。",rain:"大風、結冰或視野差就改市區活動",aurora:"與 D16 二選一參加極光團，其他晚上不強制",wear:WEAR_TROMSO,weatherIco:"🌊",spots:[
-  S("沿 Kvaløya 前往 Sommarøy","transport","途中最多選兩處安全停車點。",{dur:"往返約2.5–3小時（估算）",mapQuery:"Sommarøy"}),
-  S("Sommarøy 海灘與小島散步","attraction","午餐、海灘與小島散步，天黑前回住宿。",{dur:"約2–3小時",mapQuery:"Sommarøy"})
+{dayNum:"14",region:"Voss → Aurland",enRegion:"Bergen → Voss → Aurland",title:"轉過山路，遇見峽灣",dayDesc:"午餐之後，住進安靜的水岸。",overnight:"Aurland／Flåm｜第1/3晚",departure:"10:30–11:00",move:"取車＋自駕",driving:"約3–3.5小時",notes:"10:30–11:00 取車（租車③）。取車延誤就縮短 Voss，不繞瀑布。西部以 17:00–17:30 回住宿為目標。",rain:"取消沿途散步，直接入住",aurora:"",wear:WEAR_WEST,weatherIco:"🚗",spots:[
+  S("Bergen 取車（租車③）","transport","10:30–11:00 取車。",{mapQuery:"Bergen"}),
+  S("Voss 午餐","food","途中在 Voss 午餐、簡單散步。",{dur:"約1小時",mapQuery:"Voss, Norway"}),
+  S("Aurland 入住、水岸散步採買","activity","入住後在水岸散步、採買。",{mapQuery:"Aurlandsvangen"})
 ],moreSpots:[]},
-{dayNum:"18",region:"Ersfjordbotn 與天氣備用日",enRegion:"Tromsø → Ersfjordbotn",title:"留一天給天空",dayDesc:"在 Ersfjordbotn 喝杯咖啡，讓天氣決定步調",overnight:"Tromsø／近市區 Kvaløya｜第4/4晚",departure:"11:00",move:"自駕",driving:"往返約1–1.5小時",notes:"本日只補一個主行程，不把之前取消的項目全部補上。最後一晚避免長距離追光。",rain:"室內活動、採買、休息",aurora:"附近短時間觀察；不排要深夜才回的團",wear:WEAR_TROMSO,weatherIco:"☕",spots:[
-  S("Ersfjordbotn 峽灣短遊","attraction","咖啡與散步。",{dur:"約2小時",mapQuery:"Ersfjordbotn"}),
-  S("補搭 Fjellheisen（還沒搭成且天氣好）","activity","如果 D16 沒搭成，今天優先補纜車。",{mapQuery:"Fjellheisen, Tromsø"}),
-  S("返回住宿、整理行李","activity","下午回住宿整理行李。",{mapQuery:"Tromsø"})
+{dayNum:"15",region:"Flåm · Nærøyfjord · Gudvangen",enRegion:"Flåm → Nærøyfjord → Gudvangen",title:"山海之間，一葉船",dayDesc:"航入窄峽灣，聽山與水安靜地說話。",overnight:"Aurland／Flåm｜第2/3晚",departure:"10:30–11:00",move:"短程自駕＋船＋巴士",driving:"往返 Flåm 約20–30分鐘",notes:"含候船、接駁、午餐留 4–5 小時。2027/10/24 的船班與回程巴士要核對，不套用十月上半月舊表；D15、D16 可互換。",rain:"一般下雨仍可搭有室內艙的船；停航就和 D16 互換",aurora:"",wear:WEAR_WEST,weatherIco:"⛴️",spots:[
+  S("Flåm → Gudvangen 峽灣船","activity","白天班次航入 Nærøyfjord。",{dur:"約2小時",fullDesc:"Nærøyfjord 屬於 2005 年列入世界遺產的西挪威峽灣。船是全電動的；船班還沒確認。",mapQuery:"Flåm",link:"https://www.norwaysbest.com/en/flam/things-to-do/fjord-cruise-naeroyfjord",linkLabel:"峽灣船官方頁"}),
+  S("Gudvangen 配套巴士回 Flåm","transport","搭配套巴士回 Flåm，再開回住宿休息。",{fullDesc:"回程巴士班次要和船班一起核對。",mapQuery:"Gudvangen",link:"https://www.norwaysbest.com/en/flam/things-to-do/shuttle-bus-flam-gudvangen",linkLabel:"接駁巴士官方頁"})
 ],moreSpots:[]},
-{dayNum:"19",region:"Tromsø 經 AMS 回台",enRegion:"Tromsø → Amsterdam → Taipei",title:"帶著北方回家",dayDesc:"經阿姆斯特丹返程，把光留在記憶裡",overnight:"機上／必要時 AMS 住宿",departure:"依航班",move:"還車＋國際航班",driving:null,notes:"同日銜接尚未確認。若接不上，優先 D18 下午提前離開 Tromsø、在 AMS 住 1 晚（少一晚北部住宿，仍是 20 天）；若加 AMS 一晚又不提前離開，整趟可能變 21 天。",rain:"班機變動按實際票務處理",aurora:"",wear:WEAR_FLIGHT,weatherIco:"✈️",spots:[
-  S("退房、還車（租車③）","transport","Tromsø 機場還車；若改 D18 離境就提前還車。",{mapQuery:"Tromsø Airport"}),
-  S("Tromsø TOS → 阿姆斯特丹 AMS","transport","依當日航班確認是否直飛或轉機。",{dur:"依航班",fullDesc:"航段尚未預訂；KLM 航點頁不代表特定日期有直飛或能接華航。",mapQuery:"Tromsø Airport"}),
-  S("阿姆斯特丹 → 台北（華航）","transport","接華航回台北。",{dur:"依航班",mapQuery:"Amsterdam Airport Schiphol"})
+{dayNum:"16",region:"Flåmsbana · Myrdal",enRegion:"Flåm ⇄ Myrdal",title:"把風景交給鐵道",dayDesc:"沿著山谷往返，下午只選一個喜歡的地方。",overnight:"Aurland／Flåm｜第3/3晚",departure:"依列車",move:"火車＋短程自駕",driving:"依下午選項約0.5–1.5小時",notes:"下午晴且路況好選 Stegastein，想看小村選 Undredal，兩者不全排；列車晚就只做鐵道。",rain:"只做鐵道",aurora:"",wear:WEAR_WEST,weatherIco:"🚆",
+  choices:[{k:'A',label:'只做鐵道'},{k:'B',label:'下午 Stegastein',region:"Flåmsbana · Stegastein",enRegion:"Flåm ⇄ Myrdal · Stegastein",driving:"約1小時",rain:"低雲或結冰就取消觀景台",img:"images/day16-alt-a.webp"},{k:'C',label:'下午 Undredal',region:"Flåmsbana · Undredal",enRegion:"Flåm ⇄ Myrdal · Undredal",driving:"約0.5–1小時",rain:"只做鐵道",img:"images/day16-alt-b.webp"}],
+  spots:[
+  S("Flåmsbana 往返 Myrdal","activity","依列車時間往返。",{dur:"往返約2小時",fullDesc:"Flåmsbana 全長約 20 公里，從 Flåm 爬升約 863 公尺到 Myrdal，最陡坡度 55‰，1940 年通車。",mapQuery:"Flåm stasjon",link:"https://www.norwaysbest.com/en/flam/flam-railway-technical-information",linkLabel:"鐵道技術資料"}),
+  S("Stegastein 觀景台","attraction","下午晴天、路況好才去。",{dur:"約1.5小時（含往返）",fullDesc:"只走 Aurlandsvangen 到 Stegastein 這段，不穿越季節性的 Aurlandsfjellet 山路。低雲或結冰就取消。",mapQuery:"Stegastein viewpoint",link:"https://www.nasjonaleturistveger.no/en/routes/aurlandsfjellet/",linkLabel:"國家觀光路線",alt:"B"}),
+  S("Undredal 小村","attraction","下午到峽灣邊的小村慢慢走。",{dur:"約1.5小時",mapQuery:"Undredal",alt:"C"})
 ],moreSpots:[]},
-{dayNum:"20",region:"抵達台灣",enRegion:"Taipei",title:"狐光，未完待續",dayDesc:"回到台灣，慢慢翻看這二十天",overnight:"家中",departure:"依航班",move:"國際航班",driving:null,notes:"日期是規劃占位，最終依華航與歐洲轉機班表校正。抵達日以台灣時間為準。",rain:"",aurora:"",wear:WEAR_FLIGHT,weatherIco:"🏡",twTime:true,spots:[
-  S("抵達台灣","transport","行程結束。",{dur:"依航班",fullDesc:"抵達日以台灣時間為準。",mapQuery:"Taoyuan International Airport"})
+{dayNum:"17",region:"Bergen · Bryggen",enRegion:"Aurland → Bergen",title:"在木屋港邊道晚安",dayDesc:"回到城市，把最後的海風走進記憶。",overnight:"Bergen｜第2晚",departure:"11:00",move:"自駕＋還車＋步行",driving:"約3–3.5小時",notes:"還車（租車③）入住後逛 Bryggen；有時間才去魚市場或要塞，不強塞山頂纜車。",rain:"Bryggen 室內小店、咖啡館",aurora:"",wear:WEAR_WEST,weatherIco:"🏘️",spots:[
+  S("退房返 Bergen，還車（租車③）","transport","11:00 退房，開回 Bergen 還車入住。",{dur:"約3–3.5小時（估算）",mapQuery:"Bergen"}),
+  S("Bryggen 木屋港區","attraction","傍晚在木屋港邊慢慢走。",{dur:"約1.5小時",fullDesc:"Bryggen 在 1979 年列入世界遺產，現在約有 62 棟木造建築；歷經多次火災，都照舊有樣式與工法重建。",mapQuery:"Bryggen, Bergen",link:"https://riksantikvaren.no/en/world-heritage/bryggen-in-bergen/",linkLabel:"世界遺產介紹"}),
+  S("魚市場或 Bergenhus 要塞（有時間才去）","attraction","時間夠才順路。",{mapQuery:"Fisketorget, Bergen"})
+],moreSpots:[]},
+{dayNum:"18",region:"Bergen → 阿姆斯特丹",enRegion:"Bergen → Amsterdam",title:"留一天給從容",dayDesc:"把回程的緩衝，當作旅途的小休息。",overnight:"阿姆斯特丹機場周邊",departure:"依航班",move:"航班＋接駁",driving:null,notes:"在機場周邊過夜當回程緩衝；早到且精神好才進市區。",rain:"在旅館休息",aurora:"",wear:WEAR_FLIGHT,weatherIco:"✈️",spots:[
+  S("Bergen BGO → 阿姆斯特丹 AMS","transport","飛阿姆斯特丹。",{dur:"依航班",mapQuery:"Bergen Airport Flesland"}),
+  S("機場周邊入住","activity","接駁到旅館休息。",{mapQuery:"Amsterdam Airport Schiphol"})
+],moreSpots:[]},
+{dayNum:"19",region:"阿姆斯特丹 → 台灣",enRegion:"Amsterdam → Taipei",title:"帶著北方的光回家",dayDesc:"窗外是雲，心裡是一路收藏的風景。",overnight:"機上",departure:"依航班",move:"國際航班",driving:null,notes:"依華航實際班表回台灣。",rain:"",aurora:"",wear:WEAR_FLIGHT,weatherIco:"✈️",spots:[
+  S("阿姆斯特丹 → 台北（華航）","transport","搭華航回台灣。",{dur:"依航班",mapQuery:"Amsterdam Airport Schiphol"})
+],moreSpots:[]},
+{dayNum:"20",region:"台灣 · 抵達家",enRegion:"Taipei",title:"故事回到家的方向",dayDesc:"旅程落幕，記憶仍在慢慢發光。",overnight:"家中",departure:"依航班",move:"國際航班",driving:null,notes:"抵達台灣，回家。抵達日以台灣時間為準。",rain:"",aurora:"",wear:WEAR_FLIGHT,weatherIco:"🏡",twTime:true,spots:[
+  S("抵達台灣，回家","transport","行程結束。",{dur:"依航班",mapQuery:"Taoyuan International Airport"})
 ],moreSpots:[]}
 ];
 /* 每段住宿的住宿卡放在入住第一晚那一天的「食衣住」 */
 STAY_SEGMENTS.forEach(seg=>{days[seg.from].moreSpots.unshift(hotelSpot(seg));});
 /* 卡片封面：景點用當天的呆維插畫；交通、吃、逛、住用呆維小圖示 */
 const CAT_IMG={transport:'images/fox-point.webp',food:'images/nav-food.webp',shopping:'images/nav-shopping.webp',hotel:'images/nav-lodging.webp'};
-days.forEach((d,i)=>[...d.spots,...d.moreSpots].forEach(sp=>{if(!sp.img)sp.img=sp.alt==='B'?'images/fox-point.webp':(CAT_IMG[sp.cat]||DAYIMG(i));}));
+days.forEach((d,i)=>[...d.spots,...d.moreSpots].forEach(sp=>{if(!sp.img){const ch=sp.alt&&sp.alt!=='A'&&(d.choices||[]).find(c=>c.k===sp.alt);sp.img=(ch&&ch.img)||CAT_IMG[sp.cat]||DAYIMG(i);}}));
 
 /* ---------- 日期：出發日可以調整，每天日期與住宿日期一起平移（依 Europe/Oslo 的日曆日，不做 UTC 換算） ---------- */
-const DEFAULT_TRIP_START='2027-09-24';
+const DEFAULT_TRIP_START='2027-10-10';
 const WEEK_ZH=['日','一','二','三','四','五','六'];
 function isoAddDays(iso,n){const [y,m,d]=iso.split('-').map(Number);const t=new Date(Date.UTC(y,m-1,d+n));return t.toISOString().slice(0,10);}
 function isoParts(iso){const [y,m,d]=iso.split('-').map(Number);return {y,m,d,w:new Date(Date.UTC(y,m-1,d)).getUTCDay()};}
-let tripStart=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_trip_start'));return (typeof v==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v))?v:DEFAULT_TRIP_START;}catch(e){return DEFAULT_TRIP_START;}})();
+let tripStart=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_trip_start'));return (typeof v==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v)&&v!=='2027-09-24')?v:DEFAULT_TRIP_START;}catch(e){return DEFAULT_TRIP_START;}})();
 function applyTripDates(){
   days.forEach((d,i)=>{const iso=isoAddDays(tripStart,i),p=isoParts(iso);d.iso=iso;d.year=p.y;d.date=`${p.m}/${p.d}`;d.weekday=WEEK_ZH[p.w];});
 }
@@ -913,93 +922,94 @@ function tripRangeText(){const a=isoParts(days[0].iso),b=isoParts(days[days.leng
 /* 每日交通速查（時間都是規劃估算或依航班；不填未確認的精確班次） */
 const EST='（估算，不含停留／天候延誤）';
 const transportPlans = [
-  {summary:'搭華航飛阿姆斯特丹。',alert:'航班尚未預訂；出發與抵達日依華航班表，以台灣時間為準。',routes:[
+  {summary:'搭華航飛阿姆斯特丹。',alert:'航班尚未預訂；以台灣時間為準。',routes:[
     {from:'台北 TPE',to:'阿姆斯特丹 AMS',mode:'✈️ 華航',time:'依航班',note:'國際航班，尚未訂票'}]},
-  {summary:'阿姆斯特丹轉機到 Bergen。',alert:'抵達當天不取車、不長途開車；晚到就直接休息。',routes:[
-    {from:'阿姆斯特丹 AMS',to:'Bergen BGO',mode:'✈️ 轉機航班',time:'依航班',note:'航段尚未預訂'},
-    {from:'Bergen BGO',to:'Bergen 住宿',mode:'🚌 機場交通',time:'依交通方式',note:'不取車'}]},
-  {summary:'市區步行：Bryggen 與 Fløibanen。',alert:'纜車視雲量與風況調整。',routes:[
-    {from:'Bergen 住宿',to:'Bryggen',mode:'🚶 步行或市區交通',time:'依住宿位置',note:''},
-    {from:'Bryggen',to:'Fløibanen',mode:'🚶 步行',time:'依步行路線',note:'天氣好才搭纜車'}]},
-  {summary:'取車，經 Voss 開往 Aurland。',alert:'含取車、午餐、停留抓 5–6 小時；優先主幹道路。',routes:[
-    {from:'Bergen',to:'Voss',mode:'🚗 自駕（租車①）',time:'全程約 3–3.5 小時'+EST,note:'Voss 午餐、簡單散步'},
-    {from:'Voss',to:'Aurlandsvangen',mode:'🚗 自駕',time:'',note:'下午入住、買食材'}]},
-  {summary:'Flåm 搭峽灣船到 Gudvangen，再搭接駁巴士回來。',alert:'船班尚未確認；車不帶上船。',routes:[
-    {from:'Aurlandsvangen',to:'Flåm',mode:'🚗 自駕',time:'約 0.5 小時（往返）'+EST,note:'停車後搭船'},
-    {from:'Flåm',to:'Gudvangen',mode:'⛴️ 峽灣遊船',time:'船＋接駁約 3.5 小時',note:'選接近中午的可售班次'},
-    {from:'Gudvangen',to:'Flåm',mode:'🚌 接駁巴士',time:'含在上面的 3.5 小時',note:''},
-    {from:'Flåm',to:'Aurlandsvangen',mode:'🚗 自駕',time:'',note:'下午自由休息'}]},
-  {summary:'Flåmsbana 往返 Myrdal；天氣好再去 Stegastein。',alert:'低雲或結冰就取消觀景台；不穿越季節性山路。',routes:[
-    {from:'Aurlandsvangen',to:'Flåm',mode:'🚗 自駕',time:'含觀景台合計約 1–1.5 小時'+EST,note:''},
-    {from:'Flåm',to:'Myrdal（往返）',mode:'🚆 Flåmsbana',time:'往返約 2 小時',note:'依實際班次'},
-    {from:'Aurlandsvangen',to:'Stegastein',mode:'🚗 自駕',time:'14:30–16:30',note:'只走全年開放的進出道路'}]},
-  {summary:'經 Gudvangen、Voss 回 Bergen，還車。',alert:'D8 國內航班可能要早起；不額外繞路。',routes:[
-    {from:'Aurland',to:'Bergen',mode:'🚗 自駕',time:'約 3–3.5 小時'+EST,note:'途中只停一處午餐或咖啡'},
-    {from:'Bergen',to:'Bergen 機場附近住宿',mode:'🚗 還車（租車①）',time:'下午',note:'確認往機場的方式'}]},
-  {summary:'飛 Svolvær，取車、採買。',alert:'若不是抵達 SVJ，車程要重算，不能直接套用本日。',routes:[
-    {from:'Bergen BGO',to:'Svolvær SVJ',mode:'✈️ 國內航班',time:'依航班',note:'可能經 Bodø 等地轉機'},
-    {from:'Svolvær SVJ',to:'Svolvær 住宿',mode:'🚗 自駕（租車②）',time:'約 10–30 分鐘'+EST,note:'順路超市採買'}]},
-  {summary:'Svolvær 往返 Henningsvær。',alert:'遇到旅行團就先逛小店，不在拍照點久候。',routes:[
-    {from:'Svolvær',to:'Henningsvær',mode:'🚗 自駕',time:'往返約 1–1.5 小時'+EST,note:'下午回 Svolvær'}]},
-  {summary:'沿 E10 西行到 Reine。',alert:'只選 1–2 處安全停車點看景；不加海灘大繞路。',routes:[
-    {from:'Svolvær',to:'Leknes',mode:'🚗 自駕 E10',time:'全程約 2.5–3 小時'+EST,note:'Leknes 午餐、補給'},
-    {from:'Leknes',to:'Reine',mode:'🚗 自駕 E10',time:'',note:'下午入住'}]},
-  {summary:'Hamnøy、Sakrisøy、Reine 短程移動。',alert:'橋上與路邊不違規停車。',routes:[
-    {from:'Reine',to:'Hamnøy',mode:'🚗 自駕＋短步行',time:'合計約 0.5–1 小時'+EST,note:'公共觀景位置'},
-    {from:'Hamnøy',to:'Sakrisøy',mode:'🚗 自駕＋短步行',time:'',note:'午餐與海邊散步'},
-    {from:'Sakrisøy',to:'Reine',mode:'🚗 自駕＋短步行',time:'',note:'港口與村落'}]},
-  {summary:'Ramberg＋Flakstad，或改 Å＋Sørvågen（擇一）。',alert:'兩組擇一，不能塞進同一天。',choices:[
-    {name:'A Ramberg 海灘＋Flakstad',routes:[{from:'Reine',to:'Ramberg',mode:'🚗 自駕',time:'合計約 1.5–2 小時'+EST,note:''},{from:'Ramberg',to:'Flakstad kirke',mode:'🚗 自駕',time:'',note:'午餐後'}]},
-    {name:'B Å＋Sørvågen 漁村',routes:[{from:'Reine',to:'Å i Lofoten',mode:'🚗 自駕',time:'未估算，出發前用地圖確認',note:''},{from:'Å i Lofoten',to:'Sørvågen',mode:'🚗 自駕',time:'',note:''}]}]},
-  {summary:'E10 返回 Svolvær；晴天才繞 Haukland。',alert:'避免為了繞路而夜駕。',routes:[
-    {from:'Reine',to:'Svolvær',mode:'🚗 自駕 E10',time:'直回約 2.5–3 小時'+EST,note:'繞 Haukland 約再加 0.5–1 小時'}]},
-  {summary:'還車，晚間登上北行沿岸郵輪。',alert:'船班與艙房待確認；寄物、還車與登船順序要事先排好。',routes:[
-    {from:'Svolvær 住宿',to:'租車門市',mode:'🚗 還車（租車②）',time:'依門市營業時間',note:'車不帶上郵輪'},
-    {from:'租車門市',to:'Svolvær 港口',mode:'🚕 計程車或步行',time:'依距離',note:''},
-    {from:'Svolvær',to:'Tromsø',mode:'🚢 北行沿岸郵輪',time:'晚間登船，隔天下午抵達（規劃描述）',note:'獨立艙房 1 晚，尚未確認班次'}]},
-  {summary:'船上一早看海岸，下午抵達 Tromsø。',alert:'抵達時間依船班；延誤就直接入住。',routes:[
-    {from:'沿岸郵輪',to:'Tromsø 港口',mode:'🚢 沿岸郵輪',time:'預計下午抵達',note:'確切時間依船班'},
-    {from:'Tromsø 港口',to:'Tromsø 住宿',mode:'🚌 市區交通或計程車',time:'依住宿位置',note:'取車可延到 D16'}]},
-  {summary:'Tromsø 市區、Fjellheisen。',alert:'纜車看雲量與風況，也可以改 D18。',routes:[
-    {from:'Tromsø 住宿',to:'Tromsø 市中心',mode:'🚗 取車（租車③）或市區交通',time:'約 0.5–1 小時'+EST,note:''},
-    {from:'Tromsø 市中心',to:'Fjellheisen',mode:'🚗 自駕或市區交通',time:'',note:'午後天氣好再去'}]},
-  {summary:'沿 Kvaløya 開往 Sommarøy。',alert:'大風、結冰或視野差就改市區活動。',routes:[
-    {from:'Tromsø',to:'Sommarøy',mode:'🚗 自駕',time:'往返約 2.5–3 小時'+EST,note:'途中最多兩處安全停車點'}]},
-  {summary:'Ersfjordbotn 短程來回。',alert:'最後一晚避免長距離追光。',routes:[
+  {summary:'阿姆斯特丹轉機到 Tromsø。',alert:'不取車；早到且精神好才去港邊。',routes:[
+    {from:'阿姆斯特丹 AMS',to:'Tromsø TOS',mode:'✈️ 轉機航班',time:'依航班',note:'航段尚未預訂'},
+    {from:'Tromsø TOS',to:'Tromsø 住宿',mode:'🚌 機場接駁',time:'依交通方式',note:'順路採買'}]},
+  {summary:'市區步行：Storgata、港區、Fjellheisen。',alert:'纜車看雲量與風況；陰雨改 Polaria 或極地博物館。',routes:[
+    {from:'Tromsø 住宿',to:'Storgata／港區',mode:'🚶 步行',time:'11:00 出門',note:''},
+    {from:'Tromsø 市中心',to:'Fjellheisen',mode:'🚌 市區公車或計程車',time:'依交通方式',note:'晴天才搭纜車'}]},
+  {summary:'取車，沿 Kvaløya 開往 Sommarøy。',alert:'約 14:30 返程；取車延誤就減少停點。',routes:[
+    {from:'Tromsø',to:'Sommarøy',mode:'🚗 自駕（租車①）',time:'往返約 2.5–3 小時'+EST,note:'只在合法停車區短停'}]},
+  {summary:'Ersfjordbotn 短程來回。',alert:'下午回城；不疊加遠程海岸。',routes:[
     {from:'Tromsø',to:'Ersfjordbotn',mode:'🚗 自駕',time:'往返約 1–1.5 小時'+EST,note:''}]},
-  {summary:'還車，經阿姆斯特丹回台。',alert:'同日銜接華航尚未確認；接不上就改 D18 下午離開、AMS 住一晚。',routes:[
-    {from:'Tromsø 住宿',to:'Tromsø 機場',mode:'🚗 還車（租車③）',time:'依航班',note:''},
-    {from:'Tromsø TOS',to:'阿姆斯特丹 AMS',mode:'✈️ 航班',time:'依航班',note:'確認是否直飛或轉機'},
+  {summary:'下午還車，深夜搭計程車到碼頭登船。',alert:'出航日期是 10/16；艙房、登船時間與碼頭以訂單為準。',routes:[
+    {from:'Tromsø 住宿',to:'租車門市',mode:'🚗 還車（租車①）',time:'下午',note:'車不帶上船'},
+    {from:'Tromsø 住宿',to:'Tromsø 碼頭',mode:'🚕 計程車',time:'深夜',note:'房間保留到晚餐後'},
+    {from:'Tromsø',to:'Svolvær',mode:'🚢 南下沿岸船旅',time:'深夜登船，隔天約 18:30 抵達（目前骨架）',note:'艙房 1 晚，尚未確認班次'}]},
+  {summary:'船上看群島，傍晚抵達 Svolvær。',alert:'抵達時間依船班；下船直接入住，不租車西行。',routes:[
+    {from:'沿岸船旅',to:'Svolvær 碼頭',mode:'🚢 沿岸船旅',time:'約 18:30（依船班）',note:''},
+    {from:'Svolvær 碼頭',to:'Svolvær 住宿',mode:'🚶 步行或計程車',time:'依住宿位置',note:''}]},
+  {summary:'取車，往返 Henningsvær。',alert:'10/17 星期日取車要先確認；15:30 返程。',routes:[
+    {from:'Svolvær',to:'Henningsvær',mode:'🚗 自駕（租車②）',time:'往返約 1–1.5 小時'+EST,note:'回程可短停 Rørvikstranda'}]},
+  {summary:'Kabelvåg＋Vågan，或晴天改 Haukland＋Uttakleiv（擇一）。',alert:'兩條路線不疊加。',choices:[
+    {name:'A Kabelvåg＋Vågan Church',routes:[{from:'Svolvær',to:'Kabelvåg',mode:'🚗 自駕',time:'近程約 1 小時'+EST,note:'下午留白'}]},
+    {name:'B 晴天 Haukland＋Uttakleiv',routes:[{from:'Svolvær',to:'Haukland beach',mode:'🚗 自駕',time:'海灘線約 3 小時'+EST,note:''},{from:'Haukland beach',to:'Uttakleiv beach',mode:'🚗 自駕',time:'',note:'不走完整連接步道'}]}]},
+  {summary:'沿 E10 西行到 Reine／Hamnøy。',alert:'最多一兩個短停；15:00–16:00 入住。',routes:[
+    {from:'Svolvær',to:'Leknes',mode:'🚗 自駕 E10',time:'全程約 2.5–3 小時'+EST,note:'Leknes 午餐、採買'},
+    {from:'Leknes',to:'Reine',mode:'🚗 自駕 E10',time:'',note:'下午入住'}]},
+  {summary:'Hamnøy、Sakrisøy、Reine 短程移動。',alert:'橋上與路邊不違規停車；約 16:00 回住宿。',routes:[
+    {from:'Reine',to:'Hamnøy',mode:'🚗 自駕＋短步行',time:'合計約 0.5–1 小時'+EST,note:''},
+    {from:'Hamnøy',to:'Sakrisøy',mode:'🚗 自駕＋短步行',time:'',note:''},
+    {from:'Sakrisøy',to:'Reine',mode:'🚗 自駕＋短步行',time:'',note:''}]},
+  {summary:'Nusfjord，或風雨改 Sørvågen＋Å（擇一）。',alert:'兩條路線不疊加。',choices:[
+    {name:'A Nusfjord（有天光才加 Ramberg）',routes:[{from:'Reine',to:'Nusfjord',mode:'🚗 自駕',time:'往返約 2–2.5 小時'+EST,note:''}]},
+    {name:'B 風雨 Sørvågen＋Å',routes:[{from:'Reine',to:'Sørvågen',mode:'🚗 自駕',time:'近程，出發前用地圖確認',note:''},{from:'Sørvågen',to:'Å i Lofoten',mode:'🚗 自駕',time:'',note:''}]}]},
+  {summary:'Leknes 機場還車，飛 Bergen。',alert:'Leknes 航班與異地還車要先對齊；想 11:00 離開 Reine 就找下午班。',routes:[
+    {from:'Reine',to:'Leknes 機場',mode:'🚗 自駕＋還車（租車②）',time:'約 1–1.25 小時'+EST,note:''},
+    {from:'Leknes LKN',to:'Bergen BGO',mode:'✈️ 國內航班',time:'依航班',note:'可能經 Bodø 轉機'}]},
+  {summary:'取車，經 Voss 開往 Aurland。',alert:'取車延誤就縮短 Voss，不繞瀑布。',routes:[
+    {from:'Bergen',to:'Voss',mode:'🚗 自駕（租車③）',time:'全程約 3–3.5 小時'+EST,note:'Voss 午餐'},
+    {from:'Voss',to:'Aurlandsvangen',mode:'🚗 自駕',time:'',note:'水岸散步、採買'}]},
+  {summary:'Flåm 白天船到 Gudvangen，配套巴士回 Flåm。',alert:'2027/10/24 的船班與巴士要核對；D15、D16 可互換。',routes:[
+    {from:'Aurlandsvangen',to:'Flåm',mode:'🚗 自駕',time:'往返約 20–30 分鐘'+EST,note:''},
+    {from:'Flåm',to:'Gudvangen',mode:'⛴️ 峽灣船',time:'含候船接駁午餐留 4–5 小時',note:'白天班次'},
+    {from:'Gudvangen',to:'Flåm',mode:'🚌 配套巴士',time:'',note:''}]},
+  {summary:'Flåmsbana 往返 Myrdal；下午 Stegastein 或 Undredal 擇一。',alert:'兩者不全排；列車晚就只做鐵道。',choices:[
+    {name:'A 只做鐵道',routes:[{from:'Flåm',to:'Myrdal（往返）',mode:'🚆 Flåmsbana',time:'往返約 2 小時',note:'依實際班次'}]},
+    {name:'B 下午 Stegastein',routes:[{from:'Flåm',to:'Myrdal（往返）',mode:'🚆 Flåmsbana',time:'往返約 2 小時',note:''},{from:'Aurlandsvangen',to:'Stegastein',mode:'🚗 自駕',time:'約 1 小時'+EST,note:'只走全年開放的進出道路'}]},
+    {name:'C 下午 Undredal',routes:[{from:'Flåm',to:'Myrdal（往返）',mode:'🚆 Flåmsbana',time:'往返約 2 小時',note:''},{from:'Flåm',to:'Undredal',mode:'🚗 自駕',time:'約 0.5–1 小時'+EST,note:''}]}]},
+  {summary:'返回 Bergen 還車，傍晚逛 Bryggen。',alert:'不強塞山頂纜車。',routes:[
+    {from:'Aurland',to:'Bergen',mode:'🚗 自駕＋還車（租車③）',time:'約 3–3.5 小時'+EST,note:''},
+    {from:'Bergen 住宿',to:'Bryggen',mode:'🚶 步行',time:'',note:''}]},
+  {summary:'飛阿姆斯特丹，機場周邊過夜。',alert:'回程緩衝；早到且精神好才進市區。',routes:[
+    {from:'Bergen BGO',to:'阿姆斯特丹 AMS',mode:'✈️ 航班',time:'依航班',note:''},
+    {from:'阿姆斯特丹 AMS',to:'機場周邊旅館',mode:'🚌 接駁',time:'',note:''}]},
+  {summary:'華航回台灣。',alert:'依華航實際班表。',routes:[
     {from:'阿姆斯特丹 AMS',to:'台北 TPE',mode:'✈️ 華航',time:'依航班',note:''}]},
-  {summary:'抵達台灣。',alert:'抵達日以台灣時間為準。',routes:[
-    {from:'阿姆斯特丹 AMS',to:'台北 TPE',mode:'✈️ 華航',time:'依航班',note:'抵達後行程結束'}]}
+  {summary:'抵達台灣，回家。',alert:'抵達日以台灣時間為準。',routes:[
+    {from:'台北 TPE',to:'家',mode:'🏡 回家',time:'',note:''}]}
 ];
-const transportGeneralTips = ['租車分三段：Bergen、羅弗敦、Tromsø；車不帶上郵輪','車程都是估算，確定住宿地址後要重算'];
+const transportGeneralTips = ['租車分三段：Tromsø、羅弗敦、Bergen／峽灣；車不帶上船','車程都是估算，確定住宿地址後要重算'];
 
 /* ---------- 每日顯示資料：出門／交通／備註可在編輯模式修改；D12 擇一；整天調換 ---------- */
-const SIGHT_DAYS=new Set([2,4,5,8,10,11,15,16,17]);   /* 觀光日（其餘是交通、換住宿或船旅日） */
+const SIGHT_DAYS=new Set([2,3,4,7,8,10,11,14,15]);   /* 觀光日（其餘是交通、換住宿或船旅日） */
 let daySwapStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_day_swap'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
 function persistDaySwap(){safeSetItem('norway_day_swap',daySwapStore);}
 function contentIdx(pos){const v=daySwapStore[pos];return (typeof v==='number'&&days[v])?v:pos;}
 let dayChoiceStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_day_choice'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
 function persistDayChoice(){safeSetItem('norway_day_choice',dayChoiceStore);}
-function dayChoice(ci){return dayChoiceStore[ci]==='B'?'B':'A';}
+/* nw13：方案可以有 A/B/C（D9、D12、D16） */
+function dayChoice(ci){const ch=(days[ci]&&days[ci].choices)||[];const v=dayChoiceStore[ci];return ch.some(c=>c.k===v)?v:'A';}
+function dayChoiceObj(ci){const k=dayChoice(ci);return k==='A'?null:((days[ci].choices||[]).find(c=>c.k===k)||null);}
+function dayChoiceIdx(ci){const ch=(days[ci]&&days[ci].choices)||[];const i=ch.findIndex(c=>c.k===dayChoice(ci));return i<0?0:i;}
 function dayInfoOv(ci,f){const k=fieldOverrideKey('dinfo'+ci,f);return Object.prototype.hasOwnProperty.call(fieldOverrideStore,k)?(fieldOverrideStore[k]||''):undefined;}
 function dayView(pos){
   const p=days[pos],ci=contentIdx(pos),c=days[ci];
-  const alt=(c.alt&&dayChoice(ci)==='B')?c.alt:null;
+  const alt0=dayChoiceObj(ci);const alt=alt0?{title:c.title,dayDesc:c.dayDesc,region:c.region,enRegion:c.enRegion,...alt0}:null;
   const pick=(f,def)=>{const o=dayInfoOv(ci,f);return o!==undefined?o:def;};
   return {pos,ci,dayNum:p.dayNum,date:p.date,weekday:p.weekday,iso:p.iso,overnight:p.overnight,
     title:alt?alt.title:c.title,dayDesc:alt?alt.dayDesc:c.dayDesc,region:alt?alt.region:c.region,enRegion:alt?alt.enRegion:c.enRegion,
     departure:pick('departure',c.departure),move:pick('move',c.move),driving:pick('driving',(alt&&alt.driving)||c.driving),
     notes:pick('notes',c.notes),rain:pick('rain',(alt&&alt.rain)||c.rain),aurora:pick('aurora',c.aurora),
-    wear:c.wear,img:(alt&&alt.img)||DAYIMG(ci),twTime:!!p.twTime,hasAlt:!!c.alt,choice:dayChoice(ci),swapped:ci!==pos,swapWarn:!!daySwapStore['w'+pos]};
+    wear:c.wear,img:(alt&&alt.img)||DAYIMG(ci),twTime:!!p.twTime,hasAlt:!!(c.choices&&c.choices.length>1),choice:dayChoice(ci),swapped:ci!==pos,swapWarn:!!daySwapStore['w'+pos]};
 }
 function setDayChoice(ci,ch){
   const prev=dayChoiceStore[ci];
-  if(ch==='B')dayChoiceStore[ci]='B';else delete dayChoiceStore[ci];
+  if(ch&&ch!=='A')dayChoiceStore[ci]=ch;else delete dayChoiceStore[ci];
   persistDayChoice();renderDayChips();renderDayContent();if(typeof renderRouteTimeline==='function')renderRouteTimeline();
-  offerUndo(ch==='B'?'已改成 B 方案（Å＋Sørvågen）':'已改回 A 方案（Ramberg＋Flakstad）',()=>{if(prev)dayChoiceStore[ci]=prev;else delete dayChoiceStore[ci];persistDayChoice();renderDayContent();});
+  const lab=((days[ci].choices||[]).find(c=>c.k===(ch||'A'))||{}).label||ch;offerUndo('已改成 '+lab,()=>{if(prev)dayChoiceStore[ci]=prev;else delete dayChoiceStore[ci];persistDayChoice();renderDayContent();});
 }
 function editDayInfo(pos){
   const v=dayView(pos),ci=v.ci;
@@ -1635,7 +1645,7 @@ function transportPlanHTML(dayIdx){
   const head=`<div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/nav-route.webp" alt="" width="56" height="56"></div>`;
   if(!plan)return `<section class="transport-plan">${head}${tpLiveBarHTML(dayIdx)}${customTransportHTML(dayIdx)}${transportAddBarHTML(dayIdx)}</section>`;
   const routes=(rows,prefix='route')=>`<div class="transport-steps">${(rows||[]).map((r0,i)=>{const segmentKey=`${prefix}-${i}`;const sk=`tp${ci}-${segmentKey}`;if(currentFieldValue(sk,'hidden',null)==='1')return '';const r={from:currentFieldValue(sk,'from',r0.from)||r0.from,to:currentFieldValue(sk,'to',r0.to)||r0.to,mode:currentFieldValue(sk,'mode',r0.mode)||r0.mode,time:currentFieldValue(sk,'time',r0.time)||r0.time,note:currentFieldValue(sk,'note',r0.note)||r0.note};window._tpOrig=window._tpOrig||{};window._tpOrig[sk]=r0;return `<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b>${r.time?`<span>⏱ ${escHtml(r.time)}</span>`:''}</div>${r.note?`<small>${escHtml(r.note)}</small>`:''}${tpGoButtonsHTML(dayIdx,r,i===(rows||[]).length-1)}<div class="edit-only tp-step-actions"><button type="button" onclick="editTransportStep('${sk}')">✎ 修改</button><button type="button" onclick="deleteTransportStep('${sk}')">🗑 刪除</button></div>${transportSegmentExtrasHTML(ci,segmentKey)}</div></div>`;}).join('')}</div>`;
-  const chosen=dayChoice(ci)==='B'?1:0;
+  const chosen=dayChoiceIdx(ci);
   const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===chosen?' open':''}><summary>${escHtml(choice.name)}${i===chosen?'<em class="nw-chip">目前選這組</em>':''}<span>展開路線</span></summary>${routes(choice.routes,`choice-${i}`)}</details>`).join('')}</div>`:routes(plan.routes);
   const allRows=plan.choices?(plan.choices[chosen]||plan.choices[0]).routes:plan.routes;
   const last=(allRows||[]).filter(r=>!/✈️|航班|🚢|⛴️|郵輪|🚆/.test(r.mode||'')).slice(-1)[0];
@@ -1961,7 +1971,8 @@ function dayNotesHTML(v){
 }
 function dayChoiceHTML(v){
   if(!v.hasAlt)return '';
-  return `<div class="nw-choice" role="group" aria-label="這天的方案（擇一）"><small>這天兩組擇一，不能塞進同一天</small><div><button type="button" class="${v.choice==='A'?'on':''}" onclick="setDayChoice(${v.ci},'A')">A Ramberg＋Flakstad</button><button type="button" class="${v.choice==='B'?'on':''}" onclick="setDayChoice(${v.ci},'B')">B Å＋Sørvågen</button></div></div>`;
+  const ch=days[v.ci].choices||[];
+  return `<div class="nw-choice" role="group" aria-label="這天的方案（擇一）"><small>這天${ch.length}選一，不疊加</small><div>${ch.map(c=>`<button type="button" class="${v.choice===c.k?'on':''}" onclick="setDayChoice(${v.ci},'${c.k}')">${c.k} ${escHtml(c.label)}</button>`).join('')}</div></div>`;
 }
 function renderDayContent(){
   if(window._detailKey)setTimeout(()=>{if(document.getElementById('spotDetailSheet'))renderSpotDetail(false);},0);
@@ -2057,11 +2068,11 @@ function renderDayContent(){
 
 /* ============ RENDER: ENHANCED LIVE WEATHER & OUTFIT ============ */
 const CITIES = {
-  'Bergen': {lat:60.3913, lon:5.3221, label:'Bergen'},
-  'Flam': {lat:60.8628, lon:7.1137, label:'Aurland／Flåm'},
+  'Tromso': {lat:69.6492, lon:18.9553, label:'Tromsø'},
   'Svolvaer': {lat:68.2343, lon:14.5683, label:'Svolvær'},
   'Reine': {lat:67.9326, lon:13.0887, label:'Reine'},
-  'Tromso': {lat:69.6492, lon:18.9553, label:'Tromsø'},
+  'Bergen': {lat:60.3913, lon:5.3221, label:'Bergen'},
+  'Flam': {lat:60.8628, lon:7.1137, label:'Aurland／Flåm'},
 };
 const WMO = {
   0:['☀️','晴朗'],1:['🌤️','大致晴朗'],2:['⛅','局部多雲'],3:['☁️','多雲'],
@@ -2449,11 +2460,11 @@ window.addEventListener('online',()=>prefetchSnow(true));
 /* ============ hk12：即時氣象分得更細（各城市底下的景點：氣溫、體感、風、天氣） ============ */
 /* 各地附近的天氣（座標只用來查天氣，不是導航點） */
 const LIVE_SPOTS={
-  Bergen:[['Bergen 市區',60.3913,5.3221],['Fløyen 山上',60.3946,5.3450]],
-  Flam:[['Flåm',60.8628,7.1137],['Aurlandsvangen',60.9054,7.1860],['Myrdal',60.7350,7.1233]],
-  Svolvaer:[['Svolvær',68.2343,14.5683],['Henningsvær',68.1543,14.2050]],
-  Reine:[['Reine',67.9326,13.0887],['Ramberg',68.0880,13.2280]],
-  Tromso:[['Tromsø 市區',69.6492,18.9553],['Sommarøy',69.6350,18.0150],['Ersfjordbotn',69.6950,18.6650]]
+  Tromso:[['Tromsø 市區',69.6492,18.9553],['Sommarøy',69.6350,18.0150],['Ersfjordbotn',69.6950,18.6650]],
+  Svolvaer:[['Svolvær',68.2343,14.5683],['Henningsvær',68.1543,14.2050],['Kabelvåg',68.2100,14.4800]],
+  Reine:[['Reine',67.9326,13.0887],['Nusfjord',68.0350,13.3480],['Leknes',68.1470,13.6110]],
+  Bergen:[['Bergen 市區',60.3913,5.3221],['Voss',60.6280,6.4180]],
+  Flam:[['Flåm',60.8628,7.1137],['Aurlandsvangen',60.9054,7.1860],['Myrdal',60.7350,7.1233]]
 };
 const SPOTS_WX_KEY='norway_spots_wx_v1';
 var spotsWx=(()=>{try{return JSON.parse(localStorage.getItem(SPOTS_WX_KEY))||{};}catch(e){return {};}})();
@@ -2726,13 +2737,15 @@ function addRuleItem() {
 /* 交通與船旅：初始全部「待確認」；日期依出發日自動平移（D 幾到 D 幾） */
 const defaultDocsData = [
   {id:'doc-ci-out',ic:'✈️',t:'去程 華航 台北 → 阿姆斯特丹',s:'依華航班表；盡量和回程同一張受保護票',chip:'航班',dayFrom:0,dayTo:0},
-  {id:'doc-ams-bgo',ic:'✈️',t:'阿姆斯特丹 AMS → Bergen BGO',s:'轉機航段',chip:'航班',dayFrom:1,dayTo:1},
-  {id:'doc-car-1',ic:'🚗',t:'租車① Bergen 取還',s:'機場或市區取還點依票價與營業時間決定',chip:'租車',dayFrom:3,dayTo:6},
-  {id:'doc-bgo-svj',ic:'✈️',t:'Bergen BGO → Svolvær SVJ',s:'國內航班，可能經 Bodø 等地轉機；優先抵達 SVJ',chip:'航班',dayFrom:7,dayTo:7},
-  {id:'doc-car-2',ic:'🚗',t:'租車② Svolvær 取還',s:'SVJ 取車、港區附近還車是否可行要確認；不同據點可能收費；車不帶上郵輪',chip:'租車',dayFrom:7,dayTo:13},
-  {id:'doc-ship',ic:'🚢',t:'沿岸郵輪 Svolvær → Tromsø（北行 port-to-port）',s:'Hurtigruten 或 Havila 擇一；獨立艙房；預計晚間登船、隔天下午抵達（規劃描述）',chip:'船票',dayFrom:13,dayTo:14},
-  {id:'doc-car-3',ic:'🚗',t:'租車③ Tromsø 取車、機場還車',s:'若改 D18 離境就提前還車',chip:'租車',dayFrom:15,dayTo:18},
-  {id:'doc-tos-ams',ic:'✈️',t:'Tromsø TOS → 阿姆斯特丹 AMS',s:'確認是否直飛或轉機，能否同日接華航',chip:'航班',dayFrom:18,dayTo:18},
+  {id:'doc-ams-tos',ic:'✈️',t:'阿姆斯特丹 AMS → Tromsø TOS',s:'轉機航段',chip:'航班',dayFrom:1,dayTo:1},
+  {id:'doc-car-tos',ic:'🚗',t:'租車① Tromsø 取還',s:'D4 10:30 取車、D6 下午還車',chip:'租車',dayFrom:3,dayTo:5},
+  {id:'doc-ship-s',ic:'🚢',t:'沿岸船旅 Tromsø → Svolvær（南下）',s:'10/15 深夜到碼頭，出航日期是 10/16；艙房、登船時間與碼頭以訂單為準',chip:'船票',dayFrom:5,dayTo:6},
+  {id:'doc-car-lof',ic:'🚗',t:'租車② Svolvær 取車、Leknes 機場還車',s:'10/17 星期日取車要先確認；異地還車要和 Leknes 航班對齊',chip:'租車',dayFrom:7,dayTo:12},
+  {id:'doc-lkn-bgo',ic:'✈️',t:'Leknes LKN → Bergen BGO',s:'國內航班，可能經 Bodø 轉機；想 11:00 離開 Reine 就找下午班',chip:'航班',dayFrom:12,dayTo:12},
+  {id:'doc-car-west',ic:'🚗',t:'租車③ Bergen 取還',s:'D14 取車、D17 還車',chip:'租車',dayFrom:13,dayTo:16},
+  {id:'doc-fjord',ic:'⛴️',t:'Flåm → Gudvangen 峽灣船＋回程巴士',s:'2027/10/24 的船班與巴士要核對，不套用十月上半月舊表',chip:'船票',dayFrom:14,dayTo:14},
+  {id:'doc-flamsbana',ic:'🚆',t:'Flåmsbana 往返 Myrdal',s:'依列車時間決定下午 Stegastein／Undredal／只做鐵道',chip:'車票',dayFrom:15,dayTo:15},
+  {id:'doc-bgo-ams',ic:'✈️',t:'Bergen BGO → 阿姆斯特丹 AMS',s:'機場周邊過夜當回程緩衝',chip:'航班',dayFrom:17,dayTo:17},
   {id:'doc-ci-back',ic:'✈️',t:'回程 華航 阿姆斯特丹 → 台北',s:'抵達日以台灣時間為準',chip:'航班',dayFrom:18,dayTo:19}
 ].map(d=>({...d,no:'',conf:'',time:'',url:'',cost:'',note:'',link:'',img:null,confirmed:false}));
 function mergeDocsWithDefaults(value){
@@ -2744,7 +2757,10 @@ function mergeDocsWithDefaults(value){
   });
   return [...map.values()];
 }
-let docsData = mergeDocsWithDefaults(JSON.parse(localStorage.getItem('norway_docs')||'null'));
+/* nw13：換成新路線，舊路線的預設票券（沒填過資料的）拿掉 */
+const OLD_ROUTE_DOC_IDS=['doc-ams-bgo','doc-car-1','doc-bgo-svj','doc-car-2','doc-ship','doc-car-3','doc-tos-ams'];
+function docHasData(d){return !!(d&&(d.no||d.conf||d.time||d.url||d.cost||d.note||d.link||d.img||d.confirmed));}
+let docsData = mergeDocsWithDefaults(JSON.parse(localStorage.getItem('norway_docs')||'null')).filter(d=>!OLD_ROUTE_DOC_IDS.includes(d.id)||docHasData(d));
 function persistDocs(){ safeSetItem('norway_docs', docsData); }
 
 const DOC_ICON_MAP={'🏨':'lodging','🚗':'route','🚙':'route','🚕':'route','🚢':'route','🍽️':'food','🛍️':'shopping'};
@@ -2871,7 +2887,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=73').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=74').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3373,7 +3389,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw12-2026-10-11';
+const APP_VERSION='nw13-2026-10-11';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3595,7 +3611,7 @@ document.addEventListener('DOMContentLoaded',()=>{initLive();renderMarksBar();re
 /* =====================================================================
    v49：手機優先改版（新標頭與圖示、逛吃畫廊、MaMa 專頁、App 安裝）
    ===================================================================== */
-const DAY_CITIES=[['Bergen'],['Bergen'],['Bergen'],['Bergen','Flam'],['Flam'],['Flam'],['Flam','Bergen'],['Svolvaer'],['Svolvaer'],['Svolvaer','Reine'],['Reine'],['Reine'],['Reine','Svolvaer'],['Svolvaer'],['Tromso'],['Tromso'],['Tromso'],['Tromso'],['Tromso'],['Tromso']];
+const DAY_CITIES=[['Tromso'],['Tromso'],['Tromso'],['Tromso'],['Tromso'],['Tromso'],['Svolvaer'],['Svolvaer'],['Svolvaer'],['Svolvaer','Reine'],['Reine'],['Reine'],['Reine','Bergen'],['Bergen','Flam'],['Flam'],['Flam'],['Flam','Bergen'],['Bergen'],['Bergen'],['Bergen']];
 const NAV_IC={itinerary:'images/nav-itinerary.webp',route:'images/nav-route.webp',guide:'images/nav-guide.webp',weather:'images/nav-weather.webp',food:'images/nav-food.webp',shopping:'images/nav-shopping.webp',lodging:'images/nav-lodging.webp'};
 /* hk19：每天「交通」分頁最上方的即時狀況大按鈕（網址沿用環線頁「即時交通與警報」，在那裡改了這裡也跟著變） */
 function tpLiveBarHTML(dayIdx){
@@ -5032,7 +5048,7 @@ function isSpotMoved(key){const n=naturalDayOf(key),e=spotDayOf(key);return n!=n
 function spotsShownOnDay(dayIdx){
   const fixed=[],custom=[];
   days.forEach((d,di)=>{
-    d.spots.forEach((s,i)=>{const key=`d${di}-m${i}`;if(spotDayOf(key)===dayIdx)fixed.push({spot:s,key,fixedMeta:{dayIdx}});});
+    d.spots.forEach((s,i)=>{const key=`d${di}-m${i}`;if(s.alt&&s.alt!==dayChoice(di))return;if(spotDayOf(key)===dayIdx)fixed.push({spot:s,key,fixedMeta:{dayIdx}});});
     (d.moreSpots||[]).forEach((s,i)=>{const key=`d${di}-s${i}`;if(spotDayOf(key)===dayIdx)fixed.push({spot:s,key,fixedMeta:{dayIdx}});});
     getCustomSpots(di).forEach((s,i)=>{const key=`d${di}-c${i}`;if(!s.deleted&&spotDayOf(key)===dayIdx)custom.push({spot:s,key,customMeta:{dayIdx:di,i}});});
   });
@@ -5056,16 +5072,16 @@ function openSpotDayModal(key){
 
 /* ============ hk19（移植京丹雅行 v85）：出發前待辦（全家共用，誰勾的會顯示名字） ============ */
 const TODO_SEED=[
-  {id:'nw-todo-ci',text:'華航往返與阿姆斯特丹銜接：盡量同一張受保護的票；先確認 2027 年份與實際日期',due:''},
-  {id:'nw-todo-ship',text:'沿岸郵輪 Svolvær → Tromsø（北行 port-to-port）：獨立艙房、實際船期、餐食、報到時間、行李、港口、停航處理',due:''},
-  {id:'nw-todo-svj',text:'Bergen → Svolvær 國內航班（優先抵達 SVJ）',due:''},
-  {id:'nw-todo-car2',text:'羅弗敦租車：SVJ 取車、Svolvær 港區附近還車是否可行、門市營業時間、不同據點費用',due:''},
-  {id:'nw-todo-car13',text:'Bergen 租車（D4–D7）與 Tromsø 租車（D16 取車、機場還車）',due:''},
-  {id:'nw-todo-storage',text:'D14 退房到晚間登船之間：確認寄物或延後退房（不要假設 Airbnb 可以寄物）',due:''},
-  {id:'nw-todo-return',text:'確認 Tromsø → AMS 能不能同日接華航；接不上就改 D18 下午離開、AMS 住一晚',due:''},
-  {id:'nw-todo-stays',text:'住宿 8 段：優先廚房、停車、暖氣；訂好後把 Airbnb 連結、地址、入住退房時間填進住宿卡',due:''},
-  {id:'nw-todo-fjord',text:'Nærøyfjord 峽灣船（Flåm → Gudvangen）＋接駁巴士',due:''},
+  {id:'nw-todo-ci',text:'華航往返與阿姆斯特丹銜接：盡量同一張受保護的票；確認 2027/10/10–10/29 的實際班表',due:''},
+  {id:'nw-todo-ship2',text:'沿岸船旅 Tromsø → Svolvær（南下）：10/15 深夜到碼頭、出航日 10/16；艙房、登船時間、碼頭、餐食、行李',due:''},
+  {id:'nw-todo-tromso-room',text:'Tromsø 住宿：實睡 4 晚，登船日（10/15）另保留房間到晚餐後',due:''},
+  {id:'nw-todo-car-sun',text:'羅弗敦租車：10/17 星期日能不能在 Svolvær 取車（不能就 D8 改逛 Svolvær／Kabelvåg，D9 才取車）',due:''},
+  {id:'nw-todo-lkn',text:'Leknes → Bergen 航班與 Leknes 機場異地還車要對齊；只有早班機就 D12 晚改住 Leknes',due:''},
+  {id:'nw-todo-cars',text:'Tromsø 租車（D4 取、D6 還）與 Bergen 租車（D14 取、D17 還）',due:''},
+  {id:'nw-todo-fjord2',text:'2027/10/24 Flåm → Gudvangen 峽灣船與回程巴士班表（不套用十月上半月舊表；D15、D16 可互換）',due:''},
   {id:'nw-todo-flamsbana',text:'Flåmsbana 往返 Myrdal',due:''},
+  {id:'nw-todo-ams-hotel',text:'D18 阿姆斯特丹機場周邊住宿 1 晚（接駁方便）',due:''},
+  {id:'nw-todo-stays',text:'住宿 8 段：Tromsø、Svolvær、Reine／Hamnøy、Bergen×2、Aurland／Flåm、AMS；訂好後把連結、地址、入住退房時間填進住宿卡',due:''},
   {id:'nw-todo-license',text:'駕照正本＋國際駕照；確認每家租車公司對駕照與持照年資的要求',due:''},
   {id:'nw-todo-insurance',text:'旅遊保險：航班延誤、行李、租車',due:''},
   {id:'nw-todo-sim',text:'買網卡／eSIM，或開通漫遊',due:''},
@@ -5073,6 +5089,19 @@ const TODO_SEED=[
 ].map(t=>({...t,done:false,note:''}));
 let todoData=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_todos'));return Array.isArray(v)?normalizeStructuredList('norway_todos',v):structuredClone(TODO_SEED);}catch(e){return structuredClone(TODO_SEED);}})();
 function persistTodos(){safeSetItem('norway_todos',todoData);}
+/* nw13：換成新路線時，舊路線專用、還沒勾的待辦換成新的；勾過或自己新增的都保留 */
+(function migrateTodosToRoute2(){
+  try{if(localStorage.getItem('norway_route_v2')==='1')return;}catch(e){return;}
+  const OLD=['nw-todo-ship','nw-todo-svj','nw-todo-car2','nw-todo-car13','nw-todo-storage','nw-todo-return','nw-todo-fjord'];
+  const before=todoData.length;
+  todoData=todoData.filter(t=>!OLD.includes(t.id)||t.done);
+  const ids=new Set(todoData.map(t=>t.id));
+  TODO_SEED.forEach(t=>{if(!ids.has(t.id))todoData.push(structuredClone(t));});
+  const st=todoData.find(t=>t.id==='nw-todo-stays');const seed=TODO_SEED.find(t=>t.id==='nw-todo-stays');if(st&&!st.done)st.text=seed.text;
+  const ci=todoData.find(t=>t.id==='nw-todo-ci');const ciS=TODO_SEED.find(t=>t.id==='nw-todo-ci');if(ci&&!ci.done)ci.text=ciS.text;
+  try{localStorage.setItem('norway_route_v2','1');}catch(e){}
+  if(todoData.length!==before||true)try{localStorage.setItem('norway_todos',JSON.stringify(todoData));}catch(e){}
+})();
 function todoWho(){
   try{const e=(familyAuthSession&&familyAuthSession.email)||(readAuthSession()&&readAuthSession().email)||'';return e?e.split('@')[0]:'';}catch(e){return '';}
 }
@@ -5162,10 +5191,10 @@ const REVIEW_MOODS=[
   ['happy','開心','尾巴搖不停','今天真開心','#E07A1F'],
   ['surprised','驚喜','耳朵豎起來','撿到意外的風景','#0088B0'],
   ['relaxed','放鬆','慢慢晃就好','慢慢走也很好','#03968C'],
-  ['moved','感動','心頭暖呼呼','想把這一刻留下','#D25E86'],
+  ['moved','感動','眼眶熱熱的','想把這一刻留下','#D25E86'],
   ['satisfied','滿足','肚子圓滾滾','吃飽喝足，剛剛好','#B5651D'],
   ['excited','期待','明天快點來','明天也好想快點出發','#5A72C0'],
-  ['cozy','療癒','被風景抱抱','被風景摸摸頭','#8A6FC4'],
+  ['cozy','暖心','心裡暖呼呼','一杯熱可可的溫度','#8A6FC4'],
   ['treasured','珍藏','收進口袋裡','收進心裡的那一頁','#34448E']];
 /* nw9：心情換成八種正向心情；舊的心情代碼自動對應到最接近的新心情 */
 const OLD_MOOD_MAP={great:'happy',good:'relaxed',ok:'relaxed',sad:'relaxed',tired:'cozy',cold:'satisfied',disappointed:'relaxed',farewell:'treasured'};
@@ -5337,7 +5366,7 @@ function renderStayOverview(){
       <p class="nw-stay-tip">選房重點：${escHtml(seg.tip)}</p>
       <div class="nw-stay-acts">${stt?`<span class="book-chip ${stt.cls}">${stt.label}</span>`:'<span class="book-chip todo">待確認</span>'}${u?`<a href="${escAttr(u)}" target="_blank" rel="noopener">住宿連結</a>`:''}<a href="${escAttr(mapsLink(nav))}" target="_blank" rel="noopener">地圖</a><button type="button" onclick="jumpToSearchResult(${seg.from},'${key}','more')">開啟住宿卡</button><button type="button" class="edit-only" onclick="editMarks('${key}')">預約狀態</button></div>
     </article>`;}).join('');
-  el.innerHTML=`<p class="sub">共 ${total} 晚住宿，D1、D19 在機上。原始規劃寫「住宿共 18 晚」，但各段加起來是 ${total} 晚，這裡以各段相加為準。回到同一個城市的單晚分開列，不合併。</p>${cards}<p class="sub">回程備案：如果 D19 接不上華航，可以 D18 下午提早離開 Tromsø、在阿姆斯特丹住一晚（Tromsø 少一晚）。這只是備案，沒有算進上面的晚數。</p>`;
+  el.innerHTML=`<p class="sub">共 ${total} 晚（含 1 晚船上艙房），D1、D19 在機上。Tromsø 登船日另保留房間到晚餐後，沒有算進晚數。</p>${cards}`;
 }
 renderTripDateCard();updateHeaderDates();renderStayOverview();
 /* hk14：主程式跑完的記號（給 index.html 的啟動檢查用） */

@@ -2791,7 +2791,7 @@ html body .header-foot{margin:-44px 0 0!important;}
 /* =====================================================================
    nw4：版面改成「滿版插畫標頭＋底線分頁＋簡潔日期列」，標題用手寫字
    ===================================================================== */
-@font-face{font-family:'NW ChenYu';src:url('fonts/title-chenyu.woff2?v=nw10') format('woff2');font-display:swap;}
+@font-face{font-family:'NW ChenYu';src:url('fonts/title-chenyu.woff2?v=nw13') format('woff2');font-display:swap;}
 :root{--title:'NW ChenYu','Iansui',serif;--serif:'NW ChenYu','Iansui',serif;--hand:'Iansui','LXGW WenKai TC','Noto Sans TC',sans-serif;--title-weight:400;}
 html[data-tfont="wenkai"]{--title:'LXGW WenKai TC','Iansui',serif;--serif:'LXGW WenKai TC','Iansui',serif;}
 html[data-tfont="iansui"]{--title:'Iansui',serif;--serif:'Iansui',serif;}
@@ -3002,3 +3002,8 @@ html body p,html body li,html body .sub,html body small,html body .tc-text,html 
 html body h1,html body h2,html body h3,html body h4,html body summary small,html body .compact-section-summary .sub,html body .snow-sum small,html body .todo-sum small{text-wrap:balance;}
 html body .transport-day,html body .rt-day,html body .day-chip .d,html body .sc-tag{white-space:nowrap;}
 .surprise-card p .ph{display:inline-block;max-width:100%;}
+
+/* nw13：每日圖改成橫式風景插畫（新版紅圍巾呆維） */
+.nw-route-card{padding:10px 14px 10px 10px!important;}
+.nw-route-card .nrc-img{width:118px!important;height:84px!important;object-fit:cover!important;border-radius:16px;filter:none!important;box-shadow:0 4px 10px -6px rgba(32,40,72,.45);}
+html body .nw-hero .nw-hero-img{object-position:68% 50%!important;}

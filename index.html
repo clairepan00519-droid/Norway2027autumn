@@ -18,23 +18,23 @@ window.__repairApp=function(){var done=function(){var u=location.pathname+'?fres
 window.addEventListener('load',function(){setTimeout(function(){if(window.__appReady)return;var b=box();if(!b)return;b.innerHTML='<b>⚠️ 網站程式沒有正常啟動</b><div style="margin:6px 0;font-size:13px;word-break:break-all">'+(window.__appReady?'':'主程式 app.js 沒有跑完。<br>')+errs.slice(0,5).map(function(x){return x.replace(/</g,'&lt;');}).join('<br>')+'<br><small>'+navigator.userAgent.replace(/</g,'')+'</small></div><button type="button" onclick="__repairApp()" style="width:100%;min-height:48px;border:0;border-radius:12px;background:#202848;color:#fff;font:inherit;font-weight:800">清除舊版快取並重新載入（資料不會刪除）</button><div style="margin-top:6px;font-size:13px">如果還是不行，請把這個畫面截圖傳給我。</div>';},2500);});
 })();</script>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="64x64" href="images/favicon.png?v=nw12">
-<link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=nw12">
+<link rel="icon" type="image/png" sizes="64x64" href="images/favicon.png?v=nw13">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=nw13">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="狐光漫遊">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="format-detection" content="telephone=no">
 <title>狐光漫遊｜在峽灣慢行，等一場北方的光</title>
-<meta name="description" content="挪威 20 日峽灣與極光慢旅：Bergen、Aurland／Flåm、羅弗敦、Tromsø，含每日行程、住宿、交通、天氣與家人共享。">
+<meta name="description" content="挪威 20 日極光與峽灣慢旅：Tromsø、羅弗敦、Bergen、Aurland／Flåm，含每日行程、住宿、交通、天氣與家人共享。">
 <meta property="og:title" content="狐光漫遊｜在峽灣慢行，等一場北方的光">
 <meta property="og:description" content="挪威 20 日峽灣與極光慢旅行程與家人共享指南。">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&family=Huninn&family=Iansui&family=Cactus+Classical+Serif&family=Chiron+Hei+HK:wght@400;700&family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@1,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=nw12">
-<link rel="stylesheet" href="splash.css?v=nw12">
+<link rel="stylesheet" href="style.css?v=nw13">
+<link rel="stylesheet" href="splash.css?v=nw13">
 </head>
 <body class="family-locked">
 <div id="norwaySplash" class="splash" hidden aria-label="狐光漫遊載入中">
@@ -50,7 +50,7 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
     <div class="splash__title"><strong>狐光漫遊</strong><span>在峽灣慢行，等一場北方的光</span></div>
   </div>
 </div>
-<script src="splash.js?v=nw12"></script>
+<script src="splash.js?v=nw13"></script>
 
 <div id="familyGate" class="family-gate" aria-hidden="false">
   <div class="family-gate-card">
@@ -130,7 +130,7 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
   <div class="view" id="view-route">
     <div class="nw-section-head">
       <h2>挪威 20 日路線</h2>
-      <div class="nw-en"><i></i><span>Bergen · Fjords · Lofoten · Tromsø</span><i></i></div>
+      <div class="nw-en"><i></i><span>Tromsø · Lofoten · Bergen · Fjords</span><i></i></div>
     </div>
 
 
@@ -147,16 +147,16 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
     <div class="section-card nw-route-labels">
       <h3><img class="h-ic" src="images/nav-route.webp" alt="" width="30" height="30"> 路線順序</h3>
       <ol class="nw-route-list">
-        <li><span>D1</span><b>台灣 → 阿姆斯特丹</b><small>飛向北方</small></li>
-        <li><span>D2–D3</span><b>Bergen</b><small>木屋港灣與山頂風景・2 晚</small></li>
-        <li><span>D4–D6</span><b>Aurland／Flåm</b><small>峽灣遊船與景觀鐵道・3 晚</small></li>
-        <li><span>D7</span><b>Bergen</b><small>還車與轉場・1 晚</small></li>
-        <li><span>D8–D9</span><b>Svolvær</b><small>羅弗敦的第一站・2 晚</small></li>
-        <li><span>D10–D12</span><b>Reine／Hamnøy</b><small>漁屋、海灣與白沙海岸・3 晚</small></li>
-        <li><span>D13</span><b>Svolvær</b><small>船旅前的慢日・1 晚</small></li>
-        <li><span>D14–D15</span><b>Svolvær → Tromsø</b><small>一晚跨兩天的沿岸船旅・1 晚</small></li>
-        <li><span>D15–D18</span><b>Tromsø／Kvaløya</b><small>海岸、天空與極光等待・4 晚</small></li>
-        <li><span>D19–D20</span><b>Tromsø → 阿姆斯特丹 → 台灣</b><small>帶著北方回家</small></li>
+        <li><span>D1</span><b>台灣 → 阿姆斯特丹</b><small>帶著期待，向北方出發</small></li>
+        <li><span>D2–D5</span><b>Tromsø</b><small>港城、纜車、Sommarøy 與 Ersfjordbotn・4 晚</small></li>
+        <li><span>D6–D7</span><b>Tromsø → Svolvær</b><small>深夜登船，南下沿岸船旅・1 晚</small></li>
+        <li><span>D7–D9</span><b>Svolvær</b><small>Henningsvær、Kabelvåg・3 晚</small></li>
+        <li><span>D10–D12</span><b>Reine／Hamnøy</b><small>紅屋黃屋、Nusfjord 老漁村・3 晚</small></li>
+        <li><span>D13</span><b>Leknes → Bergen</b><small>把島嶼收進行李・1 晚</small></li>
+        <li><span>D14–D16</span><b>Aurland／Flåm</b><small>峽灣船與 Flåmsbana・3 晚</small></li>
+        <li><span>D17</span><b>Bergen</b><small>Bryggen 木屋港邊・1 晚</small></li>
+        <li><span>D18</span><b>Bergen → 阿姆斯特丹</b><small>機場周邊緩衝・1 晚</small></li>
+        <li><span>D19–D20</span><b>阿姆斯特丹 → 台灣</b><small>帶著北方的光回家</small></li>
       </ol>
     </div>
 
@@ -186,20 +186,20 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
       <details class="transport-principles">
         <summary class="transport-principles-head"><img class="tp-ic" src="images/nav-route.webp" alt="" width="34" height="34"><div><small>共通設定</small><h4>自駕與搭船原則</h4></div><em>展開</em></summary>
         <div class="transport-principles-body">
-        <ul><li>租車分三段：Bergen（D4–D7）、羅弗敦（D8–D14）、Tromsø（D16–D19）；車不帶上郵輪。</li><li>挪威開車要全天開近光燈；收費站幾乎都是自動扣款，取車時問清楚租車公司怎麼請款。</li><li>法定酒精上限 0.02%，開車的人不喝酒。</li><li>Nordland、Troms 的釘胎季從 10/15 開始；早晚可能結冰，取車時確認輪胎。</li><li>不排 Reinebringen、Trolltunga 與長距離登山，也不靠季節性高山公路完成行程。</li></ul>
+        <ul><li>租車分三段：Tromsø（D4–D6）、羅弗敦（D8 取車、D13 Leknes 還車）、Bergen／峽灣（D14–D17）；車不帶上船。</li><li>挪威開車要全天開近光燈；收費站幾乎都是自動扣款，取車時問清楚租車公司怎麼請款。</li><li>法定酒精上限 0.02%，開車的人不喝酒。</li><li>Nordland、Troms 的釘胎季從 10/15 開始；Tromsø 與羅弗敦早晚可能結冰，取車時確認輪胎。</li><li>不排 Reinebringen、Trolltunga 與長距離登山，也不靠季節性高山公路完成行程。</li></ul>
         <div class="transport-link-row"><a href="https://www.visitnorway.com/plan-your-trip/getting-around/by-car" target="_blank" rel="noopener">Visit Norway 自駕須知</a></div>
         </div>
       </details>
       <div id="transportQuickNav" class="transport-quick-nav" aria-label="交通日期快速索引"></div>
       <div class="transport-grid">
-        <article class="transport-card"><div class="transport-day">D1–D2</div><div><h4>台北 → 阿姆斯特丹 → Bergen</h4><p>華航到阿姆斯特丹，再轉機到 Bergen。抵達當天不取車、不長途開車。航班尚未預訂。</p></div></article>
-        <article class="transport-card"><div class="transport-day">D4</div><div><h4>Bergen → Voss → Aurland</h4><p>取車後經 Voss 開往 Aurland，純駕車約 3–3.5 小時（估算）；含取車、午餐、停留抓 5–6 小時。</p></div></article>
-        <article class="transport-card"><div class="transport-day">D5</div><div><h4>Flåm → Gudvangen 峽灣船＋接駁</h4><p>船＋接駁整體約 3.5 小時；船班未確認，車不帶上船。停航就和 D6 互換。</p><div class="transport-link-row"><a href="https://www.norwaysbest.com/en/flam/things-to-do/fjord-cruise-naeroyfjord" target="_blank" rel="noopener">峽灣船</a><a href="https://www.norwaysbest.com/en/flam/things-to-do/shuttle-bus-flam-gudvangen" target="_blank" rel="noopener">接駁巴士</a></div></div></article>
-        <article class="transport-card"><div class="transport-day">D6</div><div><h4>Flåmsbana 與 Stegastein</h4><p>鐵道優先；只走 Aurland 到 Stegastein，全年開放不等於每天路況安全，低雲或結冰就取消。</p><div class="transport-link-row"><a href="https://www.nasjonaleturistveger.no/en/routes/aurlandsfjellet/" target="_blank" rel="noopener">國家觀光路線 Aurlandsfjellet</a></div></div></article>
-        <article class="transport-card"><div class="transport-day">D7–D8</div><div><h4>Aurland → Bergen → Svolvær</h4><p>D7 回 Bergen 還車、住機場附近；D8 國內航班飛 Svolvær SVJ（可能經 Bodø）。改飛 Leknes 或 Evenes 要重算車程。</p></div></article>
-        <article class="transport-card"><div class="transport-day">D10・D13</div><div><h4>E10：Svolvær ⇄ Reine</h4><p>單程約 2.5–3 小時（估算）；途中只選 1–2 處安全停車點，避免夜駕。</p></div></article>
-        <article class="transport-card"><div class="transport-day">D14–D15</div><div><h4>北行沿岸郵輪 Svolvær → Tromsø</h4><p>Hurtigruten 或 Havila 擇一，獨立艙房；預計晚間登船、隔天下午抵達，約十幾小時，不是完整 48 小時航程。不保證進 Trollfjord 或下船觀光。</p><div class="transport-link-row"><a href="https://www.hurtigruten.com/en/sail-plan" target="_blank" rel="noopener">Hurtigruten 航行計畫</a><a href="https://www.hurtigruten.com/en/port-to-port" target="_blank" rel="noopener">港到港預訂</a><a href="https://www.havilavoyages.com/en/sailing-schedule" target="_blank" rel="noopener">Havila 航行時刻</a></div></div></article>
-        <article class="transport-card"><div class="transport-day">D19–D20</div><div><h4>Tromsø → 阿姆斯特丹 → 台北</h4><p>同日銜接華航尚未確認；接不上就 D18 下午離開 Tromsø、在阿姆斯特丹住一晚。</p></div></article>
+        <article class="transport-card"><div class="transport-day">D1–D2</div><div><h4>台北 → 阿姆斯特丹 → Tromsø</h4><p>華航到阿姆斯特丹，再轉機到 Tromsø。抵達當天不取車，接駁入住、採買。航班尚未預訂。</p></div></article>
+        <article class="transport-card"><div class="transport-day">D4–D6</div><div><h4>Tromsø 租車①</h4><p>D4 10:30 取車去 Kvaløya → Sommarøy（往返約 2.5–3 小時，估算），D5 Ersfjordbotn，D6 下午還車。</p></div></article>
+        <article class="transport-card"><div class="transport-day">D6–D7</div><div><h4>南下沿岸船旅 Tromsø → Svolvær</h4><p>10/15 深夜搭計程車到碼頭，出航日期是 10/16；目前骨架約 18:30 抵達 Svolvær。艙房、登船時間與碼頭以訂單為準。</p><div class="transport-link-row"><a href="https://www.hurtigruten.com/en/sail-plan" target="_blank" rel="noopener">Hurtigruten 航行計畫</a><a href="https://www.hurtigruten.com/en/port-to-port" target="_blank" rel="noopener">港到港預訂</a><a href="https://www.havilavoyages.com/en/sailing-schedule" target="_blank" rel="noopener">Havila 航行時刻</a></div></div></article>
+        <article class="transport-card"><div class="transport-day">D8–D13</div><div><h4>羅弗敦租車②：Svolvær → Reine → Leknes</h4><p>D8（星期日）取車要先確認；D10 沿 E10 到 Reine 約 2.5–3 小時（估算）；D13 在 Leknes 機場還車，異地還車要和航班對齊。</p></div></article>
+        <article class="transport-card"><div class="transport-day">D13</div><div><h4>Leknes → Bergen</h4><p>國內航班，可能經 Bodø 轉機；想 11:00 離開 Reine 就優先找下午班。</p></div></article>
+        <article class="transport-card"><div class="transport-day">D14–D17</div><div><h4>Bergen 租車③：Voss → Aurland → Bergen</h4><p>D14 取車經 Voss 到 Aurland（約 3–3.5 小時，估算），D17 回 Bergen 還車。取車延誤就縮短 Voss，不繞瀑布。</p></div></article>
+        <article class="transport-card"><div class="transport-day">D15–D16</div><div><h4>峽灣船與 Flåmsbana</h4><p>D15 Flåm 白天船 → Gudvangen，配套巴士回 Flåm；D16 Flåmsbana 往返 Myrdal，下午 Stegastein 或 Undredal 擇一。2027/10/24 的班表要核對，兩天可互換。</p><div class="transport-link-row"><a href="https://www.norwaysbest.com/en/flam/things-to-do/fjord-cruise-naeroyfjord" target="_blank" rel="noopener">峽灣船</a><a href="https://www.norwaysbest.com/en/flam/things-to-do/shuttle-bus-flam-gudvangen" target="_blank" rel="noopener">接駁巴士</a><a href="https://www.nasjonaleturistveger.no/en/routes/aurlandsfjellet/" target="_blank" rel="noopener">Aurlandsfjellet 路況</a></div></div></article>
+        <article class="transport-card"><div class="transport-day">D18–D20</div><div><h4>Bergen → 阿姆斯特丹 → 台北</h4><p>D18 飛阿姆斯特丹、機場周邊過夜當緩衝；D19 依華航實際班表回台灣。</p></div></article>
       </div>
       </div>
     </details>
@@ -247,7 +247,7 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
   <div class="view" id="view-weather">
     <div class="section-card" style="margin-bottom:14px;">
       <h3><img class="h-ic" src="images/nav-weather.webp" alt="" width="28" height="28"> 即時氣象與穿搭</h3>
-      <div class="sub">用挪威氣象局（MET Norway）模式的預報數值，顯示 Bergen、Aurland／Flåm、Svolvær、Reine、Tromsø「現在」的天氣與穿搭建議，不是旅行當天的預報；每個地點都有 yr.no 10 天預報連結。</div>
+      <div class="sub">用挪威氣象局（MET Norway）模式的預報數值，顯示 Tromsø、Svolvær、Reine、Bergen、Aurland／Flåm「現在」的天氣與穿搭建議，不是旅行當天的預報；每個地點都有 yr.no 10 天預報連結。</div>
       <div class="add-row" style="margin-bottom:10px;">
         <button class="nw-primary-btn" onclick="loadLiveWeather()" style="flex:1;">🔄 取得最新即時氣象</button>
       </div>
@@ -355,8 +355,8 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
 
 <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="restoreBackupFile(event)">
 
-<script src="config.js?v=nw12"></script>
-<script src="app.js?v=nw12"></script>
+<script src="config.js?v=nw13"></script>
+<script src="app.js?v=nw13"></script>
 
 </body>
 </html>
