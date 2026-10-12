@@ -2028,10 +2028,12 @@ function renderDayContent(){
   const swapNote=v.swapped?`<div class="nw-swap-note${v.swapWarn?' warn':''}">⇄ 這天換成原本 D${days[v.ci].dayNum} 的行程。${v.swapWarn?'跨住宿區或碰到交通日，請自己檢查住宿、租車、航班與船票日期。':''}</div>`:'';
 
   dayContent.innerHTML = `${todayRemindHTML()}
-    <div class="day-card-head nw-dayhead">
-      <div class="day-eyebrow"><span class="de-day">DAY ${pad}</span><i aria-hidden="true"></i><span>${d.date}（${d.weekday}）</span>${v.twTime?'<em>台灣時間</em>':''}</div>
+    <div class="day-card-head nw-dayhead nw-daycard">
+      <div class="ndc-hero"><img class="ndc-bg" src="${escAttr(v.img)}" alt="" decoding="async"><div class="ndc-text">
+      <div class="day-eyebrow"><span class="de-day">DAY ${pad}</span><span class="de-date">${d.date}（${d.weekday}）</span>${v.twTime?'<em>台灣時間</em>':''}</div>
       <div class="region">${escHtml(v.title)}</div>
       <h2>${escHtml(v.dayDesc)}</h2>
+      </div></div>
       <div class="nw-route-card"><img class="nrc-img" src="${escAttr(v.img)}" alt="D${d.dayNum} ${escAttr(v.title)}" width="96" height="96" loading="lazy" decoding="async"><div class="nrc-copy"><strong>${escHtml(v.region).split(' → ').join(' <i>→</i> ')}</strong>${v.enRegion&&v.enRegion.replace(/\s/g,'')!==String(v.region||'').replace(/\s/g,'')?`<small class="nrc-en">${escHtml(v.enRegion)}</small>`:''}${v.wear?`<small class="nrc-wear">${escHtml(v.wear)}</small>`:''}</div></div>
       ${stripFactsHTML(v)}
       ${dayChoiceHTML(v)}
@@ -2887,7 +2889,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=74').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=75').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3389,7 +3391,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw13-2026-10-11';
+const APP_VERSION='nw14-2026-10-12';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();

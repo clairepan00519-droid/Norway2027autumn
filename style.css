@@ -3007,3 +3007,43 @@ html body .transport-day,html body .rt-day,html body .day-chip .d,html body .sc-
 .nw-route-card{padding:10px 14px 10px 10px!important;}
 .nw-route-card .nrc-img{width:118px!important;height:84px!important;object-fit:cover!important;border-radius:16px;filter:none!important;box-shadow:0 4px 10px -6px rgba(32,40,72,.45);}
 html body .nw-hero .nw-hero-img{object-position:68% 50%!important;}
+
+/* nw14：標頭——插畫只放標題，副標與日期移到圖下方，呆維完整露出 */
+html body .header.nw-hero{--hh:clamp(210px,56vw,270px);min-height:calc(var(--hh) + 112px)!important;background:linear-gradient(180deg,#F6F4FA 0,#EFEDF7 100%)!important;border-radius:0 0 24px 24px!important;box-shadow:0 10px 22px -18px rgba(32,40,72,.45)!important;}
+html body .nw-hero .nw-hero-img{inset:0 0 auto 0!important;height:var(--hh)!important;object-position:80% 50%!important;border-radius:0 0 24px 24px;}
+html body .nw-hero::after{bottom:auto!important;height:var(--hh)!important;border-radius:0 0 24px 24px;background:linear-gradient(180deg,rgba(14,18,44,.5) 0,rgba(14,18,44,0) 30%),linear-gradient(90deg,rgba(14,18,44,.62) 0,rgba(14,18,44,.25) 45%,rgba(14,18,44,0) 60%)!important;}
+html body .nw-hero .header-title{top:auto!important;bottom:calc(112px + 18px)!important;right:auto!important;}
+html body .nw-hero h1{font-size:min(11vw,46px)!important;}
+html body .nw-hero .eyebrow{margin-bottom:4px!important;font-size:12px!important;}
+html body .nw-hero .nw-hero-sub{position:absolute;left:22px;right:22px;top:calc(var(--hh) + 12px);margin:0!important;padding:0!important;background:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;color:var(--periwinkle)!important;text-shadow:none!important;font-weight:500!important;font-size:min(4vw,15.5px)!important;letter-spacing:.12em!important;white-space:nowrap;}
+html body .nw-hero .header-title .nw-hero-sub{display:block;}
+html body .nw-hero .nw-hero-dates{bottom:16px!important;color:var(--midnight)!important;text-shadow:none!important;}
+html body .nw-hero .nw-hero-dates .hd-range{font-size:22px!important;}
+html body .nw-hero .nw-hero-dates .hd-range i{background:var(--copper)!important;}
+html body .nw-hero .nw-hero-dates small{color:var(--ink-soft)!important;}
+html body .nw-hero .preview-note{color:var(--ink-soft)!important;text-shadow:none!important;bottom:18px!important;}
+
+/* nw14：每日圖卡（插畫在左、往右淡出；標題在右），路線小卡壓在插畫下緣 */
+html body .day-card-head.nw-daycard{position:relative;margin:12px 12px 0!important;padding:0 14px 14px!important;background:#FFFFFF!important;border:1px solid var(--line)!important;border-radius:26px!important;box-shadow:0 10px 24px -18px rgba(32,40,72,.4)!important;overflow:hidden;}
+.ndc-hero{position:relative;margin:0 -14px;min-height:clamp(230px,62vw,290px);display:flex;justify-content:flex-end;align-items:flex-start;}
+.ndc-bg{position:absolute;left:0;top:0;width:74%;height:100%;object-fit:cover;object-position:30% 50%;
+  -webkit-mask-image:linear-gradient(90deg,#000 0,#000 52%,transparent 100%),linear-gradient(0deg,transparent 0,#000 26%);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,#000 0,#000 52%,transparent 100%),linear-gradient(0deg,transparent 0,#000 26%);mask-composite:intersect;}
+.ndc-text{position:relative;z-index:1;width:50%;padding:20px 16px 0 0;text-align:right;}
+html body .nw-daycard .day-eyebrow{display:block!important;margin:0!important;line-height:1.35;}
+html body .nw-daycard .day-eyebrow .de-day{display:block;font-family:var(--title)!important;font-size:18px;letter-spacing:.08em;color:var(--periwinkle);}
+html body .nw-daycard .day-eyebrow .de-date{display:block;font-family:var(--hand);font-size:13px;letter-spacing:.06em;color:var(--ink-soft);margin-top:2px;}
+html body .nw-daycard .day-eyebrow em{display:inline-block;margin-top:4px;}
+html body .nw-daycard .day-eyebrow i{display:none!important;}
+html body .nw-daycard .region{font-size:min(7.4vw,30px)!important;line-height:1.3!important;margin:10px 0 0!important;word-break:keep-all;overflow-wrap:anywhere;text-wrap:balance;}
+html body .nw-daycard h2{font-size:13.5px!important;line-height:1.75!important;letter-spacing:.06em!important;margin:8px 0 0!important;color:var(--ink-soft)!important;text-wrap:pretty;}
+html body .nw-daycard .nw-route-card{position:relative;z-index:2;margin:-38px 0 0!important;background:linear-gradient(120deg,#ECEBF8 0,#EEF2FA 100%)!important;border-radius:22px!important;box-shadow:0 8px 18px -14px rgba(32,40,72,.45);}
+html body .nw-daycard .nw-route-card .nrc-img{width:104px!important;height:70px!important;border-radius:50%!important;object-fit:cover!important;}
+html body .nw-daycard .stay-quick-card{box-shadow:none!important;}
+body.large-text .ndc-text{width:56%;}
+.ndc-bg{width:68%!important;-webkit-mask-image:linear-gradient(90deg,#000 0,#000 48%,transparent 96%),linear-gradient(0deg,transparent 0,#000 26%)!important;mask-image:linear-gradient(90deg,#000 0,#000 48%,transparent 96%),linear-gradient(0deg,transparent 0,#000 26%)!important;}
+.ndc-text{width:52%!important;}
+html body .nw-daycard .region{word-break:normal!important;overflow-wrap:normal!important;font-size:min(6.8vw,28px)!important;}
+html body .nw-daycard .ndc-text>*{text-shadow:0 0 6px #fff,0 0 12px #fff;}
+.ndc-text{padding-bottom:46px!important;}
+body.large-text .nw-daycard .nw-route-card .nrc-img{width:76px!important;height:52px!important;}
