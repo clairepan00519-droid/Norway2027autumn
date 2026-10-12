@@ -18,8 +18,8 @@ window.__repairApp=function(){var done=function(){var u=location.pathname+'?fres
 window.addEventListener('load',function(){setTimeout(function(){if(window.__appReady)return;var b=box();if(!b)return;b.innerHTML='<b>⚠️ 網站程式沒有正常啟動</b><div style="margin:6px 0;font-size:13px;word-break:break-all">'+(window.__appReady?'':'主程式 app.js 沒有跑完。<br>')+errs.slice(0,5).map(function(x){return x.replace(/</g,'&lt;');}).join('<br>')+'<br><small>'+navigator.userAgent.replace(/</g,'')+'</small></div><button type="button" onclick="__repairApp()" style="width:100%;min-height:48px;border:0;border-radius:12px;background:#202848;color:#fff;font:inherit;font-weight:800">清除舊版快取並重新載入（資料不會刪除）</button><div style="margin-top:6px;font-size:13px">如果還是不行，請把這個畫面截圖傳給我。</div>';},2500);});
 })();</script>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="64x64" href="images/favicon.png?v=nw14">
-<link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=nw14">
+<link rel="icon" type="image/png" sizes="64x64" href="images/favicon.png?v=nw15">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=nw15">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="狐光漫遊">
@@ -33,8 +33,8 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&family=Huninn&family=Iansui&family=Cactus+Classical+Serif&family=Chiron+Hei+HK:wght@400;700&family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@1,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=nw14">
-<link rel="stylesheet" href="splash.css?v=nw14">
+<link rel="stylesheet" href="style.css?v=nw15">
+<link rel="stylesheet" href="splash.css?v=nw15">
 </head>
 <body class="family-locked">
 <div id="norwaySplash" class="splash" hidden aria-label="狐光漫遊載入中">
@@ -50,7 +50,7 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
     <div class="splash__title"><strong>狐光漫遊</strong><span>在峽灣慢行，等一場北方的光</span></div>
   </div>
 </div>
-<script src="splash.js?v=nw14"></script>
+<script src="splash.js?v=nw15"></script>
 
 <div id="familyGate" class="family-gate" aria-hidden="false">
   <div class="family-gate-card">
@@ -106,10 +106,10 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
       </div>
     </div>
     <div class="header-title">
-      <div class="eyebrow">NORWAY · 2027</div>
+      <div class="eyebrow">Arctic Fox, Fjords &amp; Northern Lights</div>
       <h1>狐光漫遊</h1>
+      <p class="nw-hero-sub">在峽灣慢行，等一場北方的光。</p>
     </div>
-    <p class="nw-hero-sub">在峽灣慢行，等一場北方的光。</p>
     <button type="button" class="nw-hero-dates" id="headerDates" onclick="openToolsSheet();setTimeout(()=>document.getElementById('tripDateCard')?.scrollIntoView({behavior:'smooth',block:'center'}),150)" aria-label="旅程日期，點了可以修改出發日"></button>
     <div class="preview-note">單機預覽：資料只存在這台裝置</div>
     <span id="spotCount" hidden>--</span>
@@ -355,8 +355,8 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
 
 <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="restoreBackupFile(event)">
 
-<script src="config.js?v=nw14"></script>
-<script src="app.js?v=nw14"></script>
+<script src="config.js?v=nw15"></script>
+<script src="app.js?v=nw15"></script>
 
 </body>
 </html>
