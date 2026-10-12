@@ -2034,7 +2034,7 @@ function renderDayContent(){
       <div class="region">${escHtml(v.title)}</div>
       <h2>${escHtml(v.dayDesc)}</h2>
       </div></div>
-      <div class="nw-route-card"><img class="nrc-img" src="${escAttr(v.img)}" alt="D${d.dayNum} ${escAttr(v.title)}" width="96" height="96" loading="lazy" decoding="async"><div class="nrc-copy"><strong>${escHtml(v.region).split(' → ').join(' <i>→</i> ')}</strong>${v.enRegion&&v.enRegion.replace(/\s/g,'')!==String(v.region||'').replace(/\s/g,'')?`<small class="nrc-en">${escHtml(v.enRegion)}</small>`:''}${v.wear?`<small class="nrc-wear">${escHtml(v.wear)}</small>`:''}</div></div>
+      <div class="nw-route-card"><div class="nrc-copy"><strong>${escHtml(v.region).split(' → ').join(' <i>→</i> ')}</strong>${v.enRegion&&v.enRegion.replace(/\s/g,'')!==String(v.region||'').replace(/\s/g,'')?`<small class="nrc-en">${escHtml(v.enRegion)}</small>`:''}${v.wear?`<small class="nrc-wear">${escHtml(v.wear)}</small>`:''}</div></div>
       ${stripFactsHTML(v)}
       ${dayChoiceHTML(v)}
       ${swapNote}
@@ -2889,7 +2889,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=75').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=76').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3391,7 +3391,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw14-2026-10-12';
+const APP_VERSION='nw15-2026-10-12';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
