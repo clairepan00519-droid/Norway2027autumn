@@ -3111,3 +3111,7 @@ html body .nw-hero .nw-hero-dates{top:calc(62px + env(safe-area-inset-top,0px) +
 html body .nw-hero .nw-hero-dates .hd-range{font-size:min(5vw,22px)!important;}
 html body .header.nw-hero{min-height:max(calc(100vw / 1.42),350px)!important;}
 html body .nw-hero .eyebrow{white-space:nowrap;}html body .nw-hero .nw-hero-dates .hd-range{font-size:min(4.8vw,22px)!important;}
+/* nw17：副標去掉黑底、改粗體；日期改粗體（字體只有一種粗細，用描邊加粗） */
+html body .nw-hero .nw-hero-sub{background:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;padding:0!important;margin:12px 0 0!important;border-radius:0!important;font-weight:700!important;font-synthesis:weight;-webkit-text-stroke:.55px #fff;letter-spacing:.14em!important;font-size:min(4.2vw,17px)!important;text-shadow:0 0 2px rgba(10,14,40,.95),0 1px 6px rgba(10,14,40,.85),0 2px 14px rgba(10,14,40,.6)!important;}
+html body .nw-hero .nw-hero-dates .hd-range{font-weight:700!important;font-synthesis:weight;-webkit-text-stroke:.7px #fff;}
+html body .nw-hero .nw-hero-dates small{font-weight:700!important;font-synthesis:weight;-webkit-text-stroke:.25px rgba(255,255,255,.9);}
