@@ -2036,7 +2036,7 @@ function renderDayContent(){
       <div class="region">${phraseWrapHTML(v.title)}</div>
       <h2>${phraseWrapHTML(v.dayDesc)}</h2>
       </div></div>
-      <div class="nw-route-card"><div class="nrc-copy"><strong>${escHtml(v.region).split(' → ').join(' <i>→</i> ')}</strong>${v.enRegion&&v.enRegion.replace(/\s/g,'')!==String(v.region||'').replace(/\s/g,'')?`<small class="nrc-en">${escHtml(v.enRegion)}</small>`:''}${v.wear?`<small class="nrc-wear">${escHtml(v.wear)}</small>`:''}</div></div>
+      <div class="nw-route-card"><div class="nrc-copy"><strong class="nrc-en">${escHtml(v.enRegion||v.region).split(' → ').join(' <i>→</i> ')}</strong>${v.wear?`<small class="nrc-wear">${escHtml(v.wear)}</small>`:''}</div></div>
       ${stripFactsHTML(v)}
       ${dayChoiceHTML(v)}
       ${swapNote}
@@ -2891,7 +2891,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=77').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=78').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3393,7 +3393,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw16-2026-10-13';
+const APP_VERSION='nw17-2026-10-13';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
