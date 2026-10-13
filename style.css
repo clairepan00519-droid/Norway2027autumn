@@ -3103,3 +3103,11 @@ html body .nw-daycard .region{font-size:min(7.4vw,30px)!important;}
 html body .nw-daycard .nrc-copy strong.nrc-en{font-family:var(--script)!important;font-style:var(--en-style)!important;font-size:19px!important;color:var(--midnight)!important;font-weight:500!important;line-height:1.35;}
 html body .nw-daycard .nrc-copy strong.nrc-en i{color:var(--copper);font-style:normal;margin:0 2px;}
 html body .nw-daycard .region{font-size:min(6.6vw,30px)!important;}.ndc-text{width:63%!important;}
+/* nw17：標頭的字都留在左半邊，不壓到呆維的臉 */
+html body .nw-hero .header-title{right:auto!important;max-width:min(60%,300px);}
+html body .nw-hero .nw-hero-sub{white-space:normal!important;border-radius:16px!important;line-height:1.6!important;}
+html body .nw-hero .nw-hero-sub span{display:block;}
+html body .nw-hero .nw-hero-dates{top:calc(62px + env(safe-area-inset-top,0px) + min(46vw,186px))!important;}
+html body .nw-hero .nw-hero-dates .hd-range{font-size:min(5vw,22px)!important;}
+html body .header.nw-hero{min-height:max(calc(100vw / 1.42),350px)!important;}
+html body .nw-hero .eyebrow{white-space:nowrap;}html body .nw-hero .nw-hero-dates .hd-range{font-size:min(4.8vw,22px)!important;}
