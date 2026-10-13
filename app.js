@@ -1000,7 +1000,7 @@ function dayView(pos){
   const alt0=dayChoiceObj(ci);const alt=alt0?{title:c.title,dayDesc:c.dayDesc,region:c.region,enRegion:c.enRegion,...alt0}:null;
   const pick=(f,def)=>{const o=dayInfoOv(ci,f);return o!==undefined?o:def;};
   return {pos,ci,dayNum:p.dayNum,date:p.date,weekday:p.weekday,iso:p.iso,overnight:p.overnight,
-    title:alt?alt.title:c.title,dayDesc:alt?alt.dayDesc:c.dayDesc,region:alt?alt.region:c.region,enRegion:alt?alt.enRegion:c.enRegion,
+    title:(dayInfoOv(ci,'title')||(alt?alt.title:c.title)),dayDesc:(dayInfoOv(ci,'dayDesc')||(alt?alt.dayDesc:c.dayDesc)),region:alt?alt.region:c.region,enRegion:alt?alt.enRegion:c.enRegion,
     departure:pick('departure',c.departure),move:pick('move',c.move),driving:pick('driving',(alt&&alt.driving)||c.driving),
     notes:pick('notes',c.notes),rain:pick('rain',(alt&&alt.rain)||c.rain),aurora:pick('aurora',c.aurora),
     wear:c.wear,img:(alt&&alt.img)||DAYIMG(ci),twTime:!!p.twTime,hasAlt:!!(c.choices&&c.choices.length>1),choice:dayChoice(ci),swapped:ci!==pos,swapWarn:!!daySwapStore['w'+pos]};
@@ -1013,19 +1013,21 @@ function setDayChoice(ci,ch){
 }
 function editDayInfo(pos){
   const v=dayView(pos),ci=v.ci;
-  openFormModal({title:`修改 D${v.dayNum} 的出門與提醒`,fields:[
+  openFormModal({title:`修改 D${v.dayNum} 的標題、出門與提醒`,fields:[
+    {id:'title',label:'標題（留空＝用原本的）',value:v.title||''},
+    {id:'dayDesc',label:'副標（留空＝用原本的）',value:v.dayDesc||''},
     {id:'departure',label:'出門時間',value:v.departure||''},
     {id:'move',label:'交通方式',value:v.move||''},
     {id:'driving',label:'純駕車估算（會自動加註「估算，不含停留／天候延誤」）',value:v.driving||''},
     {id:'notes',label:'執行備註',type:'textarea',rows:3,value:v.notes||''},
     {id:'rain',label:'雨天／天候備案',type:'textarea',rows:2,value:v.rain||''},
     {id:'aurora',label:'可選極光（留空＝這天不顯示）',type:'textarea',rows:2,value:v.aurora||''}],saveText:'儲存',
-    onSave:x=>{['departure','move','driving','notes','rain','aurora'].forEach(f=>{fieldOverrideStore[fieldOverrideKey('dinfo'+ci,f)]=x[f]||'';});persistFieldOverrides();renderDayContent();}});
+    onSave:x=>{['title','dayDesc','departure','move','driving','notes','rain','aurora'].forEach(f=>{fieldOverrideStore[fieldOverrideKey('dinfo'+ci,f)]=x[f]||'';});persistFieldOverrides();renderDayContent();}});
 }
 function restoreDayInfo(pos){
   const ci=contentIdx(pos);
-  if(!confirm('把這天的出門、交通、備註、雨天備案與極光，還原成原本的規劃內容？'))return;
-  const keys=['departure','move','driving','notes','rain','aurora'].map(f=>fieldOverrideKey('dinfo'+ci,f));
+  if(!confirm('把這天的標題、副標、出門、交通、備註、雨天備案與極光，還原成原本的規劃內容？'))return;
+  const keys=['title','dayDesc','departure','move','driving','notes','rain','aurora'].map(f=>fieldOverrideKey('dinfo'+ci,f));
   const backup={};keys.forEach(k=>{if(Object.prototype.hasOwnProperty.call(fieldOverrideStore,k)){backup[k]=fieldOverrideStore[k];delete fieldOverrideStore[k];}});
   persistFieldOverrides();renderDayContent();
   offerUndo('已還原這天的提醒',()=>{Object.assign(fieldOverrideStore,backup);persistFieldOverrides();renderDayContent();});
@@ -2031,15 +2033,15 @@ function renderDayContent(){
     <div class="day-card-head nw-dayhead nw-daycard">
       <div class="ndc-hero"><img class="ndc-bg" src="${escAttr(v.img)}" alt="" decoding="async"><div class="ndc-text">
       <div class="day-eyebrow"><span class="de-day">DAY ${pad}</span><span class="de-date">${d.date}（${d.weekday}）</span>${v.twTime?'<em>台灣時間</em>':''}</div>
-      <div class="region">${escHtml(v.title)}</div>
-      <h2>${escHtml(v.dayDesc)}</h2>
+      <div class="region">${phraseWrapHTML(v.title)}</div>
+      <h2>${phraseWrapHTML(v.dayDesc)}</h2>
       </div></div>
       <div class="nw-route-card"><div class="nrc-copy"><strong>${escHtml(v.region).split(' → ').join(' <i>→</i> ')}</strong>${v.enRegion&&v.enRegion.replace(/\s/g,'')!==String(v.region||'').replace(/\s/g,'')?`<small class="nrc-en">${escHtml(v.enRegion)}</small>`:''}${v.wear?`<small class="nrc-wear">${escHtml(v.wear)}</small>`:''}</div></div>
       ${stripFactsHTML(v)}
       ${dayChoiceHTML(v)}
       ${swapNote}
       ${dayNotesHTML(v)}
-      <div class="edit-only nw-head-acts"><button type="button" onclick="editDayInfo(${activeDay})">✎ 修改出門與提醒</button><button type="button" onclick="openDaySwapModal(${activeDay})">⇄ 和另一天調換</button><button type="button" onclick="restoreDayInfo(${activeDay})">↺ 還原</button></div>
+      <div class="edit-only nw-head-acts"><button type="button" onclick="editDayInfo(${activeDay})">✎ 修改標題、出門與提醒</button><button type="button" onclick="openDaySwapModal(${activeDay})">⇄ 和另一天調換</button><button type="button" onclick="restoreDayInfo(${activeDay})">↺ 還原</button></div>
       ${stayQuickHTML}
     </div>
     <div id="daySnowSlot">${daySnowBannerHTML(activeDay)}</div>
@@ -2889,7 +2891,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=76').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=77').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3391,7 +3393,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='nw15-2026-10-12';
+const APP_VERSION='nw16-2026-10-13';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('norway_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();

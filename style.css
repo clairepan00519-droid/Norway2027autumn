@@ -3066,3 +3066,31 @@ html body .nw-hero .preview-note{color:rgba(255,255,255,.8)!important;}
 /* 分頁列（行程／天氣／交通／路線／吃逛）縮小 */
 html body #dayTools .day-tool{font-size:14.5px!important;padding-top:8px!important;padding-bottom:8px!important;letter-spacing:.08em!important;}
 html body #dayTools{margin-top:8px!important;}
+
+/* nw16：新標頭插畫（比例較高），直接滿版、不再模糊延伸；呆維在右下 */
+html body .header.nw-hero{min-height:clamp(380px,100vw,470px)!important;}
+html body .nw-hero::before{display:none!important;}
+html body .nw-hero .nw-hero-img{inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:84% 50%!important;-webkit-mask-image:none!important;mask-image:none!important;}
+html body .nw-hero::after{background:linear-gradient(180deg,rgba(14,18,44,.45) 0,rgba(14,18,44,0) 24%),linear-gradient(90deg,rgba(14,18,44,.5) 0,rgba(14,18,44,.12) 48%,rgba(14,18,44,0) 60%),linear-gradient(0deg,rgba(14,18,44,.5) 0,rgba(14,18,44,0) 28%)!important;}
+/* 每日圖卡：標題、副標依標點換行，字欄稍寬 */
+.ndc-text{width:60%!important;}
+html body .nw-daycard .region{font-size:min(6.2vw,25px)!important;text-wrap:wrap!important;}
+html body .nw-daycard .region .ph,html body .nw-daycard h2 .ph{display:inline-block;}
+html body .nw-daycard h2{font-size:13px!important;}
+/* 日期列與路線小卡字縮小 */
+html body .day-chip .d{font-size:18px!important;}
+html body .day-chip .m{font-size:11.5px!important;}
+html body .day-chip{min-width:64px!important;padding-top:6px!important;padding-bottom:6px!important;}
+.nrc-copy strong{font-size:16px!important;}
+.nrc-copy .nrc-en{font-size:13px!important;}
+.nrc-copy small{font-size:12.5px!important;}
+html body .nw-hero .nw-hero-img{object-position:100% 60%!important;}
+html body .nw-hero .nw-hero-dates{top:calc(78px + env(safe-area-inset-top,0px) + min(44vw,186px))!important;bottom:auto!important;}
+html body .nw-hero .nw-hero-dates .hd-range{font-size:min(6.4vw,26px)!important;}
+html body .header.nw-hero{min-height:max(calc(100vw / 1.42),330px)!important;}
+html body .nw-hero .header-title{top:calc(62px + env(safe-area-inset-top,0px))!important;}
+html body .nw-hero h1{font-size:min(12vw,52px)!important;}
+html body .nw-hero .nw-hero-sub{margin-top:10px!important;font-size:min(3.8vw,15px)!important;padding:5px 14px!important;}
+html body .nw-hero .nw-hero-dates{top:calc(62px + env(safe-area-inset-top,0px) + min(38vw,152px))!important;}
+html body .nw-hero .nw-hero-dates .hd-range{font-size:min(6vw,25px)!important;}
+html body .nw-hero .nw-hero-dates .hd-range{font-size:min(5.4vw,25px)!important;gap:8px!important;}html body .nw-hero .nw-hero-dates .hd-range i{width:22px!important;}
