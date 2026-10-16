@@ -72,3 +72,4 @@
 .splash__title strong::after{background:#C16F25!important;}
 .splash__title span{font-family:var(--hand,'LXGW WenKai TC'),sans-serif!important;color:#5E6386!important;font-size:15px!important;}
 .flake{background:#04B3A9!important;box-shadow:0 0 8px rgba(4,179,169,.6)!important;width:6px!important;height:6px!important;}
+.splash__map-wrap{width:min(70vw,340px)!important;top:18%!important;}
