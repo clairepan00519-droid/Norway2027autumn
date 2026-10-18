@@ -3118,3 +3118,6 @@ html body .nw-hero .nw-hero-dates small{font-weight:700!important;font-synthesis
 /* 不加粗：副標與日期回到一般粗細（副標保留沒有黑底） */
 html body .nw-hero .nw-hero-sub{font-weight:500!important;-webkit-text-stroke:0!important;}
 html body .nw-hero .nw-hero-dates .hd-range,html body .nw-hero .nw-hero-dates small{font-weight:400!important;-webkit-text-stroke:0!important;}
+/* 標頭高度依標頭本身的寬度（不是整個瀏覽器視窗），電腦版手機預覽框才不會被拉長 */
+html body .app{container-type:inline-size;}
+html body .header.nw-hero{min-height:max(calc(100cqw / 1.42),330px)!important;}
