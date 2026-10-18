@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#F6F5FA">
 <script>try{var f=localStorage.getItem("norway_tfont_v1");if(/^(chenyu|wenkai|iansui)$/.test(f||""))document.documentElement.setAttribute("data-tfont",f);}catch(e){}</script>
 <script>/* hk13：開場動畫一打開就先蓋住畫面，不等整個網頁載完 */
-try{var d=document.documentElement;if((window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone||/[?&]splash=1/.test(location.search)){d.classList.add("show-splash");var seen=false;try{seen=sessionStorage.getItem("norwaySplashSeen")==="1";sessionStorage.setItem("norwaySplashSeen","1");}catch(e){}if(!seen||/[?&]splash=1/.test(location.search)){d.classList.add("splash-now");var v=["travel","map","wakeup"][Math.floor(Math.random()*3)];d.setAttribute("data-splash",v);var l=document.createElement("link");l.rel="preload";l.as="image";l.href="images/"+({travel:"splash-travel",map:"logo",wakeup:"splash-coffee"})[v]+".webp";document.head.appendChild(l);}}}catch(e){}</script>
+try{var d=document.documentElement;if((window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone||/[?&]splash=1/.test(location.search)){d.classList.add("show-splash");var seen=false;try{seen=sessionStorage.getItem("norwaySplashSeen")==="1";sessionStorage.setItem("norwaySplashSeen","1");}catch(e){}if(!seen||/[?&]splash=1/.test(location.search)){d.classList.add("splash-now");var v=["travel","map","wakeup"][Math.floor(Math.random()*3)];d.setAttribute("data-splash",v);var l=document.createElement("link");l.rel="preload";l.as="image";l.href="images/"+({travel:"splash-travel",map:"splash-wave",wakeup:"splash-coffee"})[v]+".webp";document.head.appendChild(l);}}}catch(e){}</script>
 <style>html.splash-now,html.splash-now body{background:#F6F5FA;}html.splash-now #norwaySplash{display:block!important;}</style>
 <script>/* hk14：程式若沒有正常啟動，直接在畫面上顯示原因，並提供「修復」按鈕 */
 (function(){var errs=[];
@@ -43,7 +43,7 @@ window.addEventListener('load',function(){setTimeout(function(){if(window.__appR
     <div class="splash__sun"></div>
     <img class="splash__bird splash__bird--travel" src="images/splash-travel.webp" alt="呆維拖著行李出發">
     <div class="splash__map-wrap">
-      <img class="splash__bird splash__bird--map" src="images/logo.webp" alt="呆維仰望極光">
+      <img class="splash__bird splash__bird--map" src="images/splash-wave.webp" alt="呆維揮手打招呼">
     </div>
     <img class="splash__bird splash__bird--wakeup" src="images/splash-coffee.webp" alt="呆維在峽灣邊喝咖啡">
     <i class="flake flake--1"></i><i class="flake flake--2"></i><i class="flake flake--3"></i><i class="flake flake--4"></i><i class="flake flake--5"></i>
